@@ -1,9 +1,10 @@
 RecordStore = require '../../lib/RecordStore'
 sysPath = require 'path'
 
+newRecordStore = (path, options) ->
+  new RecordStore sysPath.join(__dirname, '..', 'data', "#{ path }.json"), options
+
 describe 'RecordStore', ->
-  newRecordStore = (path, options) ->
-    new RecordStore sysPath.join(__dirname, '..', 'data', "#{ path }.json"), options
   rs = null
 
   beforeEach ->

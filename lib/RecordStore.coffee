@@ -19,6 +19,7 @@ class RecordStore extends CoreObject
       else
         undefined
     "$id$#{id}"
+  @copy: copy
 
 
   _records: null
@@ -69,15 +70,14 @@ class RecordStore extends CoreObject
     @assert (not @readOnly), "this record store is read-only (#{ @path })"
 
   readRecord: (id) ->
-    copy @_recordForId(id), 'id'
+    Class.copy @load()._readRecord(Class.coerceId id), 'id'
 
   deleteRecord: (id, throwIfNoSuchRecord = yes) ->
     @assertWritable()
     dict = @load()._records
     rid = Class.coerceId id
-    if (old = dict[rid])
-      Object.freeze old
-      delete dict[rid]
+    if (old = @_readRecord rid)
+      @_deleteRecord rid
       @_count--
       @emit 'record.deleted', old
     else
@@ -91,7 +91,7 @@ class RecordStore extends CoreObject
     data.id ?= ++this._lastId
     @_registerRecord data
     @_count++
-    @emit 'record.created', (res = copy data, 'id')
+    @emit 'record.created', (res = Class.copy data, 'id')
     res
 
   countRecords: ->
@@ -108,31 +108,41 @@ class RecordStore extends CoreObject
       data.id is undefined or rid is Class.coerceId(data.id),
       "the given id and the one in the data to be updated are different"
     )
-    dict = @load()._records
-    @assert dict[rid], "no record found with id: #{ id }"
-    old = copy(dict[rid])
-    record = dict[rid]
-    for own key, value of data when key isnt 'id'
-      if value?
-        record[key] = value
-      else
-        delete record[key]
-    res = copy(record, 'id')
+    @load()
+    @assert (record = @_readRecord rid), "no record found with id: #{ id }"
+    old = Class.copy record, 'id'
+    @_writeRecord rid, id, data
+    res = Class.copy(record, 'id')
     @emit 'record.updated', res, old
     res
 
-
-  _recordForId: (id) ->
-    @load()._records[Class.coerceId id]
-
   _registerRecord: (data) ->
     dict = @_records
-    id = Class.coerceId data.id
-    @assert (not dict[id]), "a record with id #{ data.id } already exists (#{ @path })"
-    if /^[0-9]+$/.test(sid = "#{data.id}") and (intId = parseInt sid, 10) > @_lastId
+    id = data.id
+    rid = Class.coerceId id
+    @assert (not @_readRecord rid), "a record with id #{ id } already exists (#{ @path })"
+    if /^[0-9]+$/.test(sid = "#{id}") and (intId = parseInt sid, 10) > @_lastId
       @_lastId = intId
-    dict[id] = copy(data, 'id')
+    @_writeRecord rid, id, data, yes
     @
+
+  _readRecord: (rid) ->
+    @_records[rid]
+
+  _writeRecord: (rid, id, data = {}, override = no) ->
+    if id is null
+      id = @_records[rid].id
+    if override or not (rec = @_records[rid])
+      @_records[rid] = rec = {id}
+      CoreObject.__lockProperty rec, 'id'
+    for own key, val of data when key isnt 'id'
+      if val?
+        rec[key] = val
+      else
+        delete rec[key]
+    rec
+  _deleteRecord: (rid) ->
+    delete @_records[rid]
 
 
 module.exports = Class = RecordStore
