@@ -4,6 +4,7 @@ _ = require 'lodash'
 CoreObject = require './CoreObject'
 Class = null
 
+
 class RecordStore extends CoreObject
   @coerceId: (id, throwsIfInvalid = yes) ->
     unless id? and id isnt 0
@@ -50,6 +51,11 @@ class RecordStore extends CoreObject
       for record in records
         @_registerRecord record
         @_count++
+    @
+
+  save: ->
+    @assertWritable()
+    @writeJSON _.values(@_records) if @_records
     @
 
   assertWritable: ->
