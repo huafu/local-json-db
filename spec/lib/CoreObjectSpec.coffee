@@ -1,3 +1,4 @@
+utils = require '../../lib/utils'
 CoreObject = require '../../lib/CoreObject'
 
 class Level1 extends CoreObject
@@ -21,7 +22,7 @@ describe 'CoreObject', ->
   describe 'log()', ->
     stub = null
     beforeEach ->
-      stub = sinon.stub CoreObject, '__log'
+      stub = sinon.stub utils, 'log'
     afterEach ->
       stub.restore()
 

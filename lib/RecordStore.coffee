@@ -1,13 +1,15 @@
 sysPath = require 'path'
 fs = require 'fs'
-_ = require 'lodash'
+utils = require './utils'
 CoreObject = require './CoreObject'
+
+
 Class = null
 
 copy = (obj, propToLock...) ->
-  return obj if obj in [undefined, null]
-  res = JSON.parse JSON.stringify(obj)
-  CoreObject.__lockProperty(res, prop) for prop in propToLock
+  res = utils.copy obj
+  unless res in [null, undefined]
+    utils.lock(res, prop) for prop in propToLock
   res
 
 
@@ -38,7 +40,7 @@ class RecordStore extends CoreObject
 
   readJSON: ->
     data = JSON.parse fs.readFileSync(@path, encoding: 'utf8')
-    @assert _.isArray(data), "the record list file must be a JSON array (#{ @path })"
+    @assert utils.isArray(data), "the record list file must be a JSON array (#{ @path })"
     data
 
 
@@ -62,7 +64,7 @@ class RecordStore extends CoreObject
 
   save: ->
     @assertWritable()
-    @writeJSON _.values(@_records) if @_records
+    @writeJSON utils.values(@_records) if @_records
     @emit 'saved', @_count
     @
 
@@ -74,7 +76,7 @@ class RecordStore extends CoreObject
 
   deleteRecord: (id, throwIfNoSuchRecord = yes) ->
     @assertWritable()
-    dict = @load()._records
+    @load()
     rid = Class.coerceId id
     if (old = @_readRecord rid)
       @_deleteRecord rid
@@ -117,7 +119,7 @@ class RecordStore extends CoreObject
     res
 
   _registerRecord: (data) ->
-    dict = @_records
+    @load()
     id = data.id
     rid = Class.coerceId id
     @assert (not @_readRecord rid), "a record with id #{ id } already exists (#{ @path })"
@@ -134,13 +136,14 @@ class RecordStore extends CoreObject
       id = @_records[rid].id
     if override or not (rec = @_records[rid])
       @_records[rid] = rec = {id}
-      CoreObject.__lockProperty rec, 'id'
+      utils.lock rec, 'id'
     for own key, val of data when key isnt 'id'
       if val?
         rec[key] = val
       else
         delete rec[key]
     rec
+
   _deleteRecord: (rid) ->
     delete @_records[rid]
 
