@@ -31,8 +31,9 @@ describe 'utils', ->
       testOne new Date()
 
   describe 'throw', ->
-    expect(-> utils.throw 'test').to.throw('test')
-    expect(-> utils.throw TypeError, 'test').to.throw(TypeError)
+    it 'should throw errors', ->
+      expect(-> utils.throw 'test').to.throw('test')
+      expect(-> utils.throw TypeError, 'test').to.throw(TypeError)
 
   describe 'lock', ->
     it 'should lock property of an object', ->
