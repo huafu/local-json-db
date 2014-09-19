@@ -1,0 +1,14 @@
+[
+  {
+    "id":       1,
+    "title":    "title of post 1",
+    "body":     "body of post 1",
+    "postedAt": "2013-11-27T04:30:00.000Z"
+  },
+  {
+    "id":       2,
+    "title":    "title of post 2",
+    "body":     "body of post 2",
+    "postedAt": "2013-12-04T22:15:00.000Z"
+  }
+]

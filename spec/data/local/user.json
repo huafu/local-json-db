@@ -1,0 +1,16 @@
+[
+  {
+    "id":        1,
+    "isClaimed": false
+  },
+  {
+    "id":        6,
+    "__deleted": true
+  },
+  {
+    "id":        10,
+    "name":      "Luis Rota",
+    "isClaimed": false,
+    "joinedAt":  "2014-09-18T23:01:00.000Z"
+  }
+]
