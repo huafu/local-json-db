@@ -1,4 +1,6 @@
-class CoreObject
+EventEmitter = require('events').EventEmitter
+
+class CoreObject extends EventEmitter
   @__log:          -> console.log arguments...
   @__throw:        (message) -> throw new Error(message)
   @__lockProperty: (object, name) ->
