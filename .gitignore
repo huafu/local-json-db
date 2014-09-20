@@ -32,3 +32,8 @@ node_modules
 
 # IDEs
 .idea
+
+# temporary data
+tmp/
+*.tmp
+*.old
