@@ -1,0 +1,13 @@
+{
+  "config":  {},
+  "records": [
+    {
+      "id":        1,
+      "__deleted": true
+    },
+    {
+      "id":   11,
+      "name": "Mike"
+    }
+  ]
+}

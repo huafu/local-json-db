@@ -36,11 +36,12 @@ class RecordStore extends CoreObject
     @_uuid = @path
     @_count = null
     @_lastId = null
+    @_config = null
     @lockProperties 'path', 'readOnly', 'parent', '_uuid'
 
   readJSON: ->
     data = JSON.parse fs.readFileSync(@path, encoding: 'utf8')
-    @assert utils.isArray(data), "the record list file must be a JSON array (#{ @path })"
+    @assert utils.isArray(data.records), "the records resource file must contains a `records` array (#{ @path })"
     data
 
 
@@ -50,12 +51,15 @@ class RecordStore extends CoreObject
   load: (force = no) ->
     if not @_records or force
       @_records = {}
+      @_config = null
       @_lastId = 0
       @_count = 0
       if fs.existsSync(@path)
-        records = @readJSON()
+        {records, config} = @readJSON()
+        @_config = config
       else
         records = []
+      @_config ?= {}
       for record in records
         @_registerRecord record
         @_count++
@@ -64,9 +68,12 @@ class RecordStore extends CoreObject
 
   save: ->
     @assertWritable()
-    @writeJSON utils.values(@_records) if @_records
+    @writeJSON {config: @_config, records: utils.values(@_records)} if @_records
     @emit 'saved', @_count
     @
+
+  isLoaded: ->
+    Boolean(@_records)
 
   assertWritable: ->
     @assert (not @readOnly), "this record store is read-only (#{ @path })"
@@ -138,7 +145,7 @@ class RecordStore extends CoreObject
       @_records[rid] = rec = {id}
       utils.lock rec, 'id'
     for own key, val of data when key isnt 'id'
-      if val?
+      if val isnt undefined
         rec[key] = val
       else
         delete rec[key]

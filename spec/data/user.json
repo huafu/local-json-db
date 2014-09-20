@@ -1,18 +1,21 @@
-[
-  {
-    "id":        1,
-    "name":      "Huafu Gandon",
-    "joinedAt":  "2012-07-03T10:24:00.000Z",
-    "isClaimed": true
-  },
-  {
-    "id":        2,
-    "name":      "Pattiya Chamniphan",
-    "isClaimed": true
-  },
-  {
-    "id":        6,
-    "name":      "John Doh",
-    "isClaimed": false
-  }
-]
+{
+  "config":  {},
+  "records": [
+    {
+      "id":        1,
+      "name":      "Huafu Gandon",
+      "joinedAt":  "2012-07-03T10:24:00.000Z",
+      "isClaimed": true
+    },
+    {
+      "id":        2,
+      "name":      "Pattiya Chamniphan",
+      "isClaimed": true
+    },
+    {
+      "id":        6,
+      "name":      "John Doh",
+      "isClaimed": false
+    }
+  ]
+}

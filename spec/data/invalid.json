@@ -1,10 +1,13 @@
-[
-  {
-    "id":    1,
-    "dummy": "doh!"
-  },
-  {
-    "id":    1,
-    "dummy": "doh again!"
-  }
-]
+{
+  "config":  {},
+  "records": [
+    {
+      "id":    1,
+      "dummy": "doh!"
+    },
+    {
+      "id":    1,
+      "dummy": "doh again!"
+    }
+  ]
+}

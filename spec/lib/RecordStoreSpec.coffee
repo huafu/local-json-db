@@ -2,7 +2,7 @@ RecordStore = require '../../lib/RecordStore'
 sysPath = require 'path'
 
 newRecordStore = (path, options) ->
-  new RecordStore sysPath.join(__dirname, '..', 'data', "#{ path }.json"), options
+  new RecordStore jsonPath(path), options
 
 describe 'RecordStore', ->
   rs = null
@@ -12,24 +12,7 @@ describe 'RecordStore', ->
 
   describe 'writable', ->
     it 'should read JSON', ->
-      expect(rs.readJSON()).to.deep.equal [
-        {
-          id:        1,
-          name:      "Huafu Gandon",
-          joinedAt:  "2012-07-03T10:24:00.000Z",
-          isClaimed: true
-        },
-        {
-          id:        2,
-          name:      "Pattiya Chamniphan",
-          isClaimed: true
-        },
-        {
-          id:        6,
-          name:      "John Doh",
-          isClaimed: false
-        }
-      ]
+      expect(rs.readJSON()).to.deep.equal jsonRecord('user')
 
     it 'should not load invalid data', ->
       rs = null
@@ -38,8 +21,15 @@ describe 'RecordStore', ->
 
     it 'should load valid data', ->
       expect(-> rs.load()).to.not.throw()
+      expect(rs.path).to.equal jsonPath('user', yes)
       rs = newRecordStore('post')
       expect(-> rs.load()).to.not.throw()
+      expect(rs.path).to.equal jsonPath('post', yes)
+
+    it 'should return the loaded status', ->
+      expect(rs.isLoaded()).to.be.false
+      rs.load()
+      expect(rs.isLoaded()).to.be.true
 
     it 'should count records', ->
       expect(rs.countRecords()).to.equal 3
@@ -50,22 +40,9 @@ describe 'RecordStore', ->
       expect(newRecordStore('post').load()._lastId).to.equal 2
 
     it 'should read record by id', ->
-      expect(rs.readRecord(1)).to.deep.equal {
-        id:        1,
-        name:      "Huafu Gandon",
-        joinedAt:  "2012-07-03T10:24:00.000Z",
-        isClaimed: yes
-      }
-      expect(rs.readRecord(2)).to.deep.equal {
-        id:        2,
-        name:      "Pattiya Chamniphan",
-        isClaimed: yes
-      }
-      expect(rs.readRecord(6)).to.deep.equal {
-        id:        6,
-        name:      "John Doh",
-        isClaimed: no
-      }
+      expect(rs.readRecord(1)).to.deep.equal jsonRecord('user', 1)
+      expect(rs.readRecord(2)).to.deep.equal jsonRecord('user', 2)
+      expect(rs.readRecord(6)).to.deep.equal jsonRecord('user', 6)
 
     it 'should not read unknown record', ->
       expect(rs.readRecord 10).to.be.undefined
@@ -118,11 +95,13 @@ describe 'RecordStore', ->
       r = rs.readRecord(1)
       r.name = 'Luke'
       r.isClaimed = no
-      r.joinedAt = null
+      r.joinedAt = undefined
+      r.dummy = null
       upd = {
         id:        1
         name:      'Luke'
         isClaimed: no
+        dummy: null
       }
       expect(rs.updateRecord r).to.deep.equal upd
       expect(rs.readRecord 1).to.deep.equal upd
@@ -130,8 +109,9 @@ describe 'RecordStore', ->
         id: 2
         name: 'Pattiya Chamniphan'
         isClaimed: no
+        dummy: null
       }
-      expect(rs.updateRecord 2, {isClaimed: no, joinedAt: null}).to.deep.equal upd
+      expect(rs.updateRecord 2, {isClaimed: no, joinedAt: undefined, dummy: null}).to.deep.equal upd
       expect(rs.readRecord 2).to.deep.equal upd
 
 
@@ -140,11 +120,11 @@ describe 'RecordStore', ->
       stub = sinon.stub rs, 'writeJSON'
       # change some stuff
       rs.updateRecord(1, name: "Julian")
-      orig[0].name = "Julian"
+      orig.records[0].name = "Julian"
       rs.deleteRecord(6)
-      orig.pop()
+      orig.records.pop()
       rs.createRecord name: "Bam"
-      orig.push id: 7, name: "Bam"
+      orig.records.push id: 7, name: "Bam"
       rs.save()
       expect(stub.calledOnce).to.be.true
       expect(stub.getCall(0).args[0]).to.deep.equal orig

@@ -2,7 +2,7 @@ sysPath = require 'path'
 FlaggedRecordStore = require '../../lib/FlaggedRecordStore'
 
 newRecordStore = (path, options) ->
-  new FlaggedRecordStore sysPath.join(__dirname, '..', 'data', "#{ path }.json"), options
+  new FlaggedRecordStore jsonPath(path), options
 
 describe 'FlaggedRecordStore', ->
   rs = null
