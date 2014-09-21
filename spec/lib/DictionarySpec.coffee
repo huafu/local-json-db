@@ -140,6 +140,12 @@ describe 'Dictionary', ->
         {index: 0, key: 'a', value: 'blue'}
       ]
 
+    it 'maps entries'
+
+    it 'collects entries'
+
+
+
   describe 'with stringified keys', ->
     dict = null
     beforeEach ->

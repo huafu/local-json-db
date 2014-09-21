@@ -91,6 +91,27 @@ class Dictionary extends CoreObject
   unset: (key) ->
     @_unset(@entryForKey(key).index)
 
+  map: (callback) ->
+    if utils.isString(callback)
+      cb = (e) -> e.value?[callback]
+    else
+      cb = callback
+    res = []
+    for i in [0..@_keys.length]
+      res.push cb(@_entryForIndex(i), @)
+    res
+
+  collect: (callback) ->
+    if utils.isString(callback)
+      cb = (e) -> e.value?[callback]
+    else
+      cb = callback
+    res = []
+    for i in [0..@_keys.length]
+      if (d = cb @_entryForIndex(i), @)?
+        res.push d
+    res
+
   entryForKey: (key) ->
     @_entryForIndex @_keys.indexOf(@_stringifyKey key)
 
