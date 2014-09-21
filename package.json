@@ -4,7 +4,8 @@
   "description": "Local JSON database with overlays to be used as fixtures database",
   "main": "index.js",
   "scripts": {
-    "test": "mkdir -p coverage && COVERAGE=1 multi='spec=- xunit=coverage/xunit.xml html-cov=coverage/html-cov.html json-cov=coverage/json-cov.json mocha-lcov-reporter=coverage/coverage.lcov' ./node_modules/.bin/mocha --require coffee-script/register --require spec/loader-coverage.js --reporter mocha-multi --ui bdd spec/lib/*Spec.coffee spec/*Spec.coffee"
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register --require coffee-script/register --require spec/loader.coffee --reporter spec --ui bdd spec/lib/*Spec.coffee spec/*Spec.coffee",
+    "cover": "mkdir -p coverage && COVERAGE=1 multi='spec=- html-cov=coverage/html-cov.html json-cov=coverage/json-cov.json mocha-lcov-reporter=coverage/coverage.lcov' ./node_modules/.bin/mocha --require coffee-script/register --require spec/loader-coverage.js --reporter mocha-multi --ui bdd spec/lib/*Spec.coffee spec/*Spec.coffee"
   },
   "repository": {
     "type": "git",
