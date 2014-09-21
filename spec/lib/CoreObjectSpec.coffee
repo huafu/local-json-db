@@ -1,5 +1,4 @@
-utils = require '../../lib/utils'
-CoreObject = require '../../lib/CoreObject'
+{utils, CoreObject} = lib
 
 class Level1 extends CoreObject
 class Level2 extends Level1

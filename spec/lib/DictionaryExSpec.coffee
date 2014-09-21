@@ -1,4 +1,4 @@
-DictionaryEx = require '../../lib/DictionaryEx'
+{DictionaryEx} = lib
 
 describe 'DictionaryEx', ->
   dict = null
@@ -57,6 +57,29 @@ describe 'DictionaryEx', ->
     dict.unset 'a'
     expect(dict.deletedAt 'a').to.equal now
     expect(dict.exists 'a').to.be.false
+
+  it 'updates creation date', ->
+    now = time() + 1000
+    dict.createdAt 'a', now
+    expect(dict.createdAt 'a').to.equal now
+    expect(-> dict.createdAt 'dummy', now).to.throw()
+
+  it 'updates update date', ->
+    now = time() + 1000
+    dict.updatedAt 'a', now
+    expect(dict.updatedAt 'a').to.equal now
+    expect(-> dict.updatedAt 'dummy', now).to.throw()
+
+  it 'updates deletion date', ->
+    dict.unset('a')
+    expect(dict.deletedAt 'a').to.equal now
+    now = time() + 1000
+    dict.deletedAt 'a', now
+    expect(dict.deletedAt 'a').to.equal now
+    expect(-> dict.deletedAt 'dummy', now).to.throw()
+    expect(-> dict.deletedAt yes, now).to.not.throw()
+    expect(dict.deletedAt yes).to.equal now
+    expect(dict.exists yes).to.be.false
 
   it 'forgets deleted date after re-creation', ->
     now = time() + 1000

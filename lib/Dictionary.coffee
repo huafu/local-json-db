@@ -91,11 +91,11 @@ class Dictionary extends CoreObject
   unset: (key) ->
     @_unset(@entryForKey(key).index)
 
-  entryForKey: (key) ->
-    @_entryForIndex @_keys.indexOf(@_stringifyKey key)
+  entryForKey: (key, args...) ->
+    @_entryForIndex @_keys.indexOf(@_stringifyKey key), args...
 
-  entryForValue: (value) ->
-    @_entryForIndex @_values.indexOf(value)
+  entryForValue: (value, args...) ->
+    @_entryForIndex @_values.indexOf(value), args...
 
   entriesForValue: (value) ->
     @_entryForIndex(i) for v, i in @_values when v is value

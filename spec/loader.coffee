@@ -1,10 +1,10 @@
 sysPath = require 'path'
 _ = require 'lodash'
 
-GLOBAL.expect = require('chai').expect
-GLOBAL.sinon = require 'sinon'
+GLOBAL.expect = expect = require('chai').expect
+GLOBAL.sinon = sinon = require 'sinon'
 
-GLOBAL.jsonPath = (path, resolve = no) ->
+GLOBAL.jsonPath = jsonPath = (path, resolve = no) ->
   unless typeof path is 'string'
     path = sysPath.join path...
   res = sysPath.join(__dirname, 'data', "#{ path }.json")
@@ -12,7 +12,7 @@ GLOBAL.jsonPath = (path, resolve = no) ->
     res = sysPath.resolve res
   res
 
-GLOBAL.jsonRecord = (model, id) ->
+GLOBAL.jsonRecord = jsonRecord = (model, id) ->
   path = jsonPath(model.split '.')
   data = require(path)
   if id
@@ -21,3 +21,5 @@ GLOBAL.jsonRecord = (model, id) ->
   else
     return _.cloneDeep(data)
   return undefined
+
+GLOBAL.lib = lib = require '..'

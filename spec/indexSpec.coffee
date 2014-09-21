@@ -1,9 +1,8 @@
-pkg = require '..'
-
 describe 'local-json-db', ->
   it 'should export public API', ->
-    expect(Object.keys pkg).to.deep.equal ['utils', 'Dictionary', 'DictionaryEx', 'RecordStore']
-    expect(pkg.utils).to.equal require('../lib/utils')
-    expect(pkg.Dictionary).to.equal require('../lib/Dictionary')
-    expect(pkg.DictionaryEx).to.equal require('../lib/DictionaryEx')
-    expect(pkg.RecordStore).to.equal require('../lib/RecordStore')
+    expect(Object.keys lib).to.deep.equal ['utils', 'CoreObject', 'Dictionary', 'DictionaryEx', 'RecordStore']
+    expect(lib.utils).to.equal require('../lib/utils')
+    expect(lib.CoreObject).to.equal require('../lib/CoreObject')
+    expect(lib.Dictionary).to.equal require('../lib/Dictionary')
+    expect(lib.DictionaryEx).to.equal require('../lib/DictionaryEx')
+    expect(lib.RecordStore).to.equal require('../lib/RecordStore')

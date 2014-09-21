@@ -24,19 +24,38 @@ class DictionaryEx extends Dictionary
   deletedExists: (key) ->
     @_deleted.exists key
 
-  entryForKey: (key) ->
+  entryForKey: (key, cloneMetadata = yes) ->
     if (e = super).index is -1 and (deleted = @_deleted.entryForKey key).index isnt -1
-      e.metadata = utils.copy deleted.value
+      e.metadata = deleted.value
+      e.metadata = utils.copy e.metadata if cloneMetadata
     e
 
-  createdAt: (key) ->
-    @entryForKey(key).metadata?.createdAt
+  createdAt: (key, date) ->
+    e = @entryForKey(key, no)
+    if arguments.length is 2
+      @assert (e.index >= 0), "no entry for key #{key}"
+      e.metadata.createdAt = @_parseDate date
+    else
+      e.metadata?.createdAt
 
-  updatedAt: (key) ->
-    @entryForKey(key).metadata?.updatedAt
+  updatedAt: (key, date) ->
+    e = @entryForKey(key, no)
+    if arguments.length is 2
+      @assert (e.index >= 0), "no entry for key #{key}"
+      e.metadata.updatedAt = @_parseDate date
+    else
+      e.metadata?.updatedAt
 
-  deletedAt: (key) ->
-    @entryForKey(key).metadata?.deletedAt
+  deletedAt: (key, date) ->
+    e = @entryForKey(key, no)
+    if arguments.length is 2
+      if e.index >= 0
+        @_unset(e.index, yes, date).metadata.deletedAt
+      else
+        @assert (e.metadata), "no entry for key #{key}"
+        e.metadata.deletedAt = @_parseDate date
+    else
+      e.metadata?.deletedAt
 
   toKeyValuePairs: (keys = {}, _complete = ->) ->
     utils.defaults keys, {metadata: 'metadata'}
@@ -50,17 +69,17 @@ class DictionaryEx extends Dictionary
     else
       @_deleted.toKeyValuePairs value: 'metadata'
 
-  _unset: (index, emitEvent = yes) ->
+  _unset: (index, emitEvent = yes, _now = null) ->
     e = super index, no
     if e.index >= 0
-      e.metadata.deletedAt = Date.now()
+      e.metadata.deletedAt = @_parseDate _now
       @_deleted.set e.key, utils.copy(e.metadata)
       @_metadata.splice e.index, 1
       @emit('entry.unset', e) if emitEvent
     e
 
-  _set: (index, key, value, emitEvent = yes) ->
-    ts = Date.now()
+  _set: (index, key, value, emitEvent = yes, _now = null) ->
+    ts = @_parseDate _now
     e = super index, key, value, no
     unless e.metadata
       @_metadata[e.index] = utils.copy(e.metadata = {createdAt: ts, updatedAt: ts})
@@ -70,11 +89,20 @@ class DictionaryEx extends Dictionary
     @emit('entry.set', e) if emitEvent
     e
 
-  _entryForIndex: (index) ->
-    e = super index, no
+  _entryForIndex: (index, cloneMetadata = yes) ->
+    e = super index
     if e.index isnt -1
-      e.metadata = utils.copy @_metadata[e.index]
+      e.metadata = @_metadata[e.index]
+      e.metadata = utils.copy e.metadata if cloneMetadata
     e
+
+  _parseDate: (date) ->
+    if date is null
+      Date.now()
+    else if utils.isNumber(date)
+      Math.round(date)
+    else
+      (new Date date).getTime()
 
 
 

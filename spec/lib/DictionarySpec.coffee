@@ -1,4 +1,4 @@
-Dictionary = require '../../lib/Dictionary'
+{Dictionary} = lib
 
 describe 'Dictionary', ->
 
@@ -143,7 +143,7 @@ describe 'Dictionary', ->
   describe 'with stringified keys', ->
     dict = null
     beforeEach ->
-      dict = newDict({}, {stringifyKeys: yes})
+      dict = new Dictionary({}, {stringifyKeys: yes})
       dict.set 'a', 'blue'
       dict.set yes, 'yellow'
 
@@ -283,7 +283,7 @@ describe 'Dictionary', ->
   describe 'with `undefinedUnsets`', ->
     dict = null
     beforeEach ->
-      dict = newDict({}, {undefinedUnsets: yes})
+      dict = new Dictionary({}, {undefinedUnsets: yes})
       dict.set 'a', 'blue'
       dict.set yes, 'yellow'
 

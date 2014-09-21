@@ -1,4 +1,4 @@
-utils = require '../../lib/utils'
+{utils} = lib
 
 describe 'utils', ->
 
