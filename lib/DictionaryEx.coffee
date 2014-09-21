@@ -24,6 +24,11 @@ class DictionaryEx extends Dictionary
   deletedExists: (key) ->
     @_deleted.exists key
 
+  deleted: (key, deletedAt = null) ->
+    k = @_stringifyKey key
+    @assert (k not in @_keys and k not in @_deleted._keys), "entry already exists, use `deletedAt()` instead"
+    @_deleted.set k, {deletedAt: @_parseDate(deletedAt)}
+
   entryForKey: (key, cloneMetadata = yes) ->
     if (e = super).index is -1 and (deleted = @_deleted.entryForKey key).index isnt -1
       e.metadata = deleted.value
@@ -73,7 +78,7 @@ class DictionaryEx extends Dictionary
     e = super index, no
     if e.index >= 0
       e.metadata.deletedAt = @_parseDate _now
-      @_deleted.set e.key, utils.copy(e.metadata)
+      @_deleted.set e.key, {deletedAt: e.metadata.deletedAt}
       @_metadata.splice e.index, 1
       @emit('entry.unset', e) if emitEvent
     e

@@ -95,6 +95,17 @@ describe 'DictionaryEx', ->
     dict.deletedUnset 'a'
     expect(dict.deletedExists 'a').to.be.false
 
+  it 'registers a unknown entry as deleted', ->
+    dict.unset('a')
+    expect(-> dict.deleted('a')).to.throw()
+    expect(-> dict.deleted(yes)).to.throw()
+    now = time() + 1000
+    now2 = time() + 500
+    dict.deleted 'dummy1'
+    expect(dict.deletedAt 'dummy1').to.equal now
+    dict.deleted 'dummy2', now2
+    expect(dict.deletedAt 'dummy2').to.equal now2
+
   it 'exports to key value pairs', ->
     m = {createdAt: now, updatedAt: now}
     expect(dict.toKeyValuePairs()).to.deep.equal [
@@ -114,8 +125,6 @@ describe 'DictionaryEx', ->
     expect(spy.getCall(1).args).to.deep.equal [{key: yes, value: 'yellow', metadata: m}, 1]
 
   it 'exports deleted entries', ->
-    m = createdAt: now, updatedAt: now
     now = time() + 1000
     dict.unset 'a'
-    m.deletedAt = now
-    expect(dict.deletedMetadata()).to.deep.equal [key: 'a', metadata: m]
+    expect(dict.deletedMetadata()).to.deep.equal [key: 'a', metadata: {deletedAt: now}]
