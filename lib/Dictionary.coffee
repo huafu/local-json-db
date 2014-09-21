@@ -48,13 +48,16 @@ class Dictionary extends CoreObject
       res[k] = @_values[i]
     res
 
-  toKeyValuePairs: ->
+  toKeyValuePairs: (keys = {}, _complete = ->) ->
+    utils.defaults keys, {key: 'key', value: 'value', index: no}
     res = []
     for k, i in @_keys
-      res.push {
-        key: k
-        value: @_values[i]
-      }
+      o = {}
+      o[keys.index] = i if keys.index
+      o[keys.key] = k if keys.key
+      o[keys.value] = @_values[i] if keys.value
+      _complete o, i
+      res.push o
     res
 
   keys: ->
@@ -111,7 +114,7 @@ class Dictionary extends CoreObject
     else
       index = -1
       e = {index}
-    Object.freeze e
+    e
 
   _unset: (index, emitEvent = yes) ->
     e = @_entryForIndex index

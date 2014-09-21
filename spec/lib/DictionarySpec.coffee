@@ -83,6 +83,16 @@ describe 'Dictionary', ->
       ,
         key: yes, value: 'yellow'
       ]
+      expect(dict.toKeyValuePairs(key: 'k', value: no, index: 'i')).to.deep.equal [
+        k: 'a', i: 0
+      ,
+        k: yes, i: 1
+      ]
+      spy = sinon.spy()
+      dict.toKeyValuePairs(null, spy)
+      expect(spy.callCount).to.equal 2
+      expect(spy.getCall(0).args).to.deep.equal [{key: 'a', value: 'blue'}, 0]
+      expect(spy.getCall(1).args).to.deep.equal [{key: yes, value: 'yellow'}, 1]
 
     it 'gets all keys', ->
       expect(dict.keys()).to.deep.equal ['a', yes]

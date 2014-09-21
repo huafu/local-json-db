@@ -1,11 +1,14 @@
 # be sure to import in good order
 utils = require './utils'
 CoreObject = require './CoreObject'
+Dictionary = require './Dictionary'
+DictionaryEx = require './DictionaryEx'
 RecordStore = require './RecordStore'
-FlaggedRecordStore = require './FlaggedRecordStore'
 
 # export our public API
 module.exports = {
   utils
-  RecordStore: FlaggedRecordStore
+  Dictionary
+  DictionaryEx
+  RecordStore
 }
