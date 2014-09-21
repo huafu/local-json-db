@@ -84,6 +84,12 @@ class RecordStore extends CoreObject
     @_records.clear()
     @
 
+  ids: (includeDeleted = no) ->
+    res = @_records.keys()
+    if includeDeleted
+      res = res.concat @_records.deletedKeys()
+    res
+
   importRecords: (records) ->
     for record in records
       m = @_importRecord record
@@ -98,6 +104,10 @@ class RecordStore extends CoreObject
         @assert (not @_records.deletedExists m.id), "record with id #{m.id} already flagged as deleted"
         @_records.deleted(m.id, m.metadata.deletedAt ? null)
     @
+
+  exportRecords: ->
+    records = []
+
 
   assertValidRecord: (record, mustHaveId = no) ->
     @assert (record and utils.isObject(record)), "not a valid record: #{record}"

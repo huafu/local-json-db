@@ -64,4 +64,21 @@ describe 'RecordStore', ->
       expect(rs.readRecord 1).to.deep.equal {id: 1, name: 'Mike'}
       expect(-> rs.importRecrods [{name: 'Huafu'}]).to.throw()
 
+    it 'exports records', ->
+      records = [
+        {id: 1, name: 'Mike'}
+        {id: 3, name: 'Luke'}
+        {id: 'stuff', name: 'John'}
+      ]
+      rs.importRecords records
+      rs.updateRecord 1, name: 'Luke'
+      records[0].name = 'Luke'
+      rs.deleteRecord 3
+      records.splice 1, 1
+      rs.createRecord {name: 'Huafu'}
+      records.push {id: 4, name: 'Huafu'}
+      expect(rs.exportRecords()).to.deep.equal records
+
+    it 'ids'
+
 
