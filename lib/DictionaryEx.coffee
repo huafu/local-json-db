@@ -15,6 +15,25 @@ class DictionaryEx extends Dictionary
     @lockProperties '_metadata', '_deleted'
     super
 
+  clear: (withDeleted = yes) ->
+    @deletedClear() if withDeleted
+    @_clearing = yes
+    super
+    delete @_clearing
+    @
+
+  count: (withDeleted = no) ->
+    res = super()
+    res += @_deleted.length if withDeleted
+    res
+
+  deletedCount: ->
+    @_deleted.count()
+
+  deletedClear: ->
+    @_deleted.clear()
+    @
+
   deletedKeys: ->
     @_deleted.keys()
 
@@ -76,16 +95,20 @@ class DictionaryEx extends Dictionary
   _unset: (index, emitEvent = yes, _now = null) ->
     e = super index, no
     if e.index >= 0
-      de = @_deleted.set e.key, {deletedAt: @_parseDate _now}
-      @_metadata.splice e.index, 1
-      Object.defineProperty(
-        e.metadata,
-        'deletedAt',
-        {
-          get: -> de.deletedAt
-          set: (date) => de.deletedAt = @_parseDate(date)
-        }
-      )
+      if @_clearing
+        @_metadata.splice e.index, 1
+        e.metadata.deletedAt = @_parseDate _now
+      else
+        de = @_deleted.set e.key, {deletedAt: @_parseDate _now}
+        @_metadata.splice e.index, 1
+        Object.defineProperty(
+          e.metadata,
+          'deletedAt',
+          {
+            get: -> de.deletedAt
+            set: (date) => de.deletedAt = @_parseDate(date)
+          }
+        )
       @emit('entry.unset', e) if emitEvent
     e
 

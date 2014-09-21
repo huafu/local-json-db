@@ -128,3 +128,17 @@ describe 'DictionaryEx', ->
     now = time() + 1000
     dict.unset 'a'
     expect(dict.deletedMetadata()).to.deep.equal [key: 'a', metadata: {deletedAt: now}]
+
+  it 'counts all entries'
+
+  it 'counts deleted entries'
+
+  it 'clears all entries', ->
+    dict.deleted('o')
+    dict.clear no
+    expect(dict.deletedExists 'o').to.be.true
+    expect(dict.count()).to.equal 0
+    dict.clear()
+    expect(dict.deletedExists('o')).to.be.false
+
+  it 'clears deleted entries'
