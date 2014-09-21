@@ -32,6 +32,7 @@ node_modules
 
 # IDEs
 .idea
+local-json-db.sublime-workspace
 
 # temporary data
 tmp/
