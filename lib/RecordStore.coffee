@@ -19,50 +19,60 @@ class RecordStore extends CoreObject
     @_lastId = 0
     @lockProperties '_records', '_config'
     # create a new method instead of using `bind` to be sure we have only the record given as attribute
-    utils.map records, (record) => @createRecord(record)
+    @importRecords records
 
   readRecord: (id) ->
     @assertValidId id
-    if (r = @_records.get(id))
-      r = @copyRecord r
-    r
+    e = @_records.entryForKey(id)
+    @_exportRecord e.value, e.metadata
 
   createRecord: (record = {}) ->
     @assertValidRecord record
-    if (id = record.id)?
+    m = @_importRecord record
+    @assert m.record, "trying to create a record flagged as deleted"
+    if (id = m.id)?
       @assertIdExists id, no
       if /^[0-9]$/.test(str = "#{id}") and (int = parseInt(str, 10)) > @_lastId
         @_lastId = int
     else
-      id = record.id ?= ++@_lastId
-    @_records.set id, @copyRecord(record)
+      id = m.record.id ?= ++@_lastId
+    e = @_records.set id, m.record
+    e.metadata.createdAt = m.metadata.createdAt if m.metadata.createdAt
+    e.metadata.updatedAt = m.metadata.updatedAt if m.metadata.updatedAt
     @emit 'record.created', record
     record
 
   updateRecord: (id, record) ->
     if arguments.length is 1
       record = id
-      id = record.id
     else
       @assert(
         not record.id? or "#{id}" is "#{record.id}",
         "the id given `#{id}` does not match the id in the given record `#{record.id}`"
       )
+      record.id = id
     @assertValidRecord record
-    @assertIdExists id
-    rec = @_records.get id
-    for own key, value of record when key isnt 'id'
+    m = @_importRecord record
+    @assert m.record, "trying to update a record flagged as deleted"
+    @assertIdExists m.id
+    rec = (e = @_records.entryForKey m.id).value
+    for own key, value of m.record when key isnt 'id'
       if value is undefined
         delete rec[key]
       else
         rec[key] = value
-    rec = @copyRecord rec
+    e.metadata.createdAt = m.metadata.createdAt if m.metadata.createdAt
+    e.metadata.updatedAt = m.metadata.updatedAt if m.metadata.updatedAt
+    rec = @_exportRecord rec, e.metadata
     @emit 'record.updated', rec
     rec
 
-  deleteRecord: (id) ->
+  deleteRecord: (id, deletedAt = null) ->
     @assertIdExists id
-    rec = @_records.unsets(id).value
+    rec = @_records.get(id)
+    e = @_records.unset id
+    e.metadata.deletedAt = deletedAt if deletedAt
+    rec = @_exportRecord rec, e.metadata
     @emit 'record.deleted', rec
     rec
 
@@ -83,7 +93,7 @@ class RecordStore extends CoreObject
       @assert (not test), "a record with id `#{id}` already exists"
     @
 
-  copyRecord: (obj) ->
+  _copyRecord: (obj) ->
     res = utils.copy obj
     if res?.id?
       utils.lock res, 'id'
@@ -91,7 +101,7 @@ class RecordStore extends CoreObject
 
   _exportRecord: (record, metadata, keys = @_config) ->
     if record?
-      rec = @copyRecord record
+      rec = @_copyRecord record
       rec[k] = metadata.createdAt if (k = keys.createdAtKey)
       rec[k] = metadata.updatedAt if (k = keys.updatedAtKey)
       rec[k] = metadata.deletedAt if (k = keys.deletedAtKey)
@@ -101,7 +111,7 @@ class RecordStore extends CoreObject
   _importRecord: (record, keys = @_config) ->
     m = {
       id: null
-      record: @copyRecord record
+      record: @_copyRecord record
       metadata: {}
     }
     if record?.id?
