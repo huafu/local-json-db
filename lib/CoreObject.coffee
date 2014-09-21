@@ -10,6 +10,7 @@ class CoreObject extends EventEmitter
       items.unshift level
       level = 'debug'
     utils.log "[#{@className()}#{if arguments.callee.caller is @:: log then '#' else '.'}log][#{level}]", items...
+    @
 
   @assert: (expression, message) ->
     unless expression
@@ -26,9 +27,11 @@ class CoreObject extends EventEmitter
 
   log: (level, items...) ->
     @constructor.log arguments...
+    @
 
   assert: (expression, message) ->
     @constructor.assert arguments...
+    @
 
   lockProperties: (names...) ->
     for name in names

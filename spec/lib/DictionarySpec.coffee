@@ -1,14 +1,11 @@
 Dictionary = require '../../lib/Dictionary'
 
-newDict = (data, options) ->
-  new Dictionary(data, options)
-
 describe 'Dictionary', ->
 
   describe 'with default options', ->
     dict = null
     beforeEach ->
-      dict = newDict()
+      dict = new Dictionary()
       dict.set 'a', 'blue'
       dict.set yes, 'yellow'
 
