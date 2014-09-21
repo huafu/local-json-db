@@ -129,9 +129,19 @@ describe 'DictionaryEx', ->
     dict.unset 'a'
     expect(dict.deletedMetadata()).to.deep.equal [key: 'a', metadata: {deletedAt: now}]
 
-  it 'counts all entries'
+  it 'counts all entries', ->
+    dict.unset 'a'
+    expect(dict.count()).to.equal 1
+    expect(dict.count(yes)).to.equal 2
+    dict.deleted 'p'
+    expect(dict.count()).to.equal 1
+    expect(dict.count(yes)).to.equal 3
 
-  it 'counts deleted entries'
+  it 'counts deleted entries', ->
+    dict.unset 'a'
+    expect(dict.deletedCount()).to.equal 1
+    dict.deleted 'p'
+    expect(dict.deletedCount()).to.equal 2
 
   it 'clears all entries', ->
     dict.deleted('o')
@@ -141,4 +151,9 @@ describe 'DictionaryEx', ->
     dict.clear()
     expect(dict.deletedExists('o')).to.be.false
 
-  it 'clears deleted entries'
+  it 'clears deleted entries', ->
+    dict.unset 'a'
+    dict.deleted 'p'
+    expect(dict.deletedCount()).to.equal 2
+    dict.deletedClear()
+    expect(dict.deletedCount()).to.equal 0
