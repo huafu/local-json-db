@@ -4,7 +4,7 @@
   "description": "Local JSON database with overlays to be used as fixtures database",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register --require coffee-script/register --require spec/loader.coffee --reporter spec --ui bdd spec/**/*Spec.coffee spec/*Spec.coffee"
+    "test": "mkdir -p coverage && COVERAGE=1 multi='spec=- xunit=coverage/xunit.xml html-cov=coverage/html-cov.html json-cov=coverage/json-cov.json mocha-lcov-reporter=coverage/coverage.lcov' ./node_modules/.bin/mocha --require coffee-script/register --require spec/loader-coverage.js --reporter mocha-multi --ui bdd spec/lib/*Spec.coffee spec/*Spec.coffee"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,10 @@
   "homepage": "https://github.com/huafu/local-json-db",
   "devDependencies": {
     "chai": "^1.9.1",
+    "coffee-coverage": "^0.4.2",
     "mocha": "^1.21.4",
+    "mocha-lcov-reporter": "0.0.1",
+    "mocha-multi": "^0.4.1",
     "sinon": "^1.10.3"
   },
   "dependencies": {
