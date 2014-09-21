@@ -93,6 +93,19 @@ class RecordStore extends CoreObject
       @assert (not test), "a record with id `#{id}` already exists"
     @
 
+  importRecords: (records) ->
+    for record in records
+      m = @_importRecord record
+      @assertIdExists m.id, no
+      if m.record
+        e = @_records.set m.id, m.record
+        e.metadata.createdAt = m.metadata.createdAt if m.metadata.createdAt
+        e.metadata.updatedAt = m.metadata.updatedAt if m.metadata.updatedAt
+      else
+        @assert (not @_records.deletedExists m.id), "record with id #{m.id} already flagged as deleted"
+        @_records.deleted(m.id, m.metadata.deletedAt ? null)
+    @
+
   _copyRecord: (obj) ->
     res = utils.copy obj
     if res?.id?
