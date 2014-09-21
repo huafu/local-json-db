@@ -32,13 +32,14 @@ class RecordStore extends CoreObject
     @assert m.record, "trying to create a record flagged as deleted"
     if (id = m.id)?
       @assertIdExists id, no
-      if /^[0-9]$/.test(str = "#{id}") and (int = parseInt(str, 10)) > @_lastId
+      if /^[0-9]+$/.test(str = "#{id}") and (int = parseInt(str, 10)) > @_lastId
         @_lastId = int
     else
       id = m.record.id ?= ++@_lastId
     e = @_records.set id, m.record
     e.metadata.createdAt = m.metadata.createdAt if m.metadata.createdAt
     e.metadata.updatedAt = m.metadata.updatedAt if m.metadata.updatedAt
+    record = @_exportRecord m.record, m.metadata
     @emit 'record.created', record
     record
 
@@ -76,6 +77,28 @@ class RecordStore extends CoreObject
     @emit 'record.deleted', rec
     rec
 
+  countRecords: ->
+    @_records.count()
+
+  reset: ->
+    @_records.clear()
+    @
+
+  importRecords: (records) ->
+    for record in records
+      m = @_importRecord record
+      @assertIdExists m.id, no
+      if /^[0-9]+$/.test(sid = "#{m.id}") and (int = parseInt sid, 10) > @_lastId
+        @_lastId = int
+      if m.record
+        e = @_records.set m.id, m.record
+        e.metadata.createdAt = m.metadata.createdAt if m.metadata.createdAt
+        e.metadata.updatedAt = m.metadata.updatedAt if m.metadata.updatedAt
+      else
+        @assert (not @_records.deletedExists m.id), "record with id #{m.id} already flagged as deleted"
+        @_records.deleted(m.id, m.metadata.deletedAt ? null)
+    @
+
   assertValidRecord: (record, mustHaveId = no) ->
     @assert (record and utils.isObject(record)), "not a valid record: #{record}"
     @assertValidId(record.id) if mustHaveId
@@ -93,19 +116,6 @@ class RecordStore extends CoreObject
       @assert (not test), "a record with id `#{id}` already exists"
     @
 
-  importRecords: (records) ->
-    for record in records
-      m = @_importRecord record
-      @assertIdExists m.id, no
-      if m.record
-        e = @_records.set m.id, m.record
-        e.metadata.createdAt = m.metadata.createdAt if m.metadata.createdAt
-        e.metadata.updatedAt = m.metadata.updatedAt if m.metadata.updatedAt
-      else
-        @assert (not @_records.deletedExists m.id), "record with id #{m.id} already flagged as deleted"
-        @_records.deleted(m.id, m.metadata.deletedAt ? null)
-    @
-
   _copyRecord: (obj) ->
     res = utils.copy obj
     if res?.id?
@@ -118,6 +128,7 @@ class RecordStore extends CoreObject
       rec[k] = metadata.createdAt if (k = keys.createdAtKey)
       rec[k] = metadata.updatedAt if (k = keys.updatedAtKey)
       rec[k] = metadata.deletedAt if (k = keys.deletedAtKey)
+      rec
     else
       undefined
 
