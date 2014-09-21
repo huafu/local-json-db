@@ -1,6 +1,6 @@
 {RecordStore} = lib
 
-describe.only 'RecordStore', ->
+describe 'RecordStore', ->
   rs = null
   time = Date.now.bind(Date)
   now = time()
