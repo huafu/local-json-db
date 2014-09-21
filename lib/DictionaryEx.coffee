@@ -29,14 +29,13 @@ class DictionaryEx extends Dictionary
     @assert (k not in @_keys and k not in @_deleted._keys), "entry already exists, use `deletedAt()` instead"
     @_deleted.set k, {deletedAt: @_parseDate(deletedAt)}
 
-  entryForKey: (key, cloneMetadata = yes) ->
+  entryForKey: (key) ->
     if (e = super).index is -1 and (deleted = @_deleted.entryForKey key).index isnt -1
       e.metadata = deleted.value
-      e.metadata = utils.copy e.metadata if cloneMetadata
     e
 
   createdAt: (key, date) ->
-    e = @entryForKey(key, no)
+    e = @entryForKey key
     if arguments.length is 2
       @assert (e.index >= 0), "no entry for key #{key}"
       e.metadata.createdAt = @_parseDate date
@@ -44,7 +43,7 @@ class DictionaryEx extends Dictionary
       e.metadata?.createdAt
 
   updatedAt: (key, date) ->
-    e = @entryForKey(key, no)
+    e = @entryForKey key
     if arguments.length is 2
       @assert (e.index >= 0), "no entry for key #{key}"
       e.metadata.updatedAt = @_parseDate date
@@ -52,7 +51,7 @@ class DictionaryEx extends Dictionary
       e.metadata?.updatedAt
 
   deletedAt: (key, date) ->
-    e = @entryForKey(key, no)
+    e = @entryForKey key
     if arguments.length is 2
       if e.index >= 0
         @_unset(e.index, yes, date).metadata.deletedAt
@@ -65,7 +64,7 @@ class DictionaryEx extends Dictionary
   toKeyValuePairs: (keys = {}, _complete = ->) ->
     utils.defaults keys, {metadata: 'metadata'}
     super keys, (o, i) =>
-      o[keys.metadata] = utils.copy(@_metadata[i]) if keys.metadata
+      o[keys.metadata] = @_metadata[i] if keys.metadata
       _complete o, i
 
   deletedMetadata: (asObject = no) ->
@@ -77,9 +76,16 @@ class DictionaryEx extends Dictionary
   _unset: (index, emitEvent = yes, _now = null) ->
     e = super index, no
     if e.index >= 0
-      e.metadata.deletedAt = @_parseDate _now
-      @_deleted.set e.key, {deletedAt: e.metadata.deletedAt}
+      de = @_deleted.set e.key, {deletedAt: @_parseDate _now}
       @_metadata.splice e.index, 1
+      Object.defineProperty(
+        e.metadata,
+        'deletedAt',
+        {
+          get: -> de.deletedAt
+          set: (date) => de.deletedAt = @_parseDate(date)
+        }
+      )
       @emit('entry.unset', e) if emitEvent
     e
 
@@ -87,18 +93,17 @@ class DictionaryEx extends Dictionary
     ts = @_parseDate _now
     e = super index, key, value, no
     unless e.metadata
-      @_metadata[e.index] = utils.copy(e.metadata = {createdAt: ts, updatedAt: ts})
+      @_metadata[e.index] = e.metadata = {createdAt: ts, updatedAt: ts}
       @_deleted.unset key
     else
-      @_metadata[e.index].updatedAt = e.metadata.updatedAt = ts
+      e.metadata.updatedAt = ts
     @emit('entry.set', e) if emitEvent
     e
 
-  _entryForIndex: (index, cloneMetadata = yes) ->
+  _entryForIndex: (index) ->
     e = super index
     if e.index isnt -1
       e.metadata = @_metadata[e.index]
-      e.metadata = utils.copy e.metadata if cloneMetadata
     e
 
   _parseDate: (date) ->
