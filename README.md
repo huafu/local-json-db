@@ -1,4 +1,4 @@
-local-json-db [![Build Status](https://travis-ci.org/huafu/local-json-db.svg?branch=master)](https://travis-ci.org/huafu/local-json-db)
+local-json-db [![Build Status](https://travis-ci.org/huafu/local-json-db.svg?branch=master)](https://travis-ci.org/huafu/local-json-db) [![NPM version](https://badge.fury.io/js/local-json-db.png)](http://badge.fury.io/js/local-json-db)
 =============
 
 Local JSON database tools with override capabilities for local environment purposes
