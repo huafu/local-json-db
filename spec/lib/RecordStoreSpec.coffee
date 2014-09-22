@@ -195,9 +195,9 @@ describe 'RecordStore', ->
 
     it 'updates a record', ->
       rs.createRecord name: 'Huafu'
-      expect(rs.updateRecord 1, u: ts).to.deep.equal {id: 1, name: 'Huafu', c: now, u: ts}
-      expect(rs.updateRecord 1, c: ts).to.deep.equal {id: 1, name: 'Huafu', c: ts, u: now}
-      expect(rs.updateRecord 1, c: ts, u: ts).to.deep.equal {id: 1, name: 'Huafu', c: ts, u: ts}
+      expect(rs.updateRecord 1, {u: ts}).to.deep.equal {id: 1, name: 'Huafu', c: now, u: ts}
+      expect(rs.updateRecord 1, {c: ts}).to.deep.equal {id: 1, name: 'Huafu', c: ts, u: now}
+      expect(rs.updateRecord 1, {c: ts, u: ts}).to.deep.equal {id: 1, name: 'Huafu', c: ts, u: ts}
 
     it 'deletes a record', ->
       rs.createRecord name: 'Huafu'
@@ -290,7 +290,7 @@ describe 'RecordStore', ->
       stub = sinon.stub rs, 'emit'
       rs.deleteRecord 1
       expect(stub.calledOnce).to.be.true
-      expect(stub.firstCall.args).to.deep.equal ['record.deleted', {id: 1, name: 'Huafu', c: now, u: now, d: now}]
+      expect(stub.firstCall.args).to.deep.equal ['record.deleted', {id: 1, name: 'Huafu', d: now}]
       stub.restore()
 
 

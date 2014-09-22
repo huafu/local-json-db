@@ -130,9 +130,11 @@ class RecordStore extends CoreObject
   _exportRecord: (record, metadata, keys = @_config) ->
     if record?
       rec = @_copyRecord record
-      rec[k] = metadata.createdAt if (k = keys.createdAtKey)
-      rec[k] = metadata.updatedAt if (k = keys.updatedAtKey)
-      rec[k] = metadata.deletedAt if (k = keys.deletedAtKey)
+      if metadata.deletedAt
+        rec[k] = metadata.deletedAt if (k = keys.deletedAtKey)
+      else
+        rec[k] = metadata.createdAt if (k = keys.createdAtKey)
+        rec[k] = metadata.updatedAt if (k = keys.updatedAtKey)
       rec
     else
       undefined
@@ -164,6 +166,7 @@ class RecordStore extends CoreObject
         delete rec[key]
       else
         rec[key] = value
+    @_records.set meta.id, rec
     e.metadata.createdAt = meta.metadata.createdAt if meta.metadata.createdAt
     e.metadata.updatedAt = meta.metadata.updatedAt if meta.metadata.updatedAt
     rec = @_exportRecord rec, e.metadata
