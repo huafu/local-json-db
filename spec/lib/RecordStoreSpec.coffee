@@ -103,5 +103,15 @@ describe 'RecordStore', ->
       rs.reset()
       expect(rs.countRecords()).to.equal 0
 
+    it 'finds whether an id exists', ->
+      rs.createRecord name: 'Huafu'
+      expect(rs.idExists 1).to.be.true
+      expect(rs.idExists 1, yes).to.be.true
+      expect(rs.idExists 2).to.be.false
+      expect(rs.idExists 2, yes).to.be.false
+      rs.deleteRecord(1)
+      expect(rs.idExists(1)).to.be.false
+      expect(rs.idExists(1, yes)).to.deep.equal {isDeleted: yes}
+
 
 

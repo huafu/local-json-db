@@ -8,6 +8,7 @@ class RecordStore extends CoreObject
   _records: null
   _config:  null
   _lastId:  null
+  _eventsNamespace: null
 
   constructor: (records = [], config = {}) ->
     @_records = new DictionaryEx({}, {stringifyKeys: yes})
@@ -15,16 +16,18 @@ class RecordStore extends CoreObject
       createdAtKey: no
       updatedAtKey: no
       deletedAtKey: no
+      eventsNamespace: 'record'
     }
+    @_eventsNamespace = @_config.eventsNamespace
+    delete @_config.eventsNamespace
     @_lastId = 0
-    @lockProperties '_records', '_config'
+    @lockProperties '_records', '_config', '_eventsNamespace'
     # create a new method instead of using `bind` to be sure we have only the record given as attribute
     @importRecords records
 
   readRecord: (id) ->
     @assertValidId id
-    e = @_records.entryForKey(id)
-    @_exportRecord e.value, e.metadata
+    @_read id
 
   createRecord: (record = {}) ->
     @assertValidRecord record
@@ -35,13 +38,8 @@ class RecordStore extends CoreObject
       if /^[0-9]+$/.test(str = "#{id}") and (int = parseInt(str, 10)) > @_lastId
         @_lastId = int
     else
-      id = m.record.id ?= ++@_lastId
-    e = @_records.set id, m.record
-    e.metadata.createdAt = m.metadata.createdAt if m.metadata.createdAt
-    e.metadata.updatedAt = m.metadata.updatedAt if m.metadata.updatedAt
-    record = @_exportRecord m.record, m.metadata
-    @emit 'record.created', record
-    record
+      m.id = m.record.id = ++@_lastId
+    @_create m
 
   updateRecord: (id, record) ->
     if arguments.length is 1
@@ -56,26 +54,11 @@ class RecordStore extends CoreObject
     m = @_importRecord record
     @assert m.record, "trying to update a record flagged as deleted"
     @assertIdExists m.id
-    rec = (e = @_records.entryForKey m.id).value
-    for own key, value of m.record when key isnt 'id'
-      if value is undefined
-        delete rec[key]
-      else
-        rec[key] = value
-    e.metadata.createdAt = m.metadata.createdAt if m.metadata.createdAt
-    e.metadata.updatedAt = m.metadata.updatedAt if m.metadata.updatedAt
-    rec = @_exportRecord rec, e.metadata
-    @emit 'record.updated', rec
-    rec
+    @_update m
 
   deleteRecord: (id, deletedAt = null) ->
     @assertIdExists id
-    rec = @_records.get(id)
-    e = @_records.unset id
-    e.metadata.deletedAt = deletedAt if deletedAt
-    rec = @_exportRecord rec, e.metadata
-    @emit 'record.deleted', rec
-    rec
+    @_delete id, deletedAt
 
   countRecords: ->
     @_records.count()
@@ -89,6 +72,13 @@ class RecordStore extends CoreObject
     if includeDeleted
       res = res.concat @_records.deletedKeys()
     res
+
+  idExists: (id, includeDeleted = no) ->
+    @assertValidId id
+    exists = @_records.exists(id)
+    if not exists and includeDeleted and @_records.deletedExists(id)
+      exists = isDeleted: yes
+    exists
 
   importRecords: (records) ->
     for record in records
@@ -122,13 +112,15 @@ class RecordStore extends CoreObject
     @assert id?, "`#{id}` is not a valid id"
 
   assertIdExists: (id, exists = yes) ->
-    @assertValidId id
-    test = @_records.exists id
+    test = @idExists id
     if exists
       @assert test, "no record with id `#{id}`"
     else
       @assert (not test), "a record with id `#{id}` already exists"
     @
+
+  lastAutoId: ->
+    @_lastId
 
   _copyRecord: (obj) ->
     res = utils.copy obj
@@ -165,6 +157,39 @@ class RecordStore extends CoreObject
         m.metadata.updatedAt = @_parseDate record[k]
         delete m.record[k]
     m
+
+  _update: (meta) ->
+    rec = (e = @_records.entryForKey meta.id).value
+    for own key, value of meta.record when key isnt 'id'
+      if value is undefined
+        delete rec[key]
+      else
+        rec[key] = value
+    e.metadata.createdAt = meta.metadata.createdAt if meta.metadata.createdAt
+    e.metadata.updatedAt = meta.metadata.updatedAt if meta.metadata.updatedAt
+    rec = @_exportRecord rec, e.metadata
+    @emit "#{ @_eventsNamespace }.updated", rec
+    rec
+
+  _create: (meta) ->
+    e = @_records.set meta.id, meta.record
+    e.metadata.createdAt = meta.metadata.createdAt if meta.metadata.createdAt
+    e.metadata.updatedAt = meta.metadata.updatedAt if meta.metadata.updatedAt
+    record = @_exportRecord meta.record, meta.metadata
+    @emit "#{ @_eventsNamespace }.created", record
+    record
+
+  _delete: (id, deletedAt = null) ->
+    rec = @_records.get id
+    e = @_records.unset id
+    e.metadata.deletedAt = deletedAt if deletedAt
+    rec = @_exportRecord rec, e.metadata
+    @emit "#{ @_eventsNamespace }.deleted", rec
+    rec
+
+  _read: (id) ->
+    e = @_records.entryForKey id
+    @_exportRecord e.value, e.metadata
 
   _parseDate: DictionaryEx::_parseDate
 
