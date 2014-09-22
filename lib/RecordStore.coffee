@@ -101,6 +101,15 @@ class RecordStore extends CoreObject
   exportRecords: ->
     @_read(id, yes) for id in @ids(@_config.deletedAtKey)
 
+  exportConfig: ->
+    utils.copy(@_config)
+
+  export: ->
+    {
+      config: @exportConfig()
+      records: @exportRecords()
+    }
+
 
   assertValidRecord: (record, mustHaveId = no) ->
     @assert (record and utils.isObject(record)), "not a valid record: #{record}"
@@ -198,6 +207,13 @@ class RecordStore extends CoreObject
     @_exportRecord rec, e.metadata
 
   _parseDate: DictionaryEx::_parseDate
+
+  @import: (data) ->
+    @assert(
+      utils.isObject(data) and utils.isObject(data.config) and utils.isArray(data.records),
+      'given data is not valid data to be imported as a RecordStore'
+    )
+    new @(data.records, data.config)
 
 
 

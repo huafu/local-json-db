@@ -158,6 +158,32 @@ describe 'RecordStore', ->
       rs.createRecord(id: '10')
       expect(rs.lastAutoId()).to.equal 10
 
+    it 'exports the config', ->
+      expect(rs.exportConfig()).to.deep.equal {
+        createdAtKey: no
+        updatedAtKey: no
+        deletedAtKey: no
+      }
+
+    it 'exports the whole object', ->
+      rs.createRecord(name: 'Huafu')
+      rs.createRecord(name: 'Mike')
+      rs.createRecord(name: 'John')
+      onow = now
+      now = time() + 1000
+      rs.updateRecord 2, name: 'Luke'
+      rs.deleteRecord 3
+      expect(rs.export()).to.deep.equal {
+        records: [
+          {id: 1, name: 'Huafu'}
+          {id: 2, name: 'Luke'}
+        ]
+        config:
+          createdAtKey: no
+          updatedAtKey: no
+          deletedAtKey: no
+      }
+
 
   describe 'with CRUD flags', ->
     ts = null
@@ -301,5 +327,50 @@ describe 'RecordStore', ->
       expect(stub.firstCall.args).to.deep.equal ['record.deleted', {id: 1, name: 'Huafu', d: now}]
       stub.restore()
 
+    it 'exports the config', ->
+      expect(rs.exportConfig()).to.deep.equal {
+        createdAtKey: 'c'
+        updatedAtKey: 'u'
+        deletedAtKey: 'd'
+      }
+
+    it 'exports the whole object', ->
+      rs.createRecord(name: 'Huafu')
+      rs.createRecord(name: 'Mike')
+      rs.createRecord(name: 'John')
+      onow = now
+      now = time() + 1000
+      rs.updateRecord 2, name: 'Luke'
+      rs.deleteRecord 3
+      expect(rs.export()).to.deep.equal {
+        records: [
+          {id: 1, name: 'Huafu', c: onow, u: onow}
+          {id: 2, name: 'Luke', c: onow, u: now}
+          {id: '3', d: now}
+        ]
+        config:
+          createdAtKey: 'c'
+          updatedAtKey: 'u'
+          deletedAtKey: 'd'
+      }
+
+  it 'imports and create instance', ->
+    onow = now
+    now = time() + 1000
+    rs = RecordStore.import {
+      records: [
+        {id: 1, name: 'Huafu', c: onow, u: onow}
+        {id: 2, name: 'Luke', c: onow, u: now}
+        {id: '3', d: now}
+      ]
+      config:
+        createdAtKey: 'c'
+        updatedAtKey: 'u'
+        deletedAtKey: 'd'
+    }
+    expect(rs.countRecords()).to.equal 2
+    expect(rs.deletedIds()).to.deep.equal ['3']
+    expect(rs.readRecord(1)).to.deep.equal {id: 1, name: 'Huafu', c: onow, u: onow}
+    expect(rs.readRecord(2)).to.deep.equal {id: 2, name: 'Luke', c: onow, u: now}
 
 
