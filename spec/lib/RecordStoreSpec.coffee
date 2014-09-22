@@ -149,6 +149,14 @@ describe 'RecordStore', ->
       expect(stub.firstCall.args).to.deep.equal ['record.deleted', {id: 1, name: 'Huafu'}]
       stub.restore()
 
+    it 'returns the last automatic id', ->
+      expect(rs.lastAutoId()).to.equal 0
+      rs.createRecord()
+      expect(rs.lastAutoId()).to.equal 1
+      rs.createRecord(id: 'dummy')
+      expect(rs.lastAutoId()).to.equal 1
+      rs.createRecord(id: '10')
+      expect(rs.lastAutoId()).to.equal 10
 
 
   describe 'with CRUD flags', ->
