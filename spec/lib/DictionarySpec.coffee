@@ -140,9 +140,16 @@ describe 'Dictionary', ->
         {index: 0, key: 'a', value: 'blue'}
       ]
 
-    it 'maps entries'
+    it 'maps entries', ->
+      expect(dict.map((entry) -> entry)).to.deep.equal [
+        {key: 'a', value: 'blue', index: 0}
+        {key: yes, value: 'yellow', index: 1}
+      ]
 
-    it 'collects entries'
+    it 'collects entries', ->
+      expect(dict.collect((entry) -> if entry.key is yes then entry else undefined)).to.deep.equals [
+        {key: yes, value: 'yellow', index: 1}
+      ]
 
 
 

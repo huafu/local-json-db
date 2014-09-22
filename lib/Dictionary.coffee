@@ -97,7 +97,7 @@ class Dictionary extends CoreObject
     else
       cb = callback
     res = []
-    for i in [0..@_keys.length]
+    for i in [0...@_keys.length]
       res.push cb(@_entryForIndex(i), @)
     res
 
@@ -107,8 +107,8 @@ class Dictionary extends CoreObject
     else
       cb = callback
     res = []
-    for i in [0..@_keys.length]
-      if (d = cb @_entryForIndex(i), @)?
+    for i in [0...@_keys.length]
+      if (d = cb @_entryForIndex(i), @) isnt undefined
         res.push d
     res
 
