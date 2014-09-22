@@ -9,6 +9,7 @@ class RecordStore extends CoreObject
   _config:  null
   _lastId:  null
   _eventsNamespace: null
+  _eventsEmitter: null
 
   constructor: (records = [], config = {}) ->
     @_records = new DictionaryEx({}, {stringifyKeys: yes})
@@ -17,11 +18,14 @@ class RecordStore extends CoreObject
       updatedAtKey: 'updatedAt'
       deletedAtKey: 'deletedAt'
       eventsNamespace: 'record'
+      eventsEmitter: @
     }
     @_eventsNamespace = @_config.eventsNamespace
     delete @_config.eventsNamespace
+    @_eventsEmitter = @_config.eventsEmitter
+    delete @_config.eventsEmitter
     @_lastId = 0
-    @lockProperties '_records', '_config', '_eventsNamespace'
+    @lockProperties '_records', '_config', '_eventsNamespace', '_eventsEmitter'
     # create a new method instead of using `bind` to be sure we have only the record given as attribute
     @importRecords records
 
@@ -179,7 +183,7 @@ class RecordStore extends CoreObject
     e.metadata.createdAt = meta.metadata.createdAt if meta.metadata.createdAt
     e.metadata.updatedAt = meta.metadata.updatedAt if meta.metadata.updatedAt
     rec = @_exportRecord rec, e.metadata
-    @emit "#{ @_eventsNamespace }.updated", rec
+    @_emit "#{ @_eventsNamespace }.updated", rec
     rec
 
   _create: (meta) ->
@@ -187,7 +191,7 @@ class RecordStore extends CoreObject
     e.metadata.createdAt = meta.metadata.createdAt if meta.metadata.createdAt
     e.metadata.updatedAt = meta.metadata.updatedAt if meta.metadata.updatedAt
     record = @_exportRecord meta.record, e.metadata
-    @emit "#{ @_eventsNamespace }.created", record
+    @_emit "#{ @_eventsNamespace }.created", record
     record
 
   _delete: (id, deletedAt = null) ->
@@ -195,7 +199,7 @@ class RecordStore extends CoreObject
     e = @_records.unset id
     e.metadata.deletedAt = deletedAt if deletedAt
     rec = @_exportRecord rec, e.metadata
-    @emit "#{ @_eventsNamespace }.deleted", rec
+    @_emit "#{ @_eventsNamespace }.deleted", rec
     rec
 
   _read: (id, keepDeleted = no) ->
@@ -205,6 +209,9 @@ class RecordStore extends CoreObject
     else
       rec = e.value
     @_exportRecord rec, e.metadata
+
+  _emit: (event, args...) ->
+    @_eventsEmitter?.emit event, args...
 
   _parseDate: DictionaryEx::_parseDate
 

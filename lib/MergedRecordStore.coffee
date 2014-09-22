@@ -6,7 +6,6 @@ Class = null
 
 class MergedRecordStore extends RecordStore
   _layers: null
-  _coreLayer: null
   _eventsNamespace: null
   _globalEventsNamespace: null
 
@@ -22,21 +21,36 @@ class MergedRecordStore extends RecordStore
     @_layers = []
     @_lastId = 0
     @addLayer records, {}
-    @_coreLayer = @_layers[0]
-    @_records = @_coreLayer._records
-    @_eventsNamespace = @_coreLayer._eventsNamespace
+    coreLayer = @_layers[0]
+    @_records = coreLayer._records
+    @_eventsNamespace = coreLayer._eventsNamespace
     @lockProperties(
-      '_layers', '_eventsNamespace', '_coreLayer', '_records', '_config', '_globalEventsNamespace'
+      '_layers', '_eventsNamespace', '_records', '_config', '_globalEventsNamespace'
     )
 
   addLayer: (records = [], config = {}) ->
     # be sure the other layers follow our config
     conf = utils.defaults {
       eventsNamespace: "layer#{ @_layers.length }.#{ config.eventsNamespace ? @_eventsNamespace }"
+      eventsEmitter: @
     }, @_config, config
+    if @_layers.length
+      conf.readOnly = yes
     @_layers.push (rs = new RecordStore(records, conf))
     @_lastId = Math.max @_lastId, rs.lastAutoId()
-    @
+    rs
+
+  removeLayer: (index) ->
+    @assert (utils.isNumber(index) and @_layers[index]?), "invalid layer index: #{ index }"
+    @assert index isnt 0, "the base layer (with index 0) can't be removed"
+    @_layers.splice(index, 1).pop()
+
+  layers: (index) ->
+    if arguments.length > 0
+      @assert (utils.isNumber(index) and @_layers[index]?), "invalid layer index: #{ index }"
+      @_layers[index]
+    else
+      @_layers.slice()
 
   idExists: (id, includeDeleted = no) ->
     @assertValidId id
