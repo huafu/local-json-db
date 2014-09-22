@@ -105,8 +105,8 @@ class DictionaryEx extends Dictionary
           e.metadata,
           'deletedAt',
           {
-            get: -> de.deletedAt
-            set: (date) => de.deletedAt = @_parseDate(date)
+            get: -> de.value.deletedAt
+            set: (date) => de.value.deletedAt = @_parseDate(date)
           }
         )
       @emit('entry.unset', e) if emitEvent
@@ -134,6 +134,8 @@ class DictionaryEx extends Dictionary
       Date.now()
     else if utils.isNumber(date)
       Math.round(date)
+    else if utils.isDate(date)
+      date.getTime()
     else
       (new Date date).getTime()
 

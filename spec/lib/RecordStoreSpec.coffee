@@ -43,6 +43,14 @@ describe 'RecordStore', ->
       expect(rs.readRecord 1).to.deep.equal {id: 1, name: 'John'}
       expect(-> rs.updateRecord 2, {name: 'Luke'}).to.throw()
       expect(rs.readRecord 2).to.be.undefined
+      rec.name = 'Huafu'
+      rec = rs.updateRecord rec
+      expect(rec).to.deep.equal {id: 1, name: 'Huafu'}
+      expect(-> rs.updateRecord(2, rec)).to.throw()
+      rec.name = undefined
+      rec.age = null
+      rec = rs.updateRecord rec
+      expect(rec).to.deep.equal {id: 1, age: null}
 
     it 'deletes a record', ->
       expect(-> rs.deleteRecord 1).to.throw()
@@ -64,7 +72,7 @@ describe 'RecordStore', ->
       expect(rs.readRecord 1).to.deep.equal {id: 1, name: 'Mike'}
       expect(-> rs.importRecrods [{name: 'Huafu'}]).to.throw()
 
-    it.skip 'exports records', ->
+    it 'exports records', ->
       records = [
         {id: 1, name: 'Mike'}
         {id: 3, name: 'Luke'}
@@ -79,6 +87,21 @@ describe 'RecordStore', ->
       records.push {id: 4, name: 'Huafu'}
       expect(rs.exportRecords()).to.deep.equal records
 
-    it 'ids'
+    it 'ids', ->
+      rs.createRecord name: 'Huafu'
+      rs.createRecord id: 3, name: 'Mike'
+      rs.createRecord name: 'Luke'
+      expect(rs.ids()).to.deep.equal ['1', '3', '4']
+      rs.deleteRecord 3
+      expect(rs.ids()).to.deep.equal ['1', '4']
+
+    it 'resets the whole store', ->
+      rs.createRecord name: 'Huafu'
+      rs.createRecord id: 3, name: 'Mike'
+      rs.createRecord name: 'Luke'
+      expect(rs.countRecords()).to.equal 3
+      rs.reset()
+      expect(rs.countRecords()).to.equal 0
+
 
 

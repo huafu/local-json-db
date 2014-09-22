@@ -121,13 +121,26 @@ describe 'DictionaryEx', ->
     spy = sinon.spy()
     dict.toKeyValuePairs(null, spy)
     expect(spy.callCount).to.equal 2
-    expect(spy.getCall(0).args).to.deep.equal [{key: 'a', value: 'blue', metadata: m}, 0]
-    expect(spy.getCall(1).args).to.deep.equal [{key: yes, value: 'yellow', metadata: m}, 1]
+    expect(spy.getCall(0).args).to.deep.equal [
+      {key: 'a', value: 'blue', metadata: m},
+      0
+    ]
+    expect(spy.getCall(1).args).to.deep.equal [
+      {key: yes, value: 'yellow', metadata: m},
+      1
+    ]
 
   it 'exports deleted entries', ->
     now = time() + 1000
     dict.unset 'a'
-    expect(dict.deletedMetadata()).to.deep.equal [key: 'a', metadata: {deletedAt: now}]
+    expect(dict.deletedMetadata()).to.deep.equal [
+      key: 'a', metadata: {deletedAt: now}
+    ]
+    dict = new DictionaryEx({a: yes, b: yes}, {stringifyKeys: yes})
+    dict.unset 'b'
+    expect(dict.deletedMetadata(yes)).to.deep.equal {
+      b: {deletedAt: now}
+    }
 
   it 'counts all entries', ->
     dict.unset 'a'
@@ -157,3 +170,11 @@ describe 'DictionaryEx', ->
     expect(dict.deletedCount()).to.equal 2
     dict.deletedClear()
     expect(dict.deletedCount()).to.equal 0
+
+  it 'updates the deletedAt meta of a just deleted entry', ->
+    e = dict.unset 'a'
+    d = new Date()
+    e.metadata.deletedAt = d
+    expect(dict.deletedAt('a')).to.equal d.getTime()
+    e.metadata.deletedAt = '2014-10-10 10:10:10.000Z'
+    expect(dict.deletedAt('a')).to.equal (new Date('2014-10-10 10:10:10.000Z')).getTime()

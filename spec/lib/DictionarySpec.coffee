@@ -38,6 +38,13 @@ describe 'Dictionary', ->
       expect(dict.indexOfValue 'yellow').to.equal 1
       expect(dict.indexOfValue null).to.equal -1
 
+    it 'finds all the indexes of a value', ->
+      expect(dict.indexOfValue 'blue', yes).to.deep.equal [0]
+      expect(dict.indexOfValue 'yellow', yes).to.deep.equal [1]
+      expect(dict.indexOfValue null, yes).to.deep.equal []
+      dict.set 'o', 'blue'
+      expect(dict.indexOfValue 'blue', yes).to.deep.equal [0, 2]
+
     it 'counts all entries', ->
       expect(dict.count()).to.equal 2
       expect(dict.length).to.equal 2
@@ -145,11 +152,28 @@ describe 'Dictionary', ->
         {key: 'a', value: 'blue', index: 0}
         {key: yes, value: 'yellow', index: 1}
       ]
+      dict.clear().import {
+        one: {name: 'Mike'}
+        two: {name: 'Huafu'}
+        three: {name: 'Luke'}
+        four: {}
+      }
+      expect(dict.map 'name').to.deep.equal ['Mike', 'Huafu', 'Luke', undefined]
 
     it 'collects entries', ->
       expect(dict.collect((entry) -> if entry.key is yes then entry else undefined)).to.deep.equals [
         {key: yes, value: 'yellow', index: 1}
       ]
+      dict.clear().import {
+        one: {name: 'Mike'}
+        two: {name: 'Huafu'}
+        three: {name: 'Luke'}
+        four: {}
+      }
+      expect(dict.collect 'name').to.deep.equal ['Mike', 'Huafu', 'Luke']
+
+    it 'fails to export ot JSON', ->
+      expect(-> dict.toJSON()).to.throw()
 
 
 
@@ -292,6 +316,12 @@ describe 'Dictionary', ->
         'entry.unset'
         {index: 0, key: 'a', value: 'blue'}
       ]
+
+    it 'exports to JSON', ->
+      expect(dict.toJSON()).to.deep.equal {
+        a: 'blue'
+        true: 'yellow'
+      }
 
   describe 'with `undefinedUnsets`', ->
     dict = null

@@ -107,6 +107,10 @@ class RecordStore extends CoreObject
 
   exportRecords: ->
     records = []
+    for id in @ids(@_config.deletedAtKey)
+      e = @_records.entryForKey(id)
+      records.push @_exportRecord e.value, e.metadata
+    records
 
 
   assertValidRecord: (record, mustHaveId = no) ->
@@ -161,6 +165,8 @@ class RecordStore extends CoreObject
         m.metadata.updatedAt = @_parseDate record[k]
         delete m.record[k]
     m
+
+  _parseDate: DictionaryEx::_parseDate
 
 
 

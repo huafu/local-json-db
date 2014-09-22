@@ -24,11 +24,11 @@ class Dictionary extends CoreObject
   indexOfKey: (key) ->
     @entryForKey(key).index
 
-  indexOfValue: (value, onlyFirst = yes) ->
-    if onlyFirst
-      @entryForValue(value).index
-    else
+  indexOfValue: (value, multiple = no) ->
+    if multiple
       (e.index for e in @entriesForValue(value))
+    else
+      @entryForValue(value).index
 
   clear: ->
     while @_keys.length
