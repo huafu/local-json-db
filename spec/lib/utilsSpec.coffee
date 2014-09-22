@@ -49,3 +49,11 @@ describe 'utils', ->
       expect(o.id).to.equal 10
       expect('id' in Object.keys(o)).to.be.false
 
+  describe 'log', ->
+    it 'should log to the console', ->
+      stub = sinon.stub console, 'log'
+      utils.log 'hello', 10
+      stub.restore()
+      expect(stub.calledOnce).to.be.true
+      expect(stub.getCall(0).args).to.deep.equal ['hello', 10]
+

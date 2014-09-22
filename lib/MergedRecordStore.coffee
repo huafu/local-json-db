@@ -60,13 +60,45 @@ class MergedRecordStore extends RecordStore
     record
 
   deleteRecord: (id) ->
-    record = super
+    record = super(id)
     @emit "#{ @_globalEventsNamespace }.deleted", record
     record
 
+  countRecords: ->
+    @ids().length
 
-  _read: (id) ->
-    utils.merge @_recordStack(id)...
+  importRecords: (records) ->
+    backup = @idExists
+    @idExists = RecordStore::idExists
+    res = super(records)
+    @idExists = backup
+    res
+
+  ids: (includeDeleted = no) ->
+    existing = []
+    deleted = []
+    for layer in @_layers
+      for id in layer.ids() when id not in deleted and id not in existing
+        existing.push id
+      for id in layer.deletedIds() when id not in deleted and id not in existing
+        deleted.push id
+    if includeDeleted
+      existing.concat(deleted)
+    else
+      existing
+
+  deletedIds: ->
+    existing = []
+    deleted = []
+    for layer in @_layers
+      for id in layer.ids() when id not in deleted and id not in existing
+        existing.push id
+      for id in layer.deletedIds() when id not in deleted and id not in existing
+        deleted.push id
+    deleted
+
+  _read: (id, keepDeleted = no) ->
+    utils.merge @_recordStack(id, keepDeleted)...
 
   _update: (meta) ->
     if @_records.exists meta.id
@@ -80,16 +112,18 @@ class MergedRecordStore extends RecordStore
       @_create @_read(id)
     super
 
-  _layersWithRecord: (id) ->
+  _layersWithRecord: (id, keepDeleted = no) ->
     @assertValidId id
     res = []
     for layer in @_layers when (has = layer.idExists id, yes)
-      break if has.isDeleted
+      if has.isDeleted
+        res.push(layer) if keepDeleted and res.length is 0
+        break
       res.push layer
     res
 
-  _recordStack: (id) ->
-    layer.readRecord(id) for layer in @_layersWithRecord(id)
+  _recordStack: (id, keepDeleted = no) ->
+    layer._read(id, keepDeleted) for layer in @_layersWithRecord(id, keepDeleted)
 
 
 module.exports = Class = MergedRecordStore

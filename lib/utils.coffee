@@ -17,8 +17,6 @@ _.mixin
 
   lock: (object, propertyName, enumerable = yes) ->
     val = object[propertyName]
-    object[propertyName] = null
-    delete object[propertyName]
     Object.defineProperty(object, propertyName, {
       get:          (-> val)
       set:          (-> utils.throw "property #{ propertyName } is read-only")

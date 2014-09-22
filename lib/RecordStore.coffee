@@ -13,9 +13,9 @@ class RecordStore extends CoreObject
   constructor: (records = [], config = {}) ->
     @_records = new DictionaryEx({}, {stringifyKeys: yes})
     @_config = utils.defaults {}, config, {
-      createdAtKey: no
-      updatedAtKey: no
-      deletedAtKey: no
+      createdAtKey: 'createdAt'
+      updatedAtKey: 'updatedAt'
+      deletedAtKey: 'deletedAt'
       eventsNamespace: 'record'
     }
     @_eventsNamespace = @_config.eventsNamespace
@@ -73,6 +73,9 @@ class RecordStore extends CoreObject
       res = res.concat @_records.deletedKeys()
     res
 
+  deletedIds: ->
+    @_records.deletedKeys()
+
   idExists: (id, includeDeleted = no) ->
     @assertValidId id
     exists = @_records.exists(id)
@@ -96,11 +99,7 @@ class RecordStore extends CoreObject
     @
 
   exportRecords: ->
-    records = []
-    for id in @ids(@_config.deletedAtKey)
-      e = @_records.entryForKey(id)
-      records.push @_exportRecord e.value, e.metadata
-    records
+    @_read(id, yes) for id in @ids(@_config.deletedAtKey)
 
 
   assertValidRecord: (record, mustHaveId = no) ->
@@ -175,7 +174,7 @@ class RecordStore extends CoreObject
     e = @_records.set meta.id, meta.record
     e.metadata.createdAt = meta.metadata.createdAt if meta.metadata.createdAt
     e.metadata.updatedAt = meta.metadata.updatedAt if meta.metadata.updatedAt
-    record = @_exportRecord meta.record, meta.metadata
+    record = @_exportRecord meta.record, e.metadata
     @emit "#{ @_eventsNamespace }.created", record
     record
 
@@ -187,15 +186,15 @@ class RecordStore extends CoreObject
     @emit "#{ @_eventsNamespace }.deleted", rec
     rec
 
-  _read: (id) ->
+  _read: (id, keepDeleted = no) ->
     e = @_records.entryForKey id
-    @_exportRecord e.value, e.metadata
+    if keepDeleted and not e.value
+      rec = {id}
+    else
+      rec = e.value
+    @_exportRecord rec, e.metadata
 
   _parseDate: DictionaryEx::_parseDate
-
-
-
-
 
 
 
