@@ -70,6 +70,13 @@ describe 'MergedRecordStore', ->
       expect(rs.deleteRecord 1).to.deep.equal id: 1, name: 'Huafu', d: now
       expect(-> rs.deleteRecord 'dummy').to.throw()
 
+    it 'counts all records', ->
+      expect(rs.countRecords()).to.equal 2
+      rs.createRecord()
+      expect(rs.countRecords()).to.equal 3
+      rs.deleteRecord(1)
+      expect(rs.countRecords()).to.equal 2
+
     it 'imports some records', ->
       rs.importRecords [
         {id: 5, name: 'Kenny'}
@@ -109,6 +116,13 @@ describe 'MergedRecordStore', ->
       expect(rs.deletedIds()).to.deep.equal ['3']
       rs.deleteRecord(1)
       expect(rs.deletedIds()).to.deep.equal ['3', '1']
+
+    it 'finds whether an ID exists', ->
+      expect(rs.idExists 100).to.be.false
+      expect(rs.idExists 100, yes).to.be.false
+      expect(rs.idExists 1).to.be.true
+      expect(rs.idExists 3).to.be.false
+      expect(rs.idExists 3, yes).to.be.true
 
 
     describe 'events', ->
