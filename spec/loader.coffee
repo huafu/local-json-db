@@ -1,7 +1,8 @@
 sysPath = require 'path'
 _ = require 'lodash'
+chai = require 'chai'
 
-GLOBAL.expect = expect = require('chai').expect
+GLOBAL.expect = expect = chai.expect
 GLOBAL.sinon = sinon = require 'sinon'
 
 GLOBAL.jsonPath = jsonPath = (path, resolve = no) ->
@@ -23,3 +24,9 @@ GLOBAL.jsonRecord = jsonRecord = (model, id) ->
   return undefined
 
 GLOBAL.lib = lib = require '..'
+
+
+# ==== chai configuration =============
+
+# disable truncating
+chai.config.truncateThreshold = 0

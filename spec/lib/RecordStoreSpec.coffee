@@ -169,8 +169,6 @@ describe 'RecordStore', ->
       rs.createRecord(name: 'Huafu')
       rs.createRecord(name: 'Mike')
       rs.createRecord(name: 'John')
-      onow = now
-      now = time() + 1000
       rs.updateRecord 2, name: 'Luke'
       rs.deleteRecord 3
       expect(rs.export()).to.deep.equal {
@@ -353,6 +351,25 @@ describe 'RecordStore', ->
           updatedAtKey: 'u'
           deletedAtKey: 'd'
       }
+
+  describe 'read-only', ->
+    beforeEach ->
+      rs = new RecordStore([
+        {id: 1, name: 'Huafu'}
+      ], {readOnly: yes})
+
+    it 'fails creating a record', ->
+      expect(-> rs.createRecord name: 'Huafu').to.throw()
+
+    it 'fails updating a record', ->
+      expect(-> rs.updateRecord 1, {}).to.throw()
+
+    it 'fails deleting a record', ->
+      expect(-> rs.deleteRecord 1).to.throw()
+
+    it 'fails importing records', ->
+      expect(-> rs.importRecords []).to.throw()
+
 
   it 'imports and create instance', ->
     onow = now

@@ -10,6 +10,7 @@ class RecordStore extends CoreObject
   _lastId:  null
   _eventsNamespace: null
   _eventsEmitter: null
+  _readOnly: null
 
   constructor: (records = [], config = {}) ->
     @_records = new DictionaryEx({}, {stringifyKeys: yes})
@@ -19,21 +20,27 @@ class RecordStore extends CoreObject
       deletedAtKey: 'deletedAt'
       eventsNamespace: 'record'
       eventsEmitter: @
+      readOnly: no
     }
+    @_readOnly = no
+    readOnly = Boolean(@_config.readOnly)
+    delete @_config.readOnly
     @_eventsNamespace = @_config.eventsNamespace
     delete @_config.eventsNamespace
     @_eventsEmitter = @_config.eventsEmitter
     delete @_config.eventsEmitter
     @_lastId = 0
-    @lockProperties '_records', '_config', '_eventsNamespace', '_eventsEmitter'
     # create a new method instead of using `bind` to be sure we have only the record given as attribute
     @importRecords records
+    @_readOnly = readOnly
+    @lockProperties '_records', '_config', '_eventsNamespace', '_eventsEmitter', '_readOnly'
 
   readRecord: (id) ->
     @assertValidId id
     @_read id
 
   createRecord: (record = {}) ->
+    @assertWritable()
     @assertValidRecord record
     m = @_importRecord record
     @assert m.record, "trying to create a record flagged as deleted"
@@ -46,6 +53,7 @@ class RecordStore extends CoreObject
     @_create m
 
   updateRecord: (id, record) ->
+    @assertWritable()
     if arguments.length is 1
       record = id
     else
@@ -61,6 +69,7 @@ class RecordStore extends CoreObject
     @_update m
 
   deleteRecord: (id, deletedAt = null) ->
+    @assertWritable()
     @assertIdExists id
     @_delete id, deletedAt
 
@@ -68,6 +77,7 @@ class RecordStore extends CoreObject
     @_records.count()
 
   reset: ->
+    @assertWritable()
     @_records.clear()
     @
 
@@ -88,6 +98,7 @@ class RecordStore extends CoreObject
     exists
 
   importRecords: (records) ->
+    @assertWritable()
     for record in records
       m = @_importRecord record
       @assertIdExists m.id, no
@@ -130,6 +141,9 @@ class RecordStore extends CoreObject
     else
       @assert (not test), "a record with id `#{id}` already exists"
     @
+
+  assertWritable: ->
+    @assert (not @_readOnly), "the #{ @className() } is read-only"
 
   lastAutoId: ->
     @_lastId
@@ -183,7 +197,7 @@ class RecordStore extends CoreObject
     e.metadata.createdAt = meta.metadata.createdAt if meta.metadata.createdAt
     e.metadata.updatedAt = meta.metadata.updatedAt if meta.metadata.updatedAt
     rec = @_exportRecord rec, e.metadata
-    @_emit "#{ @_eventsNamespace }.updated", rec
+    @_trigger "#{ @_eventsNamespace }.updated", rec
     rec
 
   _create: (meta) ->
@@ -191,7 +205,7 @@ class RecordStore extends CoreObject
     e.metadata.createdAt = meta.metadata.createdAt if meta.metadata.createdAt
     e.metadata.updatedAt = meta.metadata.updatedAt if meta.metadata.updatedAt
     record = @_exportRecord meta.record, e.metadata
-    @_emit "#{ @_eventsNamespace }.created", record
+    @_trigger "#{ @_eventsNamespace }.created", record
     record
 
   _delete: (id, deletedAt = null) ->
@@ -199,7 +213,7 @@ class RecordStore extends CoreObject
     e = @_records.unset id
     e.metadata.deletedAt = deletedAt if deletedAt
     rec = @_exportRecord rec, e.metadata
-    @_emit "#{ @_eventsNamespace }.deleted", rec
+    @_trigger "#{ @_eventsNamespace }.deleted", rec
     rec
 
   _read: (id, keepDeleted = no) ->
@@ -210,7 +224,7 @@ class RecordStore extends CoreObject
       rec = e.value
     @_exportRecord rec, e.metadata
 
-  _emit: (event, args...) ->
+  _trigger: (event, args...) ->
     @_eventsEmitter?.emit event, args...
 
   _parseDate: DictionaryEx::_parseDate

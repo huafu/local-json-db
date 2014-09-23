@@ -17,6 +17,7 @@ class MergedRecordStore extends RecordStore
       eventsNamespace: 'record'
     }
     @_globalEventsNamespace = @_config.eventsNamespace
+    @_eventsEmitter = @
     delete @_config.eventsNamespace
     @_layers = []
     @_lastId = 0
@@ -24,14 +25,15 @@ class MergedRecordStore extends RecordStore
     coreLayer = @_layers[0]
     @_records = coreLayer._records
     @_eventsNamespace = coreLayer._eventsNamespace
+    @_readOnly = coreLayer._readOnly
     @lockProperties(
-      '_layers', '_eventsNamespace', '_records', '_config', '_globalEventsNamespace'
+      '_layers', '_eventsNamespace', '_records', '_config', '_globalEventsNamespace', '_readOnly'
     )
 
   addLayer: (records = [], config = {}) ->
     # be sure the other layers follow our config
     conf = utils.defaults {
-      eventsNamespace: "layer#{ @_layers.length }.#{ config.eventsNamespace ? @_eventsNamespace }"
+      eventsNamespace: "layer#{ @_layers.length }.#{ config.eventsNamespace ? @_globalEventsNamespace }"
       eventsEmitter: @
     }, @_config, config
     if @_layers.length
@@ -112,18 +114,28 @@ class MergedRecordStore extends RecordStore
     deleted
 
   _read: (id, keepDeleted = no) ->
-    utils.merge @_recordStack(id, keepDeleted)...
+    records = @_recordStack id, keepDeleted
+    rec = records.shift()
+    keys = (key for own key, val of rec)
+    for record in records
+      for own key, val of record when key not in keys
+        keys.push key
+        rec[key] = val
+    rec
 
   _update: (meta) ->
+    upd = meta.record
+    meta.record = @_read(meta.id)
+    for own key, val of upd when key isnt 'id'
+      meta.record[key] = val
     if @_records.exists meta.id
-      super @_read(meta.id)
+      super(meta)
     else
-      @_create @_read(meta.id)
-    super
+      @_create meta
 
   _delete: (id) ->
-    unless @_records.exist(id)
-      @_create @_read(id)
+    unless @_records.exists(id)
+      @_create @_importRecord(@_read id)
     super
 
   _layersWithRecord: (id, keepDeleted = no) ->

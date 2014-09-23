@@ -57,11 +57,95 @@ describe 'MergedRecordStore', ->
       expect(rs.createRecord name: 'Hector').to.deep.equal exp
       expect(rs.readRecord 4).to.deep.equal exp
 
-    it 'updates a record'
-    it 'deletes a record'
-    it 'imports some records'
-    it 'exports all records'
-    it 'lists all IDs'
-    it 'lists deleted IDs'
-    it 'emits layer events'
-    it 'emits record events'
+    it 'updates a record', ->
+      exp = {
+        id: 2, name: 'Huafu', u: afterNow
+      }
+      rs.updateRecord exp
+      exp.c = now
+      expect(rs.readRecord 2).to.deep.equal exp
+      expect(-> rs.updateRecord 'dummy', {}).to.throw()
+
+    it 'deletes a record', ->
+      expect(rs.deleteRecord 1).to.deep.equal id: 1, name: 'Huafu', d: now
+      expect(-> rs.deleteRecord 'dummy').to.throw()
+
+    it 'imports some records', ->
+      rs.importRecords [
+        {id: 5, name: 'Kenny'}
+        {id: 6, d: now}
+        {id: 7, name: 'Noy', u: afterNow}
+      ]
+      expect(rs.readRecord(5)).to.deep.equal {
+        id: 5, name: 'Kenny', c: now, u: now
+      }
+      expect(rs.readRecord(6)).to.be.undefined
+      expect(rs.readRecord(7)).to.deep.equal {
+        id: 7, name: 'Noy', c: now, u: afterNow
+      }
+      expect(-> rs.importRecords [
+        {id: 1, name: 'Test'}
+      ]).to.throw()
+      expect(-> rs.importRecords [
+        {id: 6, name: 'Test'}
+      ]).to.not.throw()
+      expect(rs.readRecord(6)).to.deep.equal {id: 6, name: 'Test', c: now, u: now}
+
+    it 'exports all records', ->
+      expect(rs.exportRecords()).to.deep.equal [
+        {id: 1, name: 'Huafu', c: now, u: afterNow}
+        {id: 2, name: 'Mike', c: now, u: now}
+        {id: '3', d: afterNow}
+      ]
+
+    it 'lists all IDs', ->
+      expect(rs.ids()).to.deep.equal ['1', '2']
+      expect(rs.ids(yes)).to.deep.equal ['1', '2', '3']
+      rs.deleteRecord(1)
+      expect(rs.ids()).to.deep.equal ['2']
+      expect(rs.ids(yes)).to.deep.equal ['2', '3', '1']
+
+    it 'lists deleted IDs', ->
+      expect(rs.deletedIds()).to.deep.equal ['3']
+      rs.deleteRecord(1)
+      expect(rs.deletedIds()).to.deep.equal ['3', '1']
+
+
+    describe 'events', ->
+      emitStub = null
+      beforeEach ->
+        emitStub = sinon.stub rs, 'emit'
+      afterEach ->
+        emitStub.restore()
+
+      it 'emits record created event', ->
+        rec = rs.createRecord name: 'Adam'
+        expect(emitStub.callCount).to.equal 2
+        expect(emitStub.getCall(0).args).to.deep.equal [
+          'layer0.record.created', rec
+        ]
+        expect(emitStub.getCall(1).args).to.deep.equal [
+          'record.created', rec
+        ]
+
+      it 'emits record updated event', ->
+        rec = rs.updateRecord id: 1, name: 'Jane'
+        expect(emitStub.callCount).to.equal 2
+        expect(emitStub.getCall(0).args).to.deep.equal [
+          'layer0.record.updated', rec
+        ]
+        expect(emitStub.getCall(1).args).to.deep.equal [
+          'record.updated', rec
+        ]
+
+      it 'emits record deleted event', ->
+        rec = rs.deleteRecord 1
+        expect(emitStub.callCount).to.equal 2
+        expect(emitStub.getCall(0).args).to.deep.equal [
+          'layer0.record.deleted', rec
+        ]
+        expect(emitStub.getCall(1).args).to.deep.equal [
+          'record.deleted', rec
+        ]
+
+
