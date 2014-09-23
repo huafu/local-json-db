@@ -260,7 +260,7 @@ describe 'MergedRecordStore', ->
         {id: 7, name: 'Noy', c: now, u: afterNow}
       ]
 
-    it.only 'reads all records', ->
+    it 'reads all records', ->
       expect(rs.readAllRecords()).to.deep.equal [
         {id: 1, name: 'Huafu', c: now, u: afterNow}
         {id: 2, name: 'Mike', c: now, u: now}

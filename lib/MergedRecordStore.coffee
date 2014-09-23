@@ -124,14 +124,16 @@ class MergedRecordStore extends RecordStore
     rec
 
   _update: (meta) ->
-    upd = meta.record
-    meta.record = @_read(meta.id)
-    for own key, val of upd when key isnt 'id'
-      meta.record[key] = val
+    merged = @_importRecord @_read(meta.id)
+    for own key, val of meta.record when key isnt 'id'
+      merged.record[key] = val
     if @_records.exists meta.id
-      super(meta)
+      merged.metadata = meta.metadata
+      super(merged)
     else
-      @_create meta
+      merged.metadata.createdAt = d if (d = meta.metadata.createdAt)
+      merged.metadata.updatedAt = d if (d = meta.metadata.updatedAt)
+      @_create merged
 
   _delete: (id, deletedAt) ->
     unless @_records.exists(id)
