@@ -260,6 +260,26 @@ describe 'MergedRecordStore', ->
         {id: 7, name: 'Noy', c: now, u: afterNow}
       ]
 
+    it.only 'reads all records', ->
+      expect(rs.readAllRecords()).to.deep.equal [
+        {id: 1, name: 'Huafu', c: now, u: afterNow}
+        {id: 2, name: 'Mike', c: now, u: now}
+      ]
+      rs.createRecord name: 'Luke'
+      expect(rs.readAllRecords()).to.deep.equal [
+        {id: 1, name: 'Huafu', c: now, u: afterNow}
+        {id: 2, name: 'Mike', c: now, u: now}
+        {id: 4, name: 'Luke', c: now, u: now}
+      ]
+      rs.deleteRecord 2
+      onow = now
+      now = now + 1000
+      rs.updateRecord 1, age: 31
+      expect(rs.readAllRecords()).to.deep.equal [
+        {id: 1, name: 'Huafu', age: 31, c: onow, u: now}
+        {id: 4, name: 'Luke', c: onow, u: onow}
+      ]
+
     it 'lists all IDs', ->
       expect(rs.ids()).to.deep.equal ['1', '2']
       expect(rs.ids(yes)).to.deep.equal ['1', '2', '3']

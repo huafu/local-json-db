@@ -46,5 +46,7 @@ class CoreObject extends EventEmitter
   identify: ->
     "[object #{ @className() }<#{ @uuid() }>]"
 
+  destroy: ->
+
 
 module.exports = CoreObject

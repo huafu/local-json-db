@@ -35,6 +35,13 @@ describe 'RecordStore', ->
       rec = rs.createRecord {id: 'dummyId', name: 'Luke'}
       expect(rs.readRecord 'dummyId').to.deep.equal {id: 'dummyId', name: 'Luke'}
 
+    it 'reads all records', ->
+      expect(rs.readAllRecords()).to.deep.equal []
+      rs.createRecord(name: 'Huafu')
+      expect(rs.readAllRecords()).to.deep.equal [
+        {id: 1, name: 'Huafu'}
+      ]
+
     it 'counts records', ->
       expect(rs.countRecords()).to.equal 0
       rs.createRecord name: 'Mike'
@@ -235,6 +242,26 @@ describe 'RecordStore', ->
       rs.createRecord name: 'Huafu'
       rs.deleteRecord 1
       expect(rs.readRecord 1).to.be.undefined
+
+    it 'reads all records', ->
+      expect(rs.readAllRecords()).to.deep.equal []
+      rs.createRecord name: 'Huafu'
+      expect(rs.readAllRecords()).to.deep.equal [
+        {id: 1, name: 'Huafu', c: now, u: now}
+      ]
+      rs.createRecord {name: 'Mike', c: now + 1000}
+      expect(rs.readAllRecords()).to.deep.equal [
+        {id: 1, name: 'Huafu', c: now, u: now}
+        {id: 2, name: 'Mike', c: now + 1000, u: now}
+      ]
+      rs.deleteRecord 2
+      onow = now
+      now = now + 1000
+      rs.updateRecord 1, age: 31
+      expect(rs.readAllRecords()).to.deep.equal [
+        {id: 1, name: 'Huafu', age: 31, c: onow, u: now}
+      ]
+
 
     it 'imports records', ->
       rs.importRecords [

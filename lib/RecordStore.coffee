@@ -39,6 +39,9 @@ class RecordStore extends CoreObject
     @assertValidId id
     @_read id
 
+  readAllRecords: ->
+    @_read(id) for id in @ids()
+
   createRecord: (record = {}) ->
     @assertWritable()
     @assertValidRecord record
@@ -196,7 +199,7 @@ class RecordStore extends CoreObject
         delete rec[key]
       else
         rec[key] = value
-    @_records.set meta.id, rec
+    e = @_records.set meta.id, rec
     e.metadata.createdAt = meta.metadata.createdAt if meta.metadata.createdAt
     e.metadata.updatedAt = meta.metadata.updatedAt if meta.metadata.updatedAt
     rec = @_exportRecord rec, e.metadata

@@ -38,3 +38,4 @@ local-json-db.sublime-workspace
 tmp/
 *.tmp
 *.old
+*.map
