@@ -176,15 +176,6 @@ describe 'MergedRecordStore', ->
         {id: 3, d: afterNow}
       ]
 
-    it 'reads a record', ->
-      expect(rs.readRecord 1).to.deep.equal {
-        id: 1, name: 'Huafu', c: now, u: afterNow
-      }
-      expect(rs.readRecord 2).to.deep.equal {
-        id: 2, name: 'Mike', c: now, u: now
-      }
-      expect(rs.readRecord 3).to.be.undefined
-
     it 'creates a record', ->
       exp = {
         id: 4, name: 'Hector', c: now, u: now
@@ -205,6 +196,21 @@ describe 'MergedRecordStore', ->
       expect(rs.deleteRecord 1).to.deep.equal id: 1, name: 'Huafu', d: now
       expect(rs.readRecord 1).to.be.undefined
       expect(-> rs.deleteRecord 'dummy').to.throw()
+
+    it 'reads a record', ->
+      expect(rs.readRecord 1).to.deep.equal {
+        id: 1, name: 'Huafu', c: now, u: afterNow
+      }
+      expect(rs.readRecord 2).to.deep.equal {
+        id: 2, name: 'Mike', c: now, u: now
+      }
+      expect(rs.readRecord 3).to.be.undefined
+      rs.importRecords [
+        {id: 1, age: 3, u: afterNow}
+      ]
+      expect(rs.readRecord 1).to.deep.equal {
+        id: 1, name: 'Huafu', age: 3, c: now, u: afterNow
+      }
 
     it 'counts all records', ->
       expect(rs.countRecords()).to.equal 2
