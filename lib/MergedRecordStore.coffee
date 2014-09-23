@@ -99,9 +99,9 @@ class MergedRecordStore extends RecordStore
       for id in layer.deletedIds() when id not in deleted and id not in existing
         deleted.push id
     if includeDeleted
-      existing.concat(deleted)
+      existing.concat(deleted).sort()
     else
-      existing
+      existing.sort()
 
   deletedIds: ->
     existing = []
@@ -111,7 +111,7 @@ class MergedRecordStore extends RecordStore
         existing.push id
       for id in layer.deletedIds() when id not in deleted and id not in existing
         deleted.push id
-    deleted
+    deleted.sort()
 
   _read: (id, keepDeleted = no) ->
     records = @_recordStack id, keepDeleted
@@ -133,10 +133,13 @@ class MergedRecordStore extends RecordStore
     else
       @_create meta
 
-  _delete: (id) ->
+  _delete: (id, deletedAt) ->
     unless @_records.exists(id)
-      @_create @_importRecord(@_read id)
-    super
+      rec = @_read id
+      e = @_records.deleted(id, deletedAt)
+      @_exportRecord rec, {deletedAt: e.value.deletedAt}
+    else
+      super(id, deletedAt)
 
   _layersWithRecord: (id, keepDeleted = no) ->
     @assertValidId id

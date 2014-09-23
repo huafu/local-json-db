@@ -88,7 +88,7 @@ describe 'RecordStore', ->
       rs.deleteRecord 3
       records.splice 1, 1
       rs.createRecord {name: 'Huafu'}
-      records.push {id: 4, name: 'Huafu'}
+      records.splice 1, 0, {id: 4, name: 'Huafu'}
       expect(rs.exportRecords()).to.deep.equal records
 
     it 'lists ids', ->
@@ -258,9 +258,8 @@ describe 'RecordStore', ->
       rs.updateRecord 1, name: 'Luke'
       records.push {id: 1, name: 'Luke', c: ts, u: now}
       rs.createRecord {name: 'Huafu'}
-      records.push {id: 4, name: 'Huafu', c: now, u: now}
-      # then comes the deleted ones
       records.push {id: '3', d: ts}
+      records.push {id: 4, name: 'Huafu', c: now, u: now}
       rs.deleteRecord 'stuff'
       records.push {id: 'stuff', d: now}
       expect(rs.exportRecords()).to.deep.equal records
@@ -272,7 +271,7 @@ describe 'RecordStore', ->
       expect(rs.ids()).to.deep.equal ['1', '3', '4']
       rs.deleteRecord 3
       expect(rs.ids()).to.deep.equal ['1', '4']
-      expect(rs.ids(yes)).to.deep.equal ['1', '4', '3']
+      expect(rs.ids(yes)).to.deep.equal ['1', '3', '4']
 
     it 'lists deleted ids', ->
       rs.createRecord name: 'Huafu'

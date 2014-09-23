@@ -85,10 +85,10 @@ class RecordStore extends CoreObject
     res = @_records.keys()
     if includeDeleted
       res = res.concat @_records.deletedKeys()
-    res
+    res.sort()
 
   deletedIds: ->
-    @_records.deletedKeys()
+    @_records.deletedKeys().sort()
 
   idExists: (id, includeDeleted = no) ->
     @assertValidId id
@@ -159,9 +159,12 @@ class RecordStore extends CoreObject
       rec = @_copyRecord record
       if metadata.deletedAt
         rec[k] = metadata.deletedAt if (k = keys.deletedAtKey)
+        delete rec[k] if (k = keys.createdAtKey)
+        delete rec[k] if (k = keys.updatedAtKey)
       else
         rec[k] = metadata.createdAt if (k = keys.createdAtKey)
         rec[k] = metadata.updatedAt if (k = keys.updatedAtKey)
+        delete rec[k] if (k = keys.deletedAtKey)
       rec
     else
       undefined
