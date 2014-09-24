@@ -175,7 +175,7 @@ describe 'Database', ->
   describe 'with overlay', ->
     beforeEach ->
       db = new Database(TEMP_DATA, {updatedAtKey: 'updatedAt', deletedAtKey: 'deletedAt'})
-      db.addOverlay('alpha')
+      db.addOverlay(['alpha'])
       db.addOverlay('local')
       debugger
 
