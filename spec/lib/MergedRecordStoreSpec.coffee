@@ -279,7 +279,6 @@ describe 'MergedRecordStore', ->
           createdAtKey: "c"
           deletedAtKey: "d"
           updatedAtKey: "u"
-          readOnly: yes
         }
         records: []
       }
@@ -288,7 +287,6 @@ describe 'MergedRecordStore', ->
           createdAtKey: "c"
           deletedAtKey: "d"
           updatedAtKey: "u"
-          readOnly: yes
         }
         records: [
           {id: 1, name: 'Huafu', c: now, u: afterNow}

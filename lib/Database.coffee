@@ -1,6 +1,8 @@
 fs = require 'fs'
 sysPath = require 'path'
 
+mkdirp = require 'mkdirp'
+
 utils = require './utils'
 CoreObject = require './CoreObject'
 MergedRecordStore = require './MergedRecordStore'
@@ -87,13 +89,14 @@ class Database extends CoreObject
     if @isLoaded()
       models = []
       for own name, model of @_models
-        @_saveModelStore model
+        @_saveModelStore name, model
         @emit 'model.store.saved', model
         models.push model
       @emit 'db.saved', model
     @
 
   modelNameToFileName: (modelName) ->
+    Model.assertValidModelName modelName
     "#{ utils.kebabCase(utils.pluralize modelName) }.json"
 
   assertNotLoaded: (msg) ->
@@ -106,7 +109,7 @@ class Database extends CoreObject
   _createModelStore: (modelName) ->
     file = @modelNameToFileName @_modelName modelName
     stores = []
-    for path in @_layers.reverse()
+    for path in @_layers.slice().reverse()
       path = sysPath.join path, file
       if fs.existsSync(path)
         data = fs.readFileSync path, encoding: 'utf8'
@@ -114,18 +117,22 @@ class Database extends CoreObject
         stores.push data
       else
         stores.push {config: {}, records: []}
-    main = stores.pop()
+    main = stores.shift()
     store = new MergedRecordStore(main.records, utils.defaults({}, @_config, main.config))
     for s in stores
       store.addLayer s.records, utils.defaults({}, main.config, s.config)
     store
 
-  _saveModelStore: (model) ->
-    file = @modelNameToFileName @_modelName model.name
+  _saveModelStore: (name, model) ->
+    file = @modelNameToFileName @_modelName name
     top = @_layers[@_layers.length - 1]
     path = sysPath.join top, file
-    mkdirp.sync top
-    fs.writeFileSync path, JSON.stringify(mode._store.layers(0).export())
+    store = model._store
+    if store.countRecords(yes) is 0
+      fs.unlinkSync(path) if fs.existsSync(path)
+    else
+      mkdirp.sync top
+      fs.writeFileSync path, JSON.stringify(store.export())
     path
 
 

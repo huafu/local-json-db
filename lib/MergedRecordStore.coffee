@@ -32,7 +32,7 @@ class MergedRecordStore extends RecordStore
 
   addLayer: (records = [], config = {}) ->
     # be sure the other layers follow our config
-    conf = utils.defaults @_config, config, {
+    conf = utils.defaults {}, @_config, config, {
       eventsNamespace: "layer#{ @_layers.length }.#{ config.eventsNamespace ? @_globalEventsNamespace }"
       eventsEmitter: @
     }
@@ -93,7 +93,7 @@ class MergedRecordStore extends RecordStore
   export: (full = no) ->
     {
       config: @exportConfig()
-      records: @exportRecords full
+      records: @exportRecords(full)
     }
 
   exportRecords: (full) ->

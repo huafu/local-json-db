@@ -102,8 +102,12 @@ class Model extends CoreObject
     else
       @emit event, args...
 
-  @_modelName: (name) ->
+  @assertValidModelName: (name) ->
     @assert utils.isString(name) and name.length, "the model name must be a string of at least on char"
+    @
+
+  @_modelName: (name) ->
+    @assertValidModelName(name)
     utils.camelCase(utils.singularize name)
 
   @_databaseClass: ->
