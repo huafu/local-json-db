@@ -120,7 +120,10 @@ class RecordStore extends CoreObject
     @_read(id, yes) for id in @ids(@_config.deletedAtKey)
 
   exportConfig: ->
-    utils.copy(@_config)
+    res = {}
+    for k in ['createdAtKey', 'updatedAtKey', 'deletedAtKey', 'readOnly']
+      res[k] = @_config[k] if @_config[k]?
+    res
 
   export: ->
     {

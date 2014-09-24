@@ -273,6 +273,30 @@ describe 'MergedRecordStore', ->
         {id: 7, name: 'Noy', c: now, u: afterNow}
       ]
 
+    it 'exports the whole object', ->
+      expect(rs.export()).to.deep.equal {
+        config:  {
+          createdAtKey: "c"
+          deletedAtKey: "d"
+          updatedAtKey: "u"
+          readOnly: yes
+        }
+        records: []
+      }
+      expect(rs.export(yes)).to.deep.equal {
+        config:  {
+          createdAtKey: "c"
+          deletedAtKey: "d"
+          updatedAtKey: "u"
+          readOnly: yes
+        }
+        records: [
+          {id: 1, name: 'Huafu', c: now, u: afterNow}
+          {id: 2, name: 'Mike', c: afterNow, u: now}
+          {id: '3', d: afterNow}
+        ]
+      }
+
     it 'reads all records', ->
       expect(rs.readAllRecords()).to.deep.equal [
         {id: 1, name: 'Huafu', c: now, u: afterNow}
