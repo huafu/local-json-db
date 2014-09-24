@@ -1,5 +1,8 @@
 utils = require './utils'
 CoreObject = require './CoreObject'
+RecordStore = require './RecordStore'
+Database = require './Database'
+
 
 Class = null
 
@@ -9,7 +12,21 @@ class Model extends CoreObject
   name: null
   database: null
 
-  constructor: (@name, @database, @_store) ->
+  constructor: (database, name, store) ->
+    if name?
+      @name = Database._modelName(name)
+    else
+      @name = null
+    if database?
+      @assert database instanceof Database, "given database isn't an instance of #{ Database.className() }"
+      @database = database
+    else
+      @database = null
+    if store?
+      @assert store instanceof RecordStore, "given store must be an instance of #{ RecordStore.className() }"
+      @_store = store
+    else
+      @_store = new RecordStore()
     @lockProperties 'name', 'database', '_store'
 
   create: (record) ->

@@ -95,8 +95,7 @@ class Database extends CoreObject
 
 
   _modelName: (name) ->
-    @assert utils.isString(name) and name.length, "the model name must be a string of at least on char"
-    utils.camelCase(utils.singularize name)
+    Class._modelName name
 
   _createModelStore: (modelName) ->
     file = @modelNameToFileName @_modelName modelName
@@ -122,6 +121,10 @@ class Database extends CoreObject
     mkdirp.sync top
     fs.writeFileSync path, JSON.stringify(mode._store.layers(0).export())
     path
+
+  @_modelName: (name) ->
+    @assert utils.isString(name) and name.length, "the model name must be a string of at least on char"
+    utils.camelCase(utils.singularize name)
 
 
 
