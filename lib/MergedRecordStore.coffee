@@ -90,6 +90,22 @@ class MergedRecordStore extends RecordStore
     @idExists = backup
     res
 
+  export: (full = no) ->
+    {
+      config: @exportConfig()
+      records: @exportRecords full
+    }
+
+  exportRecords: (full) ->
+    if full
+      super()
+    else
+      backup = @ids
+      @ids = RecordStore::ids
+      res = super()
+      @ids = backup
+      res
+
   ids: (includeDeleted = no) ->
     existing = []
     deleted = []

@@ -80,8 +80,22 @@ describe 'Database', ->
         {id: 2, name: 'Pattiya Chamniphan', isClaimed: yes, updatedAt: now}
       ]
 
+    it 'creates a record', ->
+      expect(db.createRecord 'user', name: 'Luke').to.deep.equal {
+        id: 7, name: 'Luke', updatedAt: now
+      }
+
     it 'updates a record', ->
       expect(db.updateRecord 'user', 2, name: 'Mike').to.deep.equal {
         id: 2, name: 'Mike', isClaimed: yes, updatedAt: now
+      }
+
+    it 'deletes a record', ->
+      expect(db.deleteRecord 'user', 1).to.deep.equal {
+        id:        1
+        name:      'Huafu Gandon'
+        joinedAt:  '2012-07-03T10:24:00.000Z'
+        isClaimed: yes
+        __deleted: now
       }
 

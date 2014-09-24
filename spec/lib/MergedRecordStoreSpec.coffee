@@ -172,7 +172,7 @@ describe 'MergedRecordStore', ->
       })
       rs.addLayer [
         {id: 1, name: 'Huafu', u: afterNow}
-        {id: 2, name: 'Mike'}
+        {id: 2, name: 'Mike', c: afterNow}
         {id: 3, d: afterNow}
       ]
 
@@ -188,7 +188,7 @@ describe 'MergedRecordStore', ->
         id: 2, name: 'Huafu', u: afterNow
       }
       rs.updateRecord exp
-      exp.c = now
+      exp.c = afterNow
       expect(rs.readRecord 2).to.deep.equal exp
       expect(-> rs.updateRecord 'dummy', {}).to.throw()
 
@@ -202,7 +202,7 @@ describe 'MergedRecordStore', ->
         id: 1, name: 'Huafu', c: now, u: afterNow
       }
       expect(rs.readRecord 2).to.deep.equal {
-        id: 2, name: 'Mike', c: now, u: now
+        id: 2, name: 'Mike', c: afterNow, u: now
       }
       expect(rs.readRecord 3).to.be.undefined
       rs.importRecords [
@@ -241,9 +241,10 @@ describe 'MergedRecordStore', ->
       expect(rs.readRecord(6)).to.deep.equal {id: 6, name: 'Test', c: now, u: now}
 
     it 'exports all records', ->
-      expect(rs.exportRecords()).to.deep.equal [
+      expect(rs.exportRecords()).to.deep.equal []
+      expect(rs.exportRecords(yes)).to.deep.equal [
         {id: 1, name: 'Huafu', c: now, u: afterNow}
-        {id: 2, name: 'Mike', c: now, u: now}
+        {id: 2, name: 'Mike', c: afterNow, u: now}
         {id: '3', d: afterNow}
       ]
       rs.importRecords [
@@ -252,9 +253,21 @@ describe 'MergedRecordStore', ->
         {id: 7, name: 'Noy', u: afterNow}
       ]
       expect(rs.exportRecords()).to.deep.equal [
+        {id: 5, name: 'Kenny', c: now, u: now}
+        {id: '6', d: now}
+        {id: 7, name: 'Noy', c: now, u: afterNow}
+      ]
+      expect(rs.exportRecords(yes)).to.deep.equal [
         {id: 1, name: 'Huafu', c: now, u: afterNow}
-        {id: 2, name: 'Mike', c: now, u: now}
+        {id: 2, name: 'Mike', c: afterNow, u: now}
         {id: '3', d: afterNow}
+        {id: 5, name: 'Kenny', c: now, u: now}
+        {id: '6', d: now}
+        {id: 7, name: 'Noy', c: now, u: afterNow}
+      ]
+      rs.updateRecord 2, name: 'Bam'
+      expect(rs.exportRecords()).to.deep.equal [
+        {id: 2, name: 'Bam', c: afterNow, u: now}
         {id: 5, name: 'Kenny', c: now, u: now}
         {id: '6', d: now}
         {id: 7, name: 'Noy', c: now, u: afterNow}
@@ -263,12 +276,12 @@ describe 'MergedRecordStore', ->
     it 'reads all records', ->
       expect(rs.readAllRecords()).to.deep.equal [
         {id: 1, name: 'Huafu', c: now, u: afterNow}
-        {id: 2, name: 'Mike', c: now, u: now}
+        {id: 2, name: 'Mike', c: afterNow, u: now}
       ]
       rs.createRecord name: 'Luke'
       expect(rs.readAllRecords()).to.deep.equal [
         {id: 1, name: 'Huafu', c: now, u: afterNow}
-        {id: 2, name: 'Mike', c: now, u: now}
+        {id: 2, name: 'Mike', c: afterNow, u: now}
         {id: 4, name: 'Luke', c: now, u: now}
       ]
       rs.deleteRecord 2
