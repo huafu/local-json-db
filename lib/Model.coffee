@@ -1,25 +1,27 @@
 utils = require './utils'
 CoreObject = require './CoreObject'
 RecordStore = require './RecordStore'
-Database = require './Database'
 
 
 Class = null
 
 
 class Model extends CoreObject
-  _store: null
-  _name: null
-  _database: null
+  _store:          null
+  _name:           null
+  _database:       null
   _eventListeners: null
 
   constructor: (database, name, store) ->
     if name?
-      @_name = Database._modelName(name)
+      @_name = Class._modelName(name)
     else
       @_name = null
     if database?
-      @assert database instanceof Database, "given database isn't an instance of #{ Database.className() }"
+      @assert(
+          database instanceof Class._databaseClass(),
+        "given database isn't an instance of #{ Class._databaseClass().className() }"
+      )
       @_database = database
     else
       @_database = null
@@ -100,6 +102,12 @@ class Model extends CoreObject
     else
       @emit event, args...
 
+  @_modelName: (name) ->
+    @assert utils.isString(name) and name.length, "the model name must be a string of at least on char"
+    utils.camelCase(utils.singularize name)
+
+  @_databaseClass: ->
+    require './Database'
 
 
 module.exports = Class = Model

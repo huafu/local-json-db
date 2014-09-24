@@ -61,7 +61,7 @@ describe 'Model', ->
 
   it 'destroy an instance', ->
     orig = mdl._detachEvents.bind(mdl)
-    stub = sinon.stub mdl, '_detachEvents', -> orig()
+    stub = sinon.stub mdl, '_detachEvents', orig
     mdl.destroy()
     expect(stub.callCount).to.equal 1
     expect(mdl._name).to.equal 'user' # shouldn't have changed

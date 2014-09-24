@@ -4,6 +4,7 @@ sysPath = require 'path'
 utils = require './utils'
 CoreObject = require './CoreObject'
 MergedRecordStore = require './MergedRecordStore'
+Model = require './Model'
 
 Class = null
 
@@ -64,16 +65,20 @@ class Database extends CoreObject
 
   unload: ->
     if @isLoaded()
-      for own model of @_models
+      for own name, model of @_models
         model.destroy()
       @_models = null
     @
+
+  destroy: ->
+    @unload()
+    super
 
   modelFactory: (modelName) ->
     @load()
     name = @_modelName(modelName)
     unless (model = @_models[name])
-      @_models[name] = model = new Model(name, @, @_createModelStore(name))
+      @_models[name] = model = new Model(@, name, @_createModelStore(name))
       @emit 'model.store.loaded', model
     model
 
@@ -88,14 +93,14 @@ class Database extends CoreObject
     @
 
   modelNameToFileName: (modelName) ->
-    "#{ utils.kebabCase(utils.pluralize name) }.json"
+    "#{ utils.kebabCase(utils.pluralize modelName) }.json"
 
   assertNotLoaded: (msg) ->
     @assert not @isLoaded(), "the database is already loaded#{if msg then ", #{msg}" else ''}"
 
 
   _modelName: (name) ->
-    Class._modelName name
+    Model._modelName name
 
   _createModelStore: (modelName) ->
     file = @modelNameToFileName @_modelName modelName
@@ -121,10 +126,6 @@ class Database extends CoreObject
     mkdirp.sync top
     fs.writeFileSync path, JSON.stringify(mode._store.layers(0).export())
     path
-
-  @_modelName: (name) ->
-    @assert utils.isString(name) and name.length, "the model name must be a string of at least on char"
-    utils.camelCase(utils.singularize name)
 
 
 
