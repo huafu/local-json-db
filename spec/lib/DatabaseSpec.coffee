@@ -35,7 +35,7 @@ describe 'Database', ->
 
   describe 'without overlay', ->
     beforeEach ->
-      db = new Database(TEMP_DATA)
+      db = new Database(TEMP_DATA, {updatedAtKey: 'updatedAt'})
 
     afterEach ->
       db.destroy()
@@ -45,4 +45,43 @@ describe 'Database', ->
       stub = sinon.stub db, 'load', orig
       db.find 'user', 1
       expect(stub.callCount).to.equal 1
+
+    it 'finds a record by id', ->
+      user1 = {
+        id:        1
+        name:      'Huafu Gandon'
+        joinedAt:  '2012-07-03T10:24:00.000Z'
+        isClaimed: yes
+        updatedAt: now
+      }
+      expect(db.find 'user', 1).to.deep.equal user1
+      expect(db.find 'users', 1).to.deep.equal user1
+
+    it 'finds many records by ids', ->
+      user1 = {
+        id:        1
+        name:      'Huafu Gandon'
+        joinedAt:  '2012-07-03T10:24:00.000Z'
+        isClaimed: yes
+        updatedAt: now
+      }
+      user2 = {
+        id:        2
+        name:      'Pattiya Chamniphan'
+        isClaimed: yes
+        updatedAt: now
+      }
+      expect(db.findMany 'users', [1, 2, 100]).to.deep.equal [
+        user1, user2
+      ]
+
+    it 'finds many records with a filter', ->
+      expect(db.findQuery 'user', {name: 'Pattiya Chamniphan'}).to.deep.equal [
+        {id: 2, name: 'Pattiya Chamniphan', isClaimed: yes, updatedAt: now}
+      ]
+
+    it 'updates a record', ->
+      expect(db.updateRecord 'user', 2, name: 'Mike').to.deep.equal {
+        id: 2, name: 'Mike', isClaimed: yes, updatedAt: now
+      }
 

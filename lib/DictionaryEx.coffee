@@ -81,7 +81,7 @@ class DictionaryEx extends Dictionary
       e.metadata?.deletedAt
 
   toKeyValuePairs: (keys = {}, _complete = ->) ->
-    utils.defaults keys, {metadata: 'metadata'}
+    keys = utils.defaults {}, keys, {metadata: 'metadata'}
     super keys, (o, i) =>
       o[keys.metadata] = @_metadata[i] if keys.metadata
       _complete o, i
@@ -115,11 +115,11 @@ class DictionaryEx extends Dictionary
   _set: (index, key, value, emitEvent = yes, _now = null) ->
     ts = @_parseDate _now
     e = super index, key, value, no
-    unless e.metadata
+    if e.metadata
+      e.metadata.updatedAt = ts
+    else
       @_metadata[e.index] = e.metadata = {createdAt: ts, updatedAt: ts}
       @_deleted.unset key
-    else
-      e.metadata.updatedAt = ts
     @emit('entry.set', e) if emitEvent
     e
 

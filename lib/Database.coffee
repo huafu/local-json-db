@@ -34,7 +34,8 @@ class Database extends CoreObject
     @modelFactory(modelName).create record
 
   updateRecord: (modelName, id, record) ->
-    @modelFactory(modelName).update arguments[1..]...
+    mdl = @modelFactory(modelName)
+    mdl.update.apply mdl, [].slice.call(arguments, 1)
 
   deleteRecord: (modelName, id) ->
     @modelFactory(modelName).delete id
@@ -114,9 +115,9 @@ class Database extends CoreObject
       else
         stores.push {config: {}, records: []}
     main = stores.pop()
-    store = new MergedRecordStore(main.records, main.config)
+    store = new MergedRecordStore(main.records, utils.defaults({}, @_config, main.config))
     for s in stores
-      store.addLayer s.records, s.config
+      store.addLayer s.records, utils.defaults({}, main.config, s.config)
     store
 
   _saveModelStore: (model) ->

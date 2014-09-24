@@ -13,9 +13,9 @@ class MergedRecordStore extends RecordStore
     @_config = utils.defaults {}, config, {
       createdAtKey: no
       updatedAtKey: no
-      deletedAtKey: no
       eventsNamespace: 'record'
     }
+    @_config.deletedAtKey = 'deletedAt' unless @_config.deletedAtKey
     @_globalEventsNamespace = @_config.eventsNamespace
     @_eventsEmitter = @
     delete @_config.eventsNamespace
@@ -32,10 +32,10 @@ class MergedRecordStore extends RecordStore
 
   addLayer: (records = [], config = {}) ->
     # be sure the other layers follow our config
-    conf = utils.defaults {
+    conf = utils.defaults @_config, config, {
       eventsNamespace: "layer#{ @_layers.length }.#{ config.eventsNamespace ? @_globalEventsNamespace }"
       eventsEmitter: @
-    }, @_config, config
+    }
     if @_layers.length
       conf.readOnly = yes
     @_layers.push (rs = new RecordStore(records, conf))

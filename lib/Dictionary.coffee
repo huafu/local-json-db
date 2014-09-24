@@ -49,7 +49,7 @@ class Dictionary extends CoreObject
     res
 
   toKeyValuePairs: (keys = {}, _complete = ->) ->
-    utils.defaults keys, {key: 'key', value: 'value', index: no}
+    keys = utils.defaults {}, keys, {key: 'key', value: 'value', index: no}
     res = []
     for k, i in @_keys
       o = {}
