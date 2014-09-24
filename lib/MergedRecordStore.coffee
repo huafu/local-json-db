@@ -15,7 +15,7 @@ class MergedRecordStore extends RecordStore
       updatedAtKey: no
       eventsNamespace: 'record'
     }
-    @_config.deletedAtKey = 'deletedAt' unless @_config.deletedAtKey
+    @_config.deletedAtKey = '__deleted' unless @_config.deletedAtKey
     @_globalEventsNamespace = @_config.eventsNamespace
     @_eventsEmitter = @
     delete @_config.eventsNamespace
