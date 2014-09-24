@@ -15,6 +15,28 @@ You also want to be able to have some other specific data to run unit tests of y
 
 **Well, `local-json-db` is here for that!**
 
+## Usage
+
+First of all, install it as a dependency of your project. In the root path of your project, run this:
+
+```
+npm install --save-dev local-json-db
+```
+
+Then, in your CoffeeScript file:
+
+```coffee
+ljdb = require 'local-json-db'
+db = new ljdb.Database()
+```
+
+or in javascript:
+
+```js
+var ljdb = require('local-json-db');
+var db = new ljdb.Database();
+```
+
 
 ## Example
 
