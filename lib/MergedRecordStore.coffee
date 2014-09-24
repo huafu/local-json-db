@@ -132,7 +132,7 @@ class MergedRecordStore extends RecordStore
       super(merged)
     else
       merged.metadata.createdAt = d if (d = meta.metadata.createdAt)
-      merged.metadata.updatedAt = d if (d = meta.metadata.updatedAt)
+      merged.metadata.updatedAt = meta.metadata.updatedAt
       @_create merged
 
   _delete: (id, deletedAt) ->

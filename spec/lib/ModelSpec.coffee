@@ -1,4 +1,4 @@
-{Model, Database, MergedRecordStore} = lib
+{Model, Database, MergedRecordStore, RecordStore} = lib
 
 describe 'Model', ->
   mdl = null
@@ -34,27 +34,42 @@ describe 'Model', ->
   it 'creates an instance', ->
     db = null
     expect(-> mdl = new Model(undefined, 'user', rs)).to.not.throw()
-    expect(mdl.database).to.be.null
-    expect(mdl.name).to.equal 'user'
+    expect(mdl._database).to.be.null
+    expect(mdl._name).to.equal 'user'
+    expect(mdl._store).to.equal rs
     expect(-> mdl = new Model((db = new Database()), undefined, rs)).to.not.throw()
-    expect(mdl.database).to.equal db
-    expect(mdl.name).to.be.null
+    expect(mdl._database).to.equal db
+    expect(mdl._name).to.be.null
+    expect(mdl._store).to.equal rs
     expect(-> mdl = new Model(null, null, null)).to.not.throw()
-    expect(mdl.database).to.be.null
-    expect(mdl.name).to.be.null
+    expect(mdl._database).to.be.null
+    expect(mdl._name).to.be.null
+    expect(mdl._store).to.be.instanceOf RecordStore
     # now the wrong calls
     expect(-> mdl = new Model({}, null, null)).to.throw()
     expect(-> mdl = new Model(null, {}, null)).to.throw()
     expect(-> mdl = new Model(null, null, {})).to.throw()
     # model name conversions
-    expect(new Model(null, 'users')).to.have.property 'name', 'user'
-    expect(new Model(null, 'user')).to.have.property 'name', 'user'
-    expect(new Model(null, 'User')).to.have.property 'name', 'user'
-    expect(new Model(null, 'user-post')).to.have.property 'name', 'userPost'
-    expect(new Model(null, 'user-posts')).to.have.property 'name', 'userPost'
-    expect(new Model(null, 'userPost')).to.have.property 'name', 'userPost'
-    expect(new Model(null, 'UserPost')).to.have.property 'name', 'userPost'
-    expect(new Model(null, 'User_Post')).to.have.property 'name', 'userPost'
+    expect(new Model(null, 'users')).to.have.property '_name', 'user'
+    expect(new Model(null, 'user')).to.have.property '_name', 'user'
+    expect(new Model(null, 'User')).to.have.property '_name', 'user'
+    expect(new Model(null, 'user-post')).to.have.property '_name', 'userPost'
+    expect(new Model(null, 'user-posts')).to.have.property '_name', 'userPost'
+    expect(new Model(null, 'userPost')).to.have.property '_name', 'userPost'
+    expect(new Model(null, 'UserPost')).to.have.property '_name', 'userPost'
+    expect(new Model(null, 'User_Post')).to.have.property '_name', 'userPost'
+
+  it 'destroy an instance', ->
+    orig = mdl._detachEvents.bind(mdl)
+    stub = sinon.stub mdl, '_detachEvents', -> orig()
+    mdl.destroy()
+    expect(stub.callCount).to.equal 1
+    expect(mdl._name).to.equal 'user' # shouldn't have changed
+    expect(mdl._store).to.be.null
+    expect(mdl._database).to.be.null
+    mdl._name = 'post'
+    # should have been frozen
+    expect(mdl._name).to.equal 'user'
 
   it 'creates a record', ->
     expect(mdl.create name: 'Huafu', u: later).to.deep.equal {
@@ -104,4 +119,34 @@ describe 'Model', ->
 
   it 'counts records', ->
     expect(mdl.count()).to.equal 3
+
+  it 'triggers the created event', ->
+    stub = sinon.stub mdl, 'emit'
+    mdl.create name: 'Bam'
+    expect(stub.callCount).to.equal 1
+    expect(stub.getCall(0).args).to.deep.equal [
+      'created', {id: 5, name: 'Bam', c: now, u: now}
+    ]
+    stub.restore()
+
+  it 'triggers the updated event and record specific event', ->
+    stub = sinon.stub mdl, 'emit'
+    expected = {id: 1, name: 'Bam', c: now, u: later}
+    now = later
+    mdl.update 1, name: 'Bam'
+    expect(stub.callCount).to.equal 2
+    expect(stub.getCall(0).args).to.deep.equal ['record:user#1', expected]
+    expect(stub.getCall(1).args).to.deep.equal ['updated', expected]
+    stub.restore()
+
+  it 'triggers the deleted event and record specific event', ->
+    stub = sinon.stub mdl, 'emit'
+    expected = {id: 1, name: 'Huafu', d: later}
+    now = later
+    mdl.delete 1
+    expect(stub.callCount).to.equal 2
+    expect(stub.getCall(0).args).to.deep.equal ['record:user#1', null]
+    expect(stub.getCall(1).args).to.deep.equal ['deleted', expected]
+    stub.restore()
+
 

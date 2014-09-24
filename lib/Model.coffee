@@ -9,25 +9,27 @@ Class = null
 
 class Model extends CoreObject
   _store: null
-  name: null
-  database: null
+  _name: null
+  _database: null
+  _eventListeners: null
 
   constructor: (database, name, store) ->
     if name?
-      @name = Database._modelName(name)
+      @_name = Database._modelName(name)
     else
-      @name = null
+      @_name = null
     if database?
       @assert database instanceof Database, "given database isn't an instance of #{ Database.className() }"
-      @database = database
+      @_database = database
     else
-      @database = null
+      @_database = null
     if store?
       @assert store instanceof RecordStore, "given store must be an instance of #{ RecordStore.className() }"
       @_store = store
     else
       @_store = new RecordStore()
-    @lockProperties 'name', 'database', '_store'
+    @setMaxListeners Infinity
+    @_attachEvents()
 
   create: (record) ->
     @_store.createRecord arguments...
@@ -55,6 +57,48 @@ class Model extends CoreObject
 
   count: ->
     @_store.countRecords()
+
+  destroy: ->
+    @_detachEvents()
+    @_store = null
+    @_database = null
+    Object.freeze @
+    super
+
+  _attachEvents: ->
+    unless @_eventListeners
+      @_eventListeners = {
+        created: @_recordCreated.bind @
+        updated: @_recordUpdated.bind @
+        deleted: @_recordDeleted.bind @
+      }
+      for k, v of @_eventListeners
+        @_store.on "record.#{k}", v
+    @
+
+  _detachEvents: ->
+    if @_eventListeners
+      for k, v of @_eventListeners
+        @_store.removeListener "record.#{k}", v
+      @_eventListeners = null
+    @
+
+  _recordCreated: (record) ->
+    @_emit 'created', record
+
+  _recordUpdated: (record) ->
+    @_emit "record:#{ if @_name then "#{@_name}" else '-' }##{ record.id }", record
+    @_emit 'updated', record
+
+  _recordDeleted: (record) ->
+    @_emit "record:#{ if @_name then "#{@_name}" else '-' }##{ record.id }", null
+    @_emit 'deleted', record
+
+  _emit: (event, args...) ->
+    if @_database
+      @_database.emit event, args...
+    else
+      @emit event, args...
 
 
 
