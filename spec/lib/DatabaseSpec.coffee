@@ -177,7 +177,6 @@ describe 'Database', ->
       db = new Database(TEMP_DATA, {updatedAtKey: 'updatedAt', deletedAtKey: 'deletedAt'})
       db.addOverlay(['alpha'])
       db.addOverlay('local')
-      debugger
 
     afterEach ->
       db.destroy()
