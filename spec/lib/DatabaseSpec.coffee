@@ -33,12 +33,15 @@ describe 'Database', ->
       done()
 
 
+
   describe 'without overlay', ->
     beforeEach ->
       db = new Database(TEMP_DATA, {updatedAtKey: 'updatedAt'})
 
     afterEach ->
       db.destroy()
+
+    it 'converts a model\'s name to a file name'
 
     it 'loads when trying to get a record', ->
       orig = db.load.bind(db)
@@ -79,6 +82,13 @@ describe 'Database', ->
       expect(db.findQuery 'user', {name: 'Pattiya Chamniphan'}).to.deep.equal [
         {id: 2, name: 'Pattiya Chamniphan', isClaimed: yes, updatedAt: now}
       ]
+      expect(db.findQuery 'user', (r) -> r.id is 2).to.deep.equal [
+        {id: 2, name: 'Pattiya Chamniphan', isClaimed: yes, updatedAt: now}
+      ]
+
+    it 'finds all records'
+
+    it 'counts all records'
 
     it 'creates a record', ->
       expect(db.createRecord 'user', name: 'Luke').to.deep.equal {
@@ -99,3 +109,7 @@ describe 'Database', ->
         __deleted: now
       }
 
+    it 'saves all records'
+
+
+  describe.skip 'with overlay', ->
