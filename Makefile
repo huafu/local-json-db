@@ -41,8 +41,8 @@ doc:
 
 
 publish-doc: doc
-	BRANCH=`git rev-parse --abbrev-ref HEAD`
-	git checkout gh-pages && \
+	BRANCH=`git rev-parse --abbrev-ref HEAD` && \
+		git checkout gh-pages && \
 		cp -R docs/* . && \
 		git add -A && \
 		git commit -m "Updating documentation" && \
