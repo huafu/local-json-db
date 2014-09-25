@@ -26,7 +26,7 @@ test: build
 
 
 coverall: test
-	@cat ./coverage/coverage.lcov | @$(./node_modules/coveralls/bin/coveralls.js)
+	@cat coverage/coverage.lcov | ./node_modules/coveralls/bin/coveralls.js
 
 
 doc:
