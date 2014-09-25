@@ -1,0 +1,10 @@
+{
+  "name": "Local JSON DB",
+  "description": "A local JSON database with overlays",
+  "url": "https://github.com/huafu/local-json-db",
+  "options": {
+    "outdir": "./docs",
+    "linkNatives": true,
+    "syntaxtype": "coffee"
+  }
+}

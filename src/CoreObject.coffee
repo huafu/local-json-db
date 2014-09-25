@@ -9,8 +9,10 @@ Class = null
   @class CoreObject
   @extends EventEmitter
   @example
+    ```cs
     class MyClass extends CoreObject
       # ...
+    ```
 ###
 class CoreObject extends EventEmitter
   ###*
@@ -30,8 +32,8 @@ class CoreObject extends EventEmitter
     @since 0.0.2
     @method log
     @static
-    @param {String} [level] level (debug, notice, info, warning, error, danger or fatal)
-    @param {Object} items*  anything to give back to the logger
+    @param {String} [level="debug"] level (debug, notice, info, warning, error, danger or fatal)
+    @param {mixed} items*           anything to give back to the logger
     @chainable
   ###
   @log:            (level, items...) ->
@@ -89,8 +91,8 @@ class CoreObject extends EventEmitter
 
     @since 0.0.2
     @method log
-    @param {String} [level] level (debug, notice, info, warning, error, danger or fatal)
-    @param {Object} items*  anything to give back to the logger
+    @param {String} [level="debug"] level (debug, notice, info, warning, error, danger or fatal)
+    @param {mixed} items*           anything to give back to the logger
     @chainable
   ###
   log:             (level, items...) ->

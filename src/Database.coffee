@@ -10,43 +10,74 @@ Model = require './Model'
 
 Class = null
 
-# The main class of the `local-json-db`, representing a database with one or more layers
-#
-# @since 0.0.2
-# @example
-#   var db = new Database();
-#   var record = db.createRecord({name: 'Huafu'});
-#   record.age = 31;
-#   db.updateRecord(record);
-#   console.log(db.find('user', record.id));
-#   // will output {id: 1, name: 'Huafu', age: 31}
-#   db.save();
+###*
+  The main class of the `local-json-db`, representing a database with one or more layers
+
+  @since 0.0.2
+  @class Database
+  @extends CoreObject
+  @constructor
+  @example
+    ```js
+    var db = new Database();
+    var record = db.createRecord({name: 'Huafu'});
+    record.age = 31;
+    db.updateRecord(record);
+    console.log(db.find('user', record.id));
+    // will output {id: 1, name: 'Huafu', age: 31}
+    db.save();
+    ```
+###
 class Database extends CoreObject
-  # @since 0.0.2
-  # @private
-  # @property {String} base path
+  ###*
+    The base path
+    @since 0.0.2
+    @private
+    @property _basePath
+    @type String
+    @default "./json.db"
+  ###
   _basePath: null
-  # @since 0.0.2
-  # @private
-  # @property {Object} configuration options
+  ###*
+    Configuration options
+    @since 0.0.2
+    @private
+    @property _config
+    @type Object
+    @default {deletedAtKey: "__deleted"}
+  ###
   _config: null
-  # @since 0.0.2
-  # @private
-  # @property {Array<String>} array of all layers (overlays) path
+  ###*
+    Array of all layers (overlays) path
+    @since 0.0.2
+    @private
+    @property _layers
+    @type Array<String>
+    @default [this._baseBath]
+  ###
   _layers: null
-  # @since 0.0.2
-  # @private
-  # @property {Object<Model>} loaded models, indexed by their bare name
+  ###*
+    Loaded models, indexed by their bare name
+    @since 0.0.2
+    @private
+    @property _models
+    @type Object<Model>
+    @default null
+  ###
   _models: null
 
 
-  # Constructs a new instance of {Database}
-  #
-  # @since 0.0.2
-  # @param {String} basePath              the base path for the db files, hosting base JSON files of any added overlay
-  # @option config {String} createdAtKey  name of the key to use as the `createdAt` flag for a record
-  # @option config {String} updatedAtKey  name of the key to use as the `updatedAt` flag for a record
-  # @option config {String} deletedAtKey  name of the key to use as the `deletedAt` flag for a record (default `__deleted`)
+  ###*
+    Constructs a new instance of {{#crossLink "Database"}}{{/crossLink}}
+
+    @since 0.0.2
+    @method constructor
+    @param {String} [basePath="./json.db"]            the base path for the db files, hosting base JSON files of any added overlay
+    @param {Object} [config={}]                       the configuration options
+    @param {String} [config.createdAtKey]             name of the key to use as the `createdAt` flag for a record
+    @param {String} [config.updatedAtKey]             name of the key to use as the `updatedAt` flag for a record
+    @param {String} [config.deletedAtKey="__deleted"] name of the key to use as the `deletedAt` flag for a record
+  ###
   constructor: (basePath = './json.db', config = {}) ->
     @_basePath = sysPath.resolve basePath
     @_config = utils.defaults {}, config
@@ -56,11 +87,14 @@ class Database extends CoreObject
     @lockProperties '_basePath', '_config', '_layers'
 
 
-  # Add an overlay on top of all layers (the latest is the one used first, then come the others in order until the base)
-  #
-  # @since 0.0.2
-  # @param {String} path  the path where to read/write JSON files of records, relative to the base path
-  # @return {Database}    this object for chaining
+  ###*
+    Add an overlay on top of all layers (the latest is the one used first, then come the others in order until the base)
+
+    @since 0.0.2
+    @method addOverlay
+    @param {String} path  the path where to read/write JSON files of records, relative to the base path
+    @chainable
+  ###
   addOverlay: (path) ->
     @assertNotLoaded('cannot add overlay')
     if utils.isArray(path)
@@ -71,112 +105,119 @@ class Database extends CoreObject
     @
 
 
-  # Creates a new record in the database
-  #
-  # @since 0.0.2
-  # @param {String} modelName name of the model
-  # @param {Object} record    attributes of the record to create
-  # @return {Object}          a copy of the newly created model with read-only `id`
+  ###*
+    Creates a new record in the database
+
+    @since 0.0.2
+    @method createRecord
+    @param {String} modelName name of the model
+    @param {Object} record    attributes of the record to create
+    @return {Object}          a copy of the newly created model with read-only `id`
+  ###
   createRecord: (modelName, record) ->
     @modelFactory(modelName).create record
 
 
-  # Updates a record with the given attributes
-  #
-  # @overload updateModel(modelName, id, record)
-  #   @since 0.0.2
-  #   @param {String} modelName   name of the model
-  #   @param {String, Number} id  id of the record to update
-  #   @param {Object} record      attributes of the record to update
-  #   @return {Object}            a copy of the updated record
-  #
-  # @overload updateModel(modelName, record)
-  #   @since 0.0.2
-  #   @param {String} modelName   name of the model
-  #   @param {Object} record      attributes of the record to update (including its id)
-  #   @return {Object}            a copy of the updated record
+  ###*
+    Updates a record with the given attributes
+
+    @since 0.0.2
+    @method updateModel
+    @param {String} modelName   name of the model
+    @param {String|Number} [id] id of the record to update, if not given it must be in `record`
+    @param {Object} record      attributes of the record to update
+    @return {Object}            a copy of the updated record
+  ###
   updateRecord: (modelName, id, record) ->
     mdl = @modelFactory(modelName)
     mdl.update.apply mdl, [].slice.call(arguments, 1)
 
 
-  # Deletes a record given its id
-  #
-  # @since 0.0.2
-  # @param {String} modelName name of the model
-  # @return {Object}          a copy of the old record which has been deleted
+  ###*
+    Deletes a record given its id
+
+    @since 0.0.2
+    @method deleteRecord
+    @param {String} modelName name of the model
+    @param {String|Number} id id of the record to delete
+    @return {Object}          a copy of the old record which has been deleted
+  ###
   deleteRecord: (modelName, id) ->
     @modelFactory(modelName).delete id
 
 
-  # Finds a record by id
-  #
-  # @since 0.0.2
-  # @param {String} modelName   name of the model
-  # @param {String, Number} id  id of the record to find
-  # @return {Object, undefined} copy of the record if found, else `undefined`
+  ###*
+    Finds a record by id
+
+    @since 0.0.2
+    @method find
+    @param {String} modelName   name of the model
+    @param {String|Number} id   id of the record to find
+    @return {Object|undefined}  copy of the record if found, else `undefined`
+  ###
   find: (modelName, id) ->
     @modelFactory(modelName).find id
 
 
-  # Finds many record given a list of ids. If some records are not found, they'll just be filtered out
-  # of the resulting array
-  #
-  # @overload findMany(modelName, ids...)
-  #   @since 0.0.2
-  #   @param {String} modelName       name of the model
-  #   @param {String, Number} ids...  id of each record to find
-  #   @return {Array<Object>}         array containing all found records
-  #
-  # @overload findMany(modelName, ids)
-  #   @since 0.0.2
-  #   @param {String} modelName           name of the model
-  #   @param {Array<String, Number>} ids  array of id for each record to find
-  #   @return {Array<Object>}             array containing all found records
+  ###*
+    Finds many record given a list of ids. If some records are not found, they'll just be filtered out
+    of the resulting array
+
+    @since 0.0.2
+    @method findMany
+    @param {String} modelName         name of the model
+    @param {Array|String|Number} ids* id of each record to find, or one array with all record ids
+    @return {Array<Object>}           array containing all found records
+  ###
   findMany: (modelName, ids...) ->
     @modelFactory(modelName).findMany ids...
 
 
-  # Finds records using a filter (either function or set of properties to match)
-  #
-  # @overload findQuery(modelName, filter)
-  #   @since 0.0.2
-  #   @param {String} modelName name of the model
-  #   @param {Object} filter    attributes to match
-  #   @return {Array<Object>}   array with all records which matched
-  #
-  # @overload findQuery(modelName, filter, thisArg)
-  #   @since 0.0.2
-  #   @param {String} modelName name of the model
-  #   @param {Function} filter  function used to filter records, each record is given as the first parameter
-  #   @param {Object} thisArg   optional, will be used as the context to run the filter function
-  #   @return {Array<Object>}   array with all records which matched
+  ###*
+    Finds records using a filter (either function or set of properties to match)
+
+    @since 0.0.2
+    @method findQuery
+    @param {String} modelName       name of the model
+    @param {Object|Function} filter attributes to match or a function used to filter records
+    @param {Object} [thisArg]       will be used as the context to run the filter function
+    @return {Array<Object>}         array with all records which matched
+  ###
   findQuery: (modelName, filter, thisArg) ->
     @modelFactory(modelName).findQuery filter, thisArg
 
 
-  # Finds all records in the database
-  #
-  # @since 0.0.2
-  # @param {String} modelName name of the model
-  # @return {Array<Object>}   array containing all records of the given model
+  ###*
+    Finds all records in the database
+
+    @since 0.0.2
+    @method findAll
+    @param {String} modelName name of the model
+    @return {Array<Object>}   array containing all records of the given model
+  ###
   findAll: (modelName) ->
     @modelFactory(modelName).findAll()
 
 
-  # Counts all records of a given model
-  #
-  # @since 0.0.2
-  # @param {String} modelName name of the model to count records
-  # @return {Number}          the total number of records
+  ###*
+    Counts all records of a given model
+
+    @since 0.0.2
+    @method count
+    @param {String} modelName name of the model to count records
+    @return {Number}          the total number of records
+  ###
   count: (modelName) ->
     @modelFactory(modelName).count()
 
 
-  # Saves in the top overlay's path the records that have been created/modified or deleted
-  #
-  # @since 0.0.2
-  # @return {Database} this object for chaining
+  ###*
+    Saves in the top overlay's path the records that have been created/modified or deleted
+
+    @since 0.0.2
+    @method save
+    @chainable
+  ###
   save: ->
     if @isLoaded()
       models = []
@@ -188,19 +229,25 @@ class Database extends CoreObject
     @
 
 
-  # Whether the database has been loaded or not (in that case no overlay can be added)
-  #
-  # @since 0.0.2
-  # @return {Boolean} returns `true` if the db is loaded, else `false`
+  ###*
+    Whether the database has been loaded or not (in that case no overlay can be added)
+
+    @since 0.0.2
+    @method isLoaded
+    @return {Boolean} returns `true` if the db is loaded, else `false`
+  ###
   isLoaded: ->
     Boolean(@_models)
 
 
-  # Loads the database
-  #
-  # @since 0.0.2
-  # @param {Boolean} force  whether to force a reload in case it has already been loaded previously
-  # @return {Database}      this object to do chained calls
+  ###*
+    Loads the database (you don't need to call this method, it'll be automatically called when needed)
+
+    @since 0.0.2
+    @method load
+    @param {Boolean} force  whether to force a reload in case it has already been loaded previously
+    @chainable
+  ###
   load: (force) ->
     if force or not @isLoaded()
       @unload()
@@ -208,10 +255,13 @@ class Database extends CoreObject
     @
 
 
-  # Unloads the database and all the records. **This does NOT save anything**
-  #
-  # @since 0.0.2
-  # @return {Database} this object to do chained calls
+  ###*
+    Unloads the database and all the records. **This does NOT save anything**
+
+    @since 0.0.2
+    @method unload
+    @chainable
+  ###
   unload: ->
     if @isLoaded()
       for own name, model of @_models
@@ -220,17 +270,25 @@ class Database extends CoreObject
     @
 
 
-  # @see {CoreObject#destroy}
+  ###*
+    Destroy and free the db object
+
+    @since 0.0.2
+    @method destroy
+  ###
   destroy: ->
     @unload()
     super
 
 
-  # Get the {Model} instance given a model name
-  #
-  # @since 0.0.2
-  # @param {String} modelName name of the model to get the instance
-  # @return {Model}           the model object
+  ###*
+    Get the {{#crossLink "Model"}}{{/crossLink}} instance given a model name
+
+    @since 0.0.2
+    @method modelFactory
+    @param {String} modelName name of the model to get the instance
+    @return {Model}           the model object
+  ###
   modelFactory: (modelName) ->
     @load()
     name = @_modelName(modelName)
@@ -240,42 +298,53 @@ class Database extends CoreObject
     model
 
 
-  # Used to transform a model name into its store's JSON file name
-  #
-  # @since 0.0.2
-  # @param {String} modelName name of the model
-  # @return {String}          name of the file, sanitized and normalized
+  ###*
+    Used to transform a model name into its store's JSON file name
+
+    @since 0.0.2
+    @method modelNameToFileName
+    @param {String} modelName name of the model
+    @return {String}          name of the file, sanitized and normalized
+  ###
   modelNameToFileName: (modelName) ->
     Model.assertValidModelName modelName
     "#{ utils.kebabCase(utils.pluralize modelName) }.json"
 
 
-  # Asserts that the DB hasn't been loaded yet, or throw an error
-  #
-  # @since 0.0.2
-  # @param {String} msg additional message to add in the error
-  # @return {Database}  this object for chaining
+  ###*
+    Asserts that the DB hasn't been loaded yet, or throw an error
+
+    @since 0.0.2
+    @method assertNotLoaded
+    @param {String} msg additional message to add in the error
+    @chainable
+  ###
   assertNotLoaded: (msg) ->
     @assert not @isLoaded(), "the database is already loaded#{if msg then ", #{msg}" else ''}"
 
 
-  # Normalize a model name
-  #
-  # @since 0.0.2
-  # @see {Model._modelName}
-  # @private
-  # @param {String} name  name of the model to normalize
-  # @return {String}      normalized name
+  ###*
+    Normalize a model name
+
+    @since 0.0.2
+    @method _modelName
+    @private
+    @param {String} name  name of the model to normalize
+    @return {String}      normalized name
+  ###
   _modelName: (name) ->
     Model._modelName name
 
 
-  # Creates the store for a given model
-  #
-  # @since 0.0.2
-  # @private
-  # @param {String} name        name of the model
-  # @return {MergedRecordStore} the newly created store for the given model
+  ###*
+    Creates the store for a given model
+
+    @since 0.0.2
+    @private
+    @method _createModelStore
+    @param {String} name        name of the model
+    @return {MergedRecordStore} the newly created store for the given model
+  ###
   _createModelStore: (modelName) ->
     file = @modelNameToFileName @_modelName modelName
     stores = []
@@ -294,13 +363,16 @@ class Database extends CoreObject
     store
 
 
-  # Saves the store of a given model to disk
-  #
-  # @since 0.0.2
-  # @private
-  # @param {String} name  name of the model
-  # @param {Model} model  model instance
-  # @return {String}      the full path of the file that has been saved
+  ###*
+    Saves the store of a given model to disk
+
+    @since 0.0.2
+    @private
+    @method _saveModelStore
+    @param {String} name  name of the model
+    @param {Model} model  model instance
+    @return {String}      the full path of the file that has been saved
+  ###
   _saveModelStore: (name, model) ->
     file = @modelNameToFileName @_modelName name
     top = @_layers[@_layers.length - 1]
