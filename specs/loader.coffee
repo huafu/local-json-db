@@ -1,10 +1,8 @@
-sysPath = require 'path'
-_ = require 'lodash'
 chai = require 'chai'
 
 GLOBAL.expect = expect = chai.expect
 GLOBAL.sinon = sinon = require 'sinon'
-GLOBAL.lib = lib = require '..'
+GLOBAL.lib = lib = require '../src'
 
 
 # ==== chai configuration =============

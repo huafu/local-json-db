@@ -4,11 +4,11 @@ describe 'local-json-db', ->
       'utils', 'CoreObject', 'Dictionary', 'DictionaryEx', 'RecordStore', 'MergedRecordStore',
       'Model', 'Database'
     ]
-    expect(lib.utils).to.equal require('../lib/utils')
-    expect(lib.CoreObject).to.equal require('../lib/CoreObject')
-    expect(lib.Dictionary).to.equal require('../lib/Dictionary')
-    expect(lib.DictionaryEx).to.equal require('../lib/DictionaryEx')
-    expect(lib.RecordStore).to.equal require('../lib/RecordStore')
-    expect(lib.MergedRecordStore).to.equal require('../lib/MergedRecordStore')
-    expect(lib.Model).to.equal require('../lib/Model')
-    expect(lib.Database).to.equal require('../lib/Database')
+    expect(lib.utils).to.equal require('../src/utils')
+    expect(lib.CoreObject).to.equal require('../src/CoreObject')
+    expect(lib.Dictionary).to.equal require('../src/Dictionary')
+    expect(lib.DictionaryEx).to.equal require('../src/DictionaryEx')
+    expect(lib.RecordStore).to.equal require('../src/RecordStore')
+    expect(lib.MergedRecordStore).to.equal require('../src/MergedRecordStore')
+    expect(lib.Model).to.equal require('../src/Model')
+    expect(lib.Database).to.equal require('../src/Database')
