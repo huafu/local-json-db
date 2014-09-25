@@ -1,6 +1,10 @@
 local-json-db [![Build Status](https://travis-ci.org/huafu/local-json-db.svg?branch=master)](https://travis-ci.org/huafu/local-json-db) [![Coverage Status](https://coveralls.io/repos/huafu/local-json-db/badge.png?branch=master)](https://coveralls.io/r/huafu/local-json-db?branch=master) [![NPM version](https://badge.fury.io/js/local-json-db.png)](http://badge.fury.io/js/local-json-db)
 =============
 
+# A local JSON database with overlays
+
+---
+
 Local JSON DB is exclusively designed for local environments and testing purpose. Globally, it's a
 memory database using overlays and that can persist to JSON files.
 
@@ -14,6 +18,28 @@ shared by the fake API, while still using the constantly updated core records pu
 You also want to be able to have some other specific data to run unit tests of your client for example.
 
 **Well, `local-json-db` is here for that!**
+
+## Usage
+
+First of all, install it as a dependency of your project. In the root path of your project, run this:
+
+```
+npm install --save-dev local-json-db
+```
+
+Then, in your CoffeeScript file:
+
+```coffee
+ljdb = require 'local-json-db'
+db = new ljdb.Database()
+```
+
+or in javascript:
+
+```js
+var ljdb = require('local-json-db');
+var db = new ljdb.Database();
+```
 
 
 ## Example

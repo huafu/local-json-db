@@ -25,22 +25,22 @@
   },
   "homepage": "https://github.com/huafu/local-json-db",
   "devDependencies": {
-    "chai": "^1.9.1",
-    "coffee-coverage": "^0.4.2",
-    "coveralls": "^2.11.2",
-    "mocha": "^1.21.4",
+    "chai": "1.9.1",
+    "coffee-coverage": "0.4.2",
+    "coveralls": "2.11.2",
+    "mocha": "1.21.4",
     "mocha-lcov-reporter": "0.0.1",
-    "mocha-multi": "^0.4.1",
-    "ncp": "^0.6.0",
-    "rmdir": "^1.0.4",
-    "sinon": "^1.10.3",
-    "yuidocjs": "^0.3.50"
+    "mocha-multi": "0.4.1",
+    "ncp": "0.6.0",
+    "rmdir": "1.0.4",
+    "sinon": "1.10.3",
+    "yuidocjs": "0.3.50"
   },
   "dependencies": {
-    "MD5": "^1.2.1",
-    "coffee-script": "^1.8.0",
+    "MD5": "1.2.1",
+    "coffee-script": "1.8.0",
     "lodash": "lodash/lodash#f0fb02074d41c728df28eef19fc5823c7b6bd8a6",
-    "mkdirp": "^0.5.0",
-    "underscore.inflections": "^0.2.1"
+    "mkdirp": "0.5.0",
+    "underscore.inflections": "0.2.1"
   }
 }
