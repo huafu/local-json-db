@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CoreObject - Local JSON DB</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="Local JSON DB"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.0.2</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/CoreObject.html">CoreObject</a></li>
+            
+                <li><a href="../classes/Database.html">Database</a></li>
+            
+                <li><a href="../classes/Model.html">Model</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1>CoreObject Class</h1>
+<div class="box meta">
+    
+
+    
+        <div class="extends">
+            Extends EventEmitter
+        </div>
+    
+
+    
+        <div class="foundat">
+            Defined in: <a href="../files/src_CoreObject.coffee.html#l5"><code>src&#x2F;CoreObject.coffee:5</code></a>
+        </div>
+    
+
+    
+
+    
+        <p>Available since 0.0.2</p>
+    
+</div>
+
+
+
+<div class="box intro">
+    <p>Base for all objects</p>
+
+</div>
+
+
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+        
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+        
+        
+        
+        
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+            
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods extends">
+                        
+                            <li class="index-item method">
+                                <a href="#method_assert">assert</a>
+
+                                
+                                    <span class="flag static">static</span>
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_assert">assert</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_className">className</a>
+
+                                
+                                    <span class="flag static">static</span>
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_className">className</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_destroy">destroy</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_identify">identify</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_lockProperties">lockProperties</a>
+
+                                
+                                    <span class="flag static">static</span>
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_lockProperties">lockProperties</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_log">log</a>
+
+                                
+                                    <span class="flag static">static</span>
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_log">log</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_uuid">uuid</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+
+            
+
+            
+        </div>
+
+        
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_assert" class="method item">
+    <h3 class="name"><code>assert</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>expression</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>message</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag static">static</span>
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l47"><code>src&#x2F;CoreObject.coffee:47</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Make an assertion and throw an error if it fails</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">expression</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the test to assert true</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">message</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the message of the error if assertion is failing</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_assert" class="method item">
+    <h3 class="name"><code>assert</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>expression</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>message</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l103"><code>src&#x2F;CoreObject.coffee:103</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Make an assertion and throw an error if it fails</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">expression</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the test to assert true</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">message</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the message of the error if assertion is failing</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_className" class="method item">
+    <h3 class="name"><code>className</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag static">static</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l18"><code>src&#x2F;CoreObject.coffee:18</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Get the name of the class</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                    
+                    <p>name of the class</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_className" class="method item">
+    <h3 class="name"><code>className</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l78"><code>src&#x2F;CoreObject.coffee:78</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Returns the name of the class for this object</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                    
+                    <p>class name of this object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_destroy" class="method item">
+    <h3 class="name"><code>destroy</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l154"><code>src&#x2F;CoreObject.coffee:154</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Used to destroy the object</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_identify" class="method item">
+    <h3 class="name"><code>identify</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l143"><code>src&#x2F;CoreObject.coffee:143</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Get a string identification of the object</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                    
+                    <p>the string identifying the object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_lockProperties" class="method item">
+    <h3 class="name"><code>lockProperties</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>names</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag static">static</span>
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l63"><code>src&#x2F;CoreObject.coffee:63</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Lock given properties so that setting them will fail</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">names</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+                        <span class="flag multiple" title="This argument may occur one or more times.">multiple</span>
+                    
+
+                    <div class="param-description">
+                        <p>the name of each property to lock</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_lockProperties" class="method item">
+    <h3 class="name"><code>lockProperties</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>names</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l117"><code>src&#x2F;CoreObject.coffee:117</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Lock given properties so that setting them will fail</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">names</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+                        <span class="flag multiple" title="This argument may occur one or more times.">multiple</span>
+                    
+
+                    <div class="param-description">
+                        <p>the name of each property to lock</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_log" class="method item">
+    <h3 class="name"><code>log</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[level=&quot;debug&quot;]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag static">static</span>
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l29"><code>src&#x2F;CoreObject.coffee:29</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Log a string with the class name as a prefix</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[level=&quot;debug&quot;]</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>level (debug, notice, info, warning, error, danger or fatal)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+                        <span class="flag multiple" title="This argument may occur one or more times.">multiple</span>
+                    
+
+                    <div class="param-description">
+                        <p>anything to give back to the logger</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_log" class="method item">
+    <h3 class="name"><code>log</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[level=&quot;debug&quot;]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l89"><code>src&#x2F;CoreObject.coffee:89</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Log a string with the class name as a prefix</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[level=&quot;debug&quot;]</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>level (debug, notice, info, warning, error, danger or fatal)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+                        <span class="flag multiple" title="This argument may occur one or more times.">multiple</span>
+                    
+
+                    <div class="param-description">
+                        <p>anything to give back to the logger</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_uuid" class="method item">
+    <h3 class="name"><code>uuid</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l131"><code>src&#x2F;CoreObject.coffee:131</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Get the UUID of the object or fail if none defined</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                    
+                    <p>UUID of the object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+
+        
+
+        
+    </div>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

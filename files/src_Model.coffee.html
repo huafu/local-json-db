@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/Model.coffee - Local JSON DB</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="Local JSON DB"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.0.2</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/CoreObject.html">CoreObject</a></li>
+            
+                <li><a href="../classes/Database.html">Database</a></li>
+            
+                <li><a href="../classes/Model.html">Model</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src/Model.coffee</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+utils = require &#x27;./utils&#x27;
+CoreObject = require &#x27;./CoreObject&#x27;
+RecordStore = require &#x27;./RecordStore&#x27;
+
+
+Class = null
+
+###*
+  Used to manipulate records of a given type. Use {{#crossLink &quot;Database/modelFactory:method&quot;}}{{/crossLink}}
+  to get an instance related to a {{#crossLink &quot;Database&quot;}}{{/crossLink}}.
+
+  @since 0.0.2
+  @class Model
+  @extends CoreObject
+  @constructor
+###
+class Model extends CoreObject
+  ###*
+    Holds our store, could be a {{#crossLink &quot;MergedRecordStore&quot;}}{{/crossLink}}
+    or a simple {{#crossLink &quot;RecordStore&quot;}}{{/crossLink}}
+    @since 0.0.2
+    @private
+    @property _store
+    @type RecordStore|MergedRecordStore
+  ###
+  _store:          null
+  ###*
+    Name of our model, normalized
+    @since 0.0.2
+    @private
+    @property _name
+    @type String
+  ###
+  _name:           null
+  ###*
+    Our database object where we came from
+    @since 0.0.2
+    @private
+    @property _database
+    @type Database
+  ###
+  _database:       null
+  ###*
+    Store our event listener methods that have been self-bound for detaching later
+    @since 0.0.2
+    @private
+    @property _eventListeners
+    @type Object
+  ###
+  _eventListeners: null
+
+
+  ###*
+    Constructs a new instance of &#x60;Model&#x60;
+
+    @since 0.0.2
+    @method constructor
+    @param {Database|null} database our database
+    @param {String|null} name       our name
+    @param {RecordStore} store      our store
+  ###
+  constructor: (database, name, store) -&gt;
+    if name?
+      @_name = Class._modelName(name)
+    else
+      @_name = null
+    if database?
+      @assert(
+          database instanceof Class._databaseClass(),
+        &quot;given database isn&#x27;t an instance of #{ Class._databaseClass().className() }&quot;
+      )
+      @_database = database
+    else
+      @_database = null
+    if store?
+      @assert store instanceof RecordStore, &quot;given store must be an instance of #{ RecordStore.className() }&quot;
+      @_store = store
+    else
+      @_store = new RecordStore()
+    @setMaxListeners Infinity
+    @_attachEvents()
+
+
+  ###*
+    Creates a new record
+
+    @since 0.0.2
+    @method create
+    @param {Object} [record={}] the attributes of our record, including a possible &#x60;id&#x60; if we want to force it
+    @return {Object} copy of our new record
+  ###
+  create: (record) -&gt;
+    @_store.createRecord arguments...
+
+
+  ###*
+    Update a record with new given attributes
+
+    @since 0.0.2
+    @method update
+    @param {String|Number} [id] id of the record to update, if not given, it must be defined in &#x60;record.id&#x60;
+    @param {Object} record      attributes to update
+    @return {Object}            copy of the updated record
+  ###
+  update: (id, record) -&gt;
+    @_store.updateRecord arguments...
+
+
+  ###*
+    Deletes a record
+
+    @since 0.0.2
+    @method delete
+    @param {String|Number} id id of the record to delete
+    @return {Object}          copy of the old record which has been deleted
+  ###
+  delete: (id) -&gt;
+    @_store.deleteRecord arguments...
+
+
+  ###*
+    Find a record given its id
+
+    @since 0.0.2
+    @method find
+    @param {String|Number} id id of the record to get
+    @return {Object|undefined} copy of the record, or &#x60;undefined&#x60; if no such record
+  ###
+  find: (id) -&gt;
+    @_store.readRecord arguments...
+
+
+  ###*
+    Find multiple records at once given their id
+
+    @since 0.0.2
+    @method findMany
+    @param {Array|Number|String} id* id list of the records to get, or one array with all of them
+    @return {Array&lt;Object&gt;} array of all records found
+  ###
+  findMany: (ids...) -&gt;
+    if ids.length is 1 and utils.isArray(ids[0])
+      ids = ids[0]
+    ids = utils.uniq ids
+    record for id in ids when (record = @_store.readRecord id)
+
+
+  ###*
+    Find all records in the store for this model
+
+    @since 0.0.2
+    @method findAll
+    @return {Array&lt;Object&gt;} array of all records
+  ###
+  findAll: -&gt;
+    @_store.readAllRecords()
+
+
+  ###*
+    Find multiple records using a filter object or function
+
+    @since 0.0.2
+    @method findQuery
+    @param {Object|Function} filter the object with attributes to match, or a function used to filter records
+    @param {Object} [thisArg]       the object to bind &#x60;filter&#x60; on if it&#x27;s a function
+    @return {Array&lt;Object&gt;}         array of all records which matched
+  ###
+  findQuery: (filter, thisArg) -&gt;
+    utils.filter @_store.readAllRecords(), filter, thisArg
+
+
+  ###*
+    Count all records
+
+    @since 0.0.2
+    @method count
+    @return {Number} the total count of all records
+  ###
+  count: -&gt;
+    @_store.countRecords()
+
+
+  ###*
+    Destroy this instance, freeing the store
+
+    @since 0.0.2
+    @method destroy
+  ###
+  destroy: -&gt;
+    @_detachEvents()
+    @_store = null
+    @_database = null
+    Object.freeze @
+    super
+
+
+  ###*
+    Attach events on the store
+
+    @since 0.0.2
+    @private
+    @method _attachEvents
+    @chainable
+  ###
+  _attachEvents: -&gt;
+    unless @_eventListeners
+      @_eventListeners = {
+        created: @_recordCreated.bind @
+        updated: @_recordUpdated.bind @
+        deleted: @_recordDeleted.bind @
+      }
+      for k, v of @_eventListeners
+        @_store.on &quot;record.#{k}&quot;, v
+    @
+
+
+  ###*
+    Detach events if previously attached to the store
+
+    @since 0.0.2
+    @private
+    @method _detachEvents
+    @chainable
+  ###
+  _detachEvents: -&gt;
+    if @_eventListeners
+      for k, v of @_eventListeners
+        @_store.removeListener &quot;record.#{k}&quot;, v
+      @_eventListeners = null
+    @
+
+
+  ###*
+    Handles the &#x60;record.created&#x60; event
+
+    @since 0.0.2
+    @private
+    @method _recordCreated
+    @param {Object} record the created record
+  ###
+  _recordCreated: (record) -&gt;
+    @_emit &#x27;created&#x27;, record
+
+
+  ###*
+    Handles the &#x60;record.updated&#x60; event
+
+    @since 0.0.2
+    @private
+    @method _recordUpdated
+    @param {Object} record the updated record
+  ###
+  _recordUpdated: (record) -&gt;
+    @_emit &quot;record:#{ if @_name then &quot;#{@_name}&quot; else &#x27;-&#x27; }##{ record.id }&quot;, record
+    @_emit &#x27;updated&#x27;, record
+
+
+  ###*
+    Handles the &#x60;record.deleted&#x60; event
+
+    @since 0.0.2
+    @private
+    @method _recordDeleted
+    @param {Object} record the deleted record
+  ###
+  _recordDeleted: (record) -&gt;
+    @_emit &quot;record:#{ if @_name then &quot;#{@_name}&quot; else &#x27;-&#x27; }##{ record.id }&quot;, null
+    @_emit &#x27;deleted&#x27;, record
+
+
+  ###*
+    Emits an event from ourself or our database if we have one
+
+    @since 0.0.2
+    @private
+    @method _emit
+    @param {String} event   name of the event
+    @param {mixed} [args]*  any additional args to pass to the event handlers
+  ###
+  _emit: (event, args...) -&gt;
+    if @_database
+      @_database.emit event, args...
+    else
+      @emit event, args...
+
+
+  ###*
+    Asserts that the given model name is valid
+
+    @since 0.0.2
+    @static
+    @method assertValidModelName
+    @param {String} name name of the model to check
+    @chainable
+  ###
+  @assertValidModelName: (name) -&gt;
+    @assert utils.isString(name) and name.length, &quot;the model name must be a string of at least on char&quot;
+    @
+
+
+  ###*
+    Normalize a model name
+
+    @since 0.0.2
+    @static
+    @private
+    @method _modelName
+    @param {String} name  name of the model to normalize
+    @return {String}      the normalized model name
+  ###
+  @_modelName: (name) -&gt;
+    @assertValidModelName(name)
+    utils.camelCase(utils.singularize name)
+
+
+  ###*
+    Return the {{#crossLink &quot;Database&quot;}}{{/crossLink}} class, used to avoid cross-referencing packages
+
+    @since 0.0.2
+    @static
+    @private
+    @method _databaseClass
+    @return {Object} the &#x60;Database&#x60; class
+  ###
+  @_databaseClass: -&gt;
+    require &#x27;./Database&#x27;
+
+
+module.exports = Class = Model
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

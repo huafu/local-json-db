@@ -1,0 +1,1204 @@
+{
+    "project": {
+        "name": "Local JSON DB",
+        "description": "A local JSON database with overlays",
+        "url": "https://github.com/huafu/local-json-db",
+        "version": "0.0.2"
+    },
+    "files": {
+        "src/CoreObject.coffee": {
+            "name": "src/CoreObject.coffee",
+            "modules": {},
+            "classes": {
+                "CoreObject": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/Database.coffee": {
+            "name": "src/Database.coffee",
+            "modules": {},
+            "classes": {
+                "Database": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/Model.coffee": {
+            "name": "src/Model.coffee",
+            "modules": {},
+            "classes": {
+                "Model": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/local-json-db.coffee": {
+            "name": "src/local-json-db.coffee",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "CoreObject": {
+            "name": "CoreObject",
+            "shortname": "CoreObject",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/CoreObject.coffee",
+            "line": 5,
+            "description": "Base for all objects",
+            "since": "0.0.2",
+            "extends": "EventEmitter",
+            "example": [
+                "\n  ```cs\n  class MyClass extends CoreObject\n    # ...\n  ```"
+            ]
+        },
+        "Database": {
+            "name": "Database",
+            "shortname": "Database",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/Database.coffee",
+            "line": 13,
+            "description": "The main class of the `local-json-db`, representing a database with one or more layers",
+            "since": "0.0.2",
+            "extends": "CoreObject",
+            "is_constructor": 1,
+            "example": [
+                "\n  ```js\n  var db = new Database();\n  var record = db.createRecord({name: 'Huafu'});\n  record.age = 31;\n  db.updateRecord(record);\n  console.log(db.find('user', record.id));\n  // will output {id: 1, name: 'Huafu', age: 31}\n  db.save();\n  ```"
+            ]
+        },
+        "Model": {
+            "name": "Model",
+            "shortname": "Model",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/Model.coffee",
+            "line": 8,
+            "description": "Used to manipulate records of a given type. Use {{#crossLink \"Database/modelFactory:method\"}}{{/crossLink}}\nto get an instance related to a {{#crossLink \"Database\"}}{{/crossLink}}.",
+            "since": "0.0.2",
+            "extends": "CoreObject",
+            "is_constructor": 1
+        }
+    },
+    "classitems": [
+        {
+            "file": "src/CoreObject.coffee",
+            "line": 18,
+            "description": "Get the name of the class",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "className",
+            "static": 1,
+            "return": {
+                "description": "name of the class",
+                "type": "String"
+            },
+            "class": "CoreObject"
+        },
+        {
+            "file": "src/CoreObject.coffee",
+            "line": 29,
+            "description": "Log a string with the class name as a prefix",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "log",
+            "static": 1,
+            "params": [
+                {
+                    "name": "level",
+                    "description": "level (debug, notice, info, warning, error, danger or fatal)",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "\"debug\""
+                },
+                {
+                    "name": "items",
+                    "description": "anything to give back to the logger",
+                    "type": "Mixed",
+                    "multiple": true
+                }
+            ],
+            "chainable": 1,
+            "class": "CoreObject"
+        },
+        {
+            "file": "src/CoreObject.coffee",
+            "line": 47,
+            "description": "Make an assertion and throw an error if it fails",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "assert",
+            "static": 1,
+            "params": [
+                {
+                    "name": "expression",
+                    "description": "the test to assert true",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "message",
+                    "description": "the message of the error if assertion is failing",
+                    "type": "String"
+                }
+            ],
+            "chainable": 1,
+            "class": "CoreObject"
+        },
+        {
+            "file": "src/CoreObject.coffee",
+            "line": 63,
+            "description": "Lock given properties so that setting them will fail",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "lockProperties",
+            "static": 1,
+            "params": [
+                {
+                    "name": "names",
+                    "description": "the name of each property to lock",
+                    "type": "String",
+                    "multiple": true
+                }
+            ],
+            "chainable": 1,
+            "class": "CoreObject"
+        },
+        {
+            "file": "src/CoreObject.coffee",
+            "line": 78,
+            "description": "Returns the name of the class for this object",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "className",
+            "return": {
+                "description": "class name of this object",
+                "type": "String"
+            },
+            "class": "CoreObject"
+        },
+        {
+            "file": "src/CoreObject.coffee",
+            "line": 89,
+            "description": "Log a string with the class name as a prefix",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "log",
+            "params": [
+                {
+                    "name": "level",
+                    "description": "level (debug, notice, info, warning, error, danger or fatal)",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "\"debug\""
+                },
+                {
+                    "name": "items",
+                    "description": "anything to give back to the logger",
+                    "type": "Mixed",
+                    "multiple": true
+                }
+            ],
+            "chainable": 1,
+            "class": "CoreObject"
+        },
+        {
+            "file": "src/CoreObject.coffee",
+            "line": 103,
+            "description": "Make an assertion and throw an error if it fails",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "assert",
+            "params": [
+                {
+                    "name": "expression",
+                    "description": "the test to assert true",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "message",
+                    "description": "the message of the error if assertion is failing",
+                    "type": "String"
+                }
+            ],
+            "chainable": 1,
+            "class": "CoreObject"
+        },
+        {
+            "file": "src/CoreObject.coffee",
+            "line": 117,
+            "description": "Lock given properties so that setting them will fail",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "lockProperties",
+            "params": [
+                {
+                    "name": "names",
+                    "description": "the name of each property to lock",
+                    "type": "String",
+                    "multiple": true
+                }
+            ],
+            "chainable": 1,
+            "class": "CoreObject"
+        },
+        {
+            "file": "src/CoreObject.coffee",
+            "line": 131,
+            "description": "Get the UUID of the object or fail if none defined",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "uuid",
+            "return": {
+                "description": "UUID of the object",
+                "type": "String"
+            },
+            "class": "CoreObject"
+        },
+        {
+            "file": "src/CoreObject.coffee",
+            "line": 143,
+            "description": "Get a string identification of the object",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "identify",
+            "return": {
+                "description": "the string identifying the object",
+                "type": "String"
+            },
+            "class": "CoreObject"
+        },
+        {
+            "file": "src/CoreObject.coffee",
+            "line": 154,
+            "description": "Used to destroy the object",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "destroy",
+            "class": "CoreObject"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 32,
+            "description": "The base path",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "property",
+            "name": "_basePath",
+            "type": "String",
+            "default": "\"./json.db\"",
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 41,
+            "description": "Configuration options",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "property",
+            "name": "_config",
+            "type": "Object",
+            "default": "{deletedAtKey: \"__deleted\"}",
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 50,
+            "description": "Array of all layers (overlays) path",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "property",
+            "name": "_layers",
+            "type": "Array<String>",
+            "default": "[this._baseBath]",
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 59,
+            "description": "Loaded models, indexed by their bare name",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "property",
+            "name": "_models",
+            "type": "Object<Model>",
+            "default": "null",
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 70,
+            "description": "Constructs a new instance of {{#crossLink \"Database\"}}{{/crossLink}}",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "constructor",
+            "params": [
+                {
+                    "name": "basePath",
+                    "description": "the base path for the db files, hosting base JSON files of any added overlay",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "\"./json.db\""
+                },
+                {
+                    "name": "config",
+                    "description": "the configuration options",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "createdAtKey",
+                            "description": "name of the key to use as the `createdAt` flag for a record",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "updatedAtKey",
+                            "description": "name of the key to use as the `updatedAt` flag for a record",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "deletedAtKey",
+                            "description": "name of the key to use as the `deletedAt` flag for a record",
+                            "type": "String",
+                            "optional": true,
+                            "optdefault": "\"__deleted\""
+                        }
+                    ]
+                }
+            ],
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 90,
+            "description": "Add an overlay on top of all layers (the latest is the one used first, then come the others in order until the base)",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "addOverlay",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "the path where to read/write JSON files of records, relative to the base path",
+                    "type": "String"
+                }
+            ],
+            "chainable": 1,
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 108,
+            "description": "Creates a new record in the database",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "createRecord",
+            "params": [
+                {
+                    "name": "modelName",
+                    "description": "name of the model",
+                    "type": "String"
+                },
+                {
+                    "name": "record",
+                    "description": "attributes of the record to create",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "a copy of the newly created model with read-only `id`",
+                "type": "Object"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 121,
+            "description": "Updates a record with the given attributes",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "updateModel",
+            "params": [
+                {
+                    "name": "modelName",
+                    "description": "name of the model",
+                    "type": "String"
+                },
+                {
+                    "name": "id",
+                    "description": "id of the record to update, if not given it must be in `record`",
+                    "type": "String|Number",
+                    "optional": true
+                },
+                {
+                    "name": "record",
+                    "description": "attributes of the record to update",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "a copy of the updated record",
+                "type": "Object"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 136,
+            "description": "Deletes a record given its id",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "deleteRecord",
+            "params": [
+                {
+                    "name": "modelName",
+                    "description": "name of the model",
+                    "type": "String"
+                },
+                {
+                    "name": "id",
+                    "description": "id of the record to delete",
+                    "type": "String|Number"
+                }
+            ],
+            "return": {
+                "description": "a copy of the old record which has been deleted",
+                "type": "Object"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 149,
+            "description": "Finds a record by id",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "find",
+            "params": [
+                {
+                    "name": "modelName",
+                    "description": "name of the model",
+                    "type": "String"
+                },
+                {
+                    "name": "id",
+                    "description": "id of the record to find",
+                    "type": "String|Number"
+                }
+            ],
+            "return": {
+                "description": "copy of the record if found, else `undefined`",
+                "type": "Object|undefined"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 162,
+            "description": "Finds many record given a list of ids. If some records are not found, they'll just be filtered out\nof the resulting array",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "findMany",
+            "params": [
+                {
+                    "name": "modelName",
+                    "description": "name of the model",
+                    "type": "String"
+                },
+                {
+                    "name": "ids",
+                    "description": "id of each record to find, or one array with all record ids",
+                    "type": "Array|String|Number",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "array containing all found records",
+                "type": "Array<Object>"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 176,
+            "description": "Finds records using a filter (either function or set of properties to match)",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "findQuery",
+            "params": [
+                {
+                    "name": "modelName",
+                    "description": "name of the model",
+                    "type": "String"
+                },
+                {
+                    "name": "filter",
+                    "description": "attributes to match or a function used to filter records",
+                    "type": "Object|Function"
+                },
+                {
+                    "name": "thisArg",
+                    "description": "will be used as the context to run the filter function",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "array with all records which matched",
+                "type": "Array<Object>"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 190,
+            "description": "Finds all records in the database",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "findAll",
+            "params": [
+                {
+                    "name": "modelName",
+                    "description": "name of the model",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "array containing all records of the given model",
+                "type": "Array<Object>"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 202,
+            "description": "Counts all records of a given model",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "count",
+            "params": [
+                {
+                    "name": "modelName",
+                    "description": "name of the model to count records",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "the total number of records",
+                "type": "Number"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 214,
+            "description": "Saves in the top overlay's path the records that have been created/modified or deleted",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "save",
+            "chainable": 1,
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 232,
+            "description": "Whether the database has been loaded or not (in that case no overlay can be added)",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "isLoaded",
+            "return": {
+                "description": "returns `true` if the db is loaded, else `false`",
+                "type": "Boolean"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 243,
+            "description": "Loads the database (you don't need to call this method, it'll be automatically called when needed)",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "load",
+            "params": [
+                {
+                    "name": "force",
+                    "description": "whether to force a reload in case it has already been loaded previously",
+                    "type": "Boolean"
+                }
+            ],
+            "chainable": 1,
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 258,
+            "description": "Unloads the database and all the records. **This does NOT save anything**",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "unload",
+            "chainable": 1,
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 273,
+            "description": "Destroy and free the db object",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "destroy",
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 284,
+            "description": "Get the {{#crossLink \"Model\"}}{{/crossLink}} instance given a model name",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "modelFactory",
+            "params": [
+                {
+                    "name": "modelName",
+                    "description": "name of the model to get the instance",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "the model object",
+                "type": "Model"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 301,
+            "description": "Used to transform a model name into its store's JSON file name",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "modelNameToFileName",
+            "params": [
+                {
+                    "name": "modelName",
+                    "description": "name of the model",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "name of the file, sanitized and normalized",
+                "type": "String"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 314,
+            "description": "Asserts that the DB hasn't been loaded yet, or throw an error",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "assertNotLoaded",
+            "params": [
+                {
+                    "name": "msg",
+                    "description": "additional message to add in the error",
+                    "type": "String"
+                }
+            ],
+            "chainable": 1,
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 326,
+            "description": "Normalize a model name",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "_modelName",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "name of the model to normalize",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "normalized name",
+                "type": "String"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 339,
+            "description": "Creates the store for a given model",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_createModelStore",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "name of the model",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "the newly created store for the given model",
+                "type": "MergedRecordStore"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Database.coffee",
+            "line": 366,
+            "description": "Saves the store of a given model to disk",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_saveModelStore",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "name of the model",
+                    "type": "String"
+                },
+                {
+                    "name": "model",
+                    "description": "model instance",
+                    "type": "Model"
+                }
+            ],
+            "return": {
+                "description": "the full path of the file that has been saved",
+                "type": "String"
+            },
+            "class": "Database"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 18,
+            "description": "Holds our store, could be a {{#crossLink \"MergedRecordStore\"}}{{/crossLink}}\nor a simple {{#crossLink \"RecordStore\"}}{{/crossLink}}",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "property",
+            "name": "_store",
+            "type": "RecordStore|MergedRecordStore",
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 27,
+            "description": "Name of our model, normalized",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "property",
+            "name": "_name",
+            "type": "String",
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 35,
+            "description": "Our database object where we came from",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "property",
+            "name": "_database",
+            "type": "Database",
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 43,
+            "description": "Store our event listener methods that have been self-bound for detaching later",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "property",
+            "name": "_eventListeners",
+            "type": "Object",
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 53,
+            "description": "Constructs a new instance of `Model`",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "constructor",
+            "params": [
+                {
+                    "name": "database",
+                    "description": "our database",
+                    "type": "Database|null"
+                },
+                {
+                    "name": "name",
+                    "description": "our name",
+                    "type": "String|null"
+                },
+                {
+                    "name": "store",
+                    "description": "our store",
+                    "type": "RecordStore"
+                }
+            ],
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 84,
+            "description": "Creates a new record",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "create",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "the attributes of our record, including a possible `id` if we want to force it",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}"
+                }
+            ],
+            "return": {
+                "description": "copy of our new record",
+                "type": "Object"
+            },
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 96,
+            "description": "Update a record with new given attributes",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "update",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "id of the record to update, if not given, it must be defined in `record.id`",
+                    "type": "String|Number",
+                    "optional": true
+                },
+                {
+                    "name": "record",
+                    "description": "attributes to update",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "copy of the updated record",
+                "type": "Object"
+            },
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 109,
+            "description": "Deletes a record",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "delete",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "id of the record to delete",
+                    "type": "String|Number"
+                }
+            ],
+            "return": {
+                "description": "copy of the old record which has been deleted",
+                "type": "Object"
+            },
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 121,
+            "description": "Find a record given its id",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "find",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "id of the record to get",
+                    "type": "String|Number"
+                }
+            ],
+            "return": {
+                "description": "copy of the record, or `undefined` if no such record",
+                "type": "Object|undefined"
+            },
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 133,
+            "description": "Find multiple records at once given their id",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "findMany",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "id list of the records to get, or one array with all of them",
+                    "type": "Array|Number|String",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "array of all records found",
+                "type": "Array<Object>"
+            },
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 148,
+            "description": "Find all records in the store for this model",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "findAll",
+            "return": {
+                "description": "array of all records",
+                "type": "Array<Object>"
+            },
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 159,
+            "description": "Find multiple records using a filter object or function",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "findQuery",
+            "params": [
+                {
+                    "name": "filter",
+                    "description": "the object with attributes to match, or a function used to filter records",
+                    "type": "Object|Function"
+                },
+                {
+                    "name": "thisArg",
+                    "description": "the object to bind `filter` on if it's a function",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "array of all records which matched",
+                "type": "Array<Object>"
+            },
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 172,
+            "description": "Count all records",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "count",
+            "return": {
+                "description": "the total count of all records",
+                "type": "Number"
+            },
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 183,
+            "description": "Destroy this instance, freeing the store",
+            "since": "0.0.2",
+            "itemtype": "method",
+            "name": "destroy",
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 197,
+            "description": "Attach events on the store",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_attachEvents",
+            "chainable": 1,
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 217,
+            "description": "Detach events if previously attached to the store",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_detachEvents",
+            "chainable": 1,
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 233,
+            "description": "Handles the `record.created` event",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_recordCreated",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "the created record",
+                    "type": "Object"
+                }
+            ],
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 245,
+            "description": "Handles the `record.updated` event",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_recordUpdated",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "the updated record",
+                    "type": "Object"
+                }
+            ],
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 258,
+            "description": "Handles the `record.deleted` event",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_recordDeleted",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "the deleted record",
+                    "type": "Object"
+                }
+            ],
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 271,
+            "description": "Emits an event from ourself or our database if we have one",
+            "since": "0.0.2",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_emit",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "name of the event",
+                    "type": "String"
+                },
+                {
+                    "name": "args",
+                    "description": "any additional args to pass to the event handlers",
+                    "type": "Mixed",
+                    "optional": true,
+                    "multiple": true
+                }
+            ],
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 287,
+            "description": "Asserts that the given model name is valid",
+            "since": "0.0.2",
+            "static": 1,
+            "itemtype": "method",
+            "name": "assertValidModelName",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "name of the model to check",
+                    "type": "String"
+                }
+            ],
+            "chainable": 1,
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 301,
+            "description": "Normalize a model name",
+            "since": "0.0.2",
+            "static": 1,
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_modelName",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "name of the model to normalize",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "the normalized model name",
+                "type": "String"
+            },
+            "class": "Model"
+        },
+        {
+            "file": "src/Model.coffee",
+            "line": 316,
+            "description": "Return the {{#crossLink \"Database\"}}{{/crossLink}} class, used to avoid cross-referencing packages",
+            "since": "0.0.2",
+            "static": 1,
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "_databaseClass",
+            "return": {
+                "description": "the `Database` class",
+                "type": "Object"
+            },
+            "class": "Model"
+        }
+    ],
+    "warnings": []
+}

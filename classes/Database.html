@@ -1,0 +1,3550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Database - Local JSON DB</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="Local JSON DB"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.0.2</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/CoreObject.html">CoreObject</a></li>
+            
+                <li><a href="../classes/Database.html">Database</a></li>
+            
+                <li><a href="../classes/Model.html">Model</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1>Database Class</h1>
+<div class="box meta">
+    
+
+    
+        <div class="extends">
+            Extends <a href="../classes/CoreObject.html" class="crosslink">CoreObject</a>
+        </div>
+    
+
+    
+        <div class="foundat">
+            Defined in: <a href="../files/src_Database.coffee.html#l13"><code>src&#x2F;Database.coffee:13</code></a>
+        </div>
+    
+
+    
+
+    
+        <p>Available since 0.0.2</p>
+    
+</div>
+
+
+
+<div class="box intro">
+    <p>The main class of the <code>local-json-db</code>, representing a database with one or more layers</p>
+
+</div>
+
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_Database" class="method item">
+    <h3 class="name"><code>Database</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l13"><code>src&#x2F;Database.coffee:13</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code class="lang-js">  var db = new Database();
+  var record = db.createRecord({name: &#39;Huafu&#39;});
+  record.age = 31;
+  db.updateRecord(record);
+  console.log(db.find(&#39;user&#39;, record.id));
+  // will output {id: 1, name: &#39;Huafu&#39;, age: 31}
+  db.save();</code></pre>
+
+            </div>
+        </div>
+    
+</div>
+
+    </div>
+
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+        
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+        
+        
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+        
+        
+        
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+            
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods extends">
+                        
+                            <li class="index-item method private">
+                                <a href="#method__createModelStore">_createModelStore</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__modelName">_modelName</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__saveModelStore">_saveModelStore</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_addOverlay">addOverlay</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_assert">assert</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_assertNotLoaded">assertNotLoaded</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_className">className</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_constructor">constructor</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_count">count</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_createRecord">createRecord</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_deleteRecord">deleteRecord</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_destroy">destroy</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_find">find</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_findAll">findAll</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_findMany">findMany</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_findQuery">findQuery</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_identify">identify</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_isLoaded">isLoaded</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_load">load</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_lockProperties">lockProperties</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_log">log</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_modelFactory">modelFactory</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_modelNameToFileName">modelNameToFileName</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_save">save</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_unload">unload</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_updateModel">updateModel</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_uuid">uuid</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties extends">
+                        
+                            <li class="index-item property private">
+                                <a href="#property__basePath">_basePath</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property__config">_config</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property__layers">_layers</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property__models">_models</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+
+            
+        </div>
+
+        
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method__createModelStore" class="method item private">
+    <h3 class="name"><code>_createModelStore</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">MergedRecordStore</span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l339"><code>src&#x2F;Database.coffee:339</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Creates the store for a given model</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">MergedRecordStore</span>:
+                    
+                    <p>the newly created store for the given model</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method__modelName" class="method item private">
+    <h3 class="name"><code>_modelName</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l326"><code>src&#x2F;Database.coffee:326</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Normalize a model name</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model to normalize</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                    
+                    <p>normalized name</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method__saveModelStore" class="method item private">
+    <h3 class="name"><code>_saveModelStore</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>model</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l366"><code>src&#x2F;Database.coffee:366</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Saves the store of a given model to disk</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">model</code>
+                        <span class="type"><a href="../classes/Model.html" class="crosslink">Model</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>model instance</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                    
+                    <p>the full path of the file that has been saved</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_addOverlay" class="method item">
+    <h3 class="name"><code>addOverlay</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>path</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l90"><code>src&#x2F;Database.coffee:90</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Add an overlay on top of all layers (the latest is the one used first, then come the others in order until the base)</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">path</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the path where to read/write JSON files of records, relative to the base path</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_assert" class="method item inherited">
+    <h3 class="name"><code>assert</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>expression</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>message</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/CoreObject.html#method_assert">CoreObject</a>:
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l103"><code>src&#x2F;CoreObject.coffee:103</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Make an assertion and throw an error if it fails</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">expression</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the test to assert true</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">message</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the message of the error if assertion is failing</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_assertNotLoaded" class="method item">
+    <h3 class="name"><code>assertNotLoaded</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>msg</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l314"><code>src&#x2F;Database.coffee:314</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Asserts that the DB hasn&#39;t been loaded yet, or throw an error</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">msg</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>additional message to add in the error</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_className" class="method item inherited">
+    <h3 class="name"><code>className</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/CoreObject.html#method_className">CoreObject</a>:
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l78"><code>src&#x2F;CoreObject.coffee:78</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Returns the name of the class for this object</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                    
+                    <p>class name of this object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_constructor" class="method item">
+    <h3 class="name"><code>constructor</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[basePath=&quot;./json.db&quot;]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[config={}]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l70"><code>src&#x2F;Database.coffee:70</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Constructs a new instance of <a href="../classes/Database.html" class="crosslink">Database</a></p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[basePath=&quot;./json.db&quot;]</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the base path for the db files, hosting base JSON files of any added overlay</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[config={}]</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the configuration options</p>
+
+                    </div>
+
+                    
+                        <ul class="params-list">
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[createdAtKey]</code>
+                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>name of the key to use as the <code>createdAt</code> flag for a record</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[updatedAtKey]</code>
+                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>name of the key to use as the <code>updatedAt</code> flag for a record</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[deletedAtKey=&quot;__deleted&quot;]</code>
+                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>name of the key to use as the <code>deletedAt</code> flag for a record</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                        </ul>
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_count" class="method item">
+    <h3 class="name"><code>count</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l202"><code>src&#x2F;Database.coffee:202</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Counts all records of a given model</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model to count records</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>:
+                    
+                    <p>the total number of records</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_createRecord" class="method item">
+    <h3 class="name"><code>createRecord</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>record</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l108"><code>src&#x2F;Database.coffee:108</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Creates a new record in the database</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">record</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>attributes of the record to create</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                    
+                    <p>a copy of the newly created model with read-only <code>id</code></p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_deleteRecord" class="method item">
+    <h3 class="name"><code>deleteRecord</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>id</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l136"><code>src&#x2F;Database.coffee:136</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Deletes a record given its id</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>id of the record to delete</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                    
+                    <p>a copy of the old record which has been deleted</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_destroy" class="method item">
+    <h3 class="name"><code>destroy</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/CoreObject.html#method_destroy">
+                CoreObject
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l273"><code>src&#x2F;Database.coffee:273</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Destroy and free the db object</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_find" class="method item">
+    <h3 class="name"><code>find</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>id</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a> | Undefined</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l149"><code>src&#x2F;Database.coffee:149</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Finds a record by id</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>id of the record to find</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a> | Undefined</span>:
+                    
+                    <p>copy of the record if found, else <code>undefined</code></p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_findAll" class="method item">
+    <h3 class="name"><code>findAll</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Array<Object></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l190"><code>src&#x2F;Database.coffee:190</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Finds all records in the database</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Array<Object></span>:
+                    
+                    <p>array containing all records of the given model</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_findMany" class="method item">
+    <h3 class="name"><code>findMany</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>ids</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Array<Object></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l162"><code>src&#x2F;Database.coffee:162</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Finds many record given a list of ids. If some records are not found, they&#39;ll just be filtered out
+of the resulting array</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">ids</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                    
+
+                    
+                        <span class="flag multiple" title="This argument may occur one or more times.">multiple</span>
+                    
+
+                    <div class="param-description">
+                        <p>id of each record to find, or one array with all record ids</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Array<Object></span>:
+                    
+                    <p>array containing all found records</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_findQuery" class="method item">
+    <h3 class="name"><code>findQuery</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>filter</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[thisArg]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Array<Object></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l176"><code>src&#x2F;Database.coffee:176</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Finds records using a filter (either function or set of properties to match)</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">filter</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>attributes to match or a function used to filter records</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[thisArg]</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>will be used as the context to run the filter function</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Array<Object></span>:
+                    
+                    <p>array with all records which matched</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_identify" class="method item inherited">
+    <h3 class="name"><code>identify</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/CoreObject.html#method_identify">CoreObject</a>:
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l143"><code>src&#x2F;CoreObject.coffee:143</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Get a string identification of the object</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                    
+                    <p>the string identifying the object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_isLoaded" class="method item">
+    <h3 class="name"><code>isLoaded</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l232"><code>src&#x2F;Database.coffee:232</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Whether the database has been loaded or not (in that case no overlay can be added)</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>:
+                    
+                    <p>returns <code>true</code> if the db is loaded, else <code>false</code></p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_load" class="method item">
+    <h3 class="name"><code>load</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>force</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l243"><code>src&#x2F;Database.coffee:243</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Loads the database (you don&#39;t need to call this method, it&#39;ll be automatically called when needed)</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">force</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>whether to force a reload in case it has already been loaded previously</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_lockProperties" class="method item inherited">
+    <h3 class="name"><code>lockProperties</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>names</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/CoreObject.html#method_lockProperties">CoreObject</a>:
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l117"><code>src&#x2F;CoreObject.coffee:117</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Lock given properties so that setting them will fail</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">names</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+                        <span class="flag multiple" title="This argument may occur one or more times.">multiple</span>
+                    
+
+                    <div class="param-description">
+                        <p>the name of each property to lock</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_log" class="method item inherited">
+    <h3 class="name"><code>log</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[level=&quot;debug&quot;]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/CoreObject.html#method_log">CoreObject</a>:
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l89"><code>src&#x2F;CoreObject.coffee:89</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Log a string with the class name as a prefix</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[level=&quot;debug&quot;]</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>level (debug, notice, info, warning, error, danger or fatal)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+                        <span class="flag multiple" title="This argument may occur one or more times.">multiple</span>
+                    
+
+                    <div class="param-description">
+                        <p>anything to give back to the logger</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_modelFactory" class="method item">
+    <h3 class="name"><code>modelFactory</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="../classes/Model.html" class="crosslink">Model</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l284"><code>src&#x2F;Database.coffee:284</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Get the <a href="../classes/Model.html" class="crosslink">Model</a> instance given a model name</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model to get the instance</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="../classes/Model.html" class="crosslink">Model</a></span>:
+                    
+                    <p>the model object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_modelNameToFileName" class="method item">
+    <h3 class="name"><code>modelNameToFileName</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l301"><code>src&#x2F;Database.coffee:301</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Used to transform a model name into its store&#39;s JSON file name</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                    
+                    <p>name of the file, sanitized and normalized</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_save" class="method item">
+    <h3 class="name"><code>save</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l214"><code>src&#x2F;Database.coffee:214</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Saves in the top overlay&#39;s path the records that have been created/modified or deleted</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_unload" class="method item">
+    <h3 class="name"><code>unload</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l258"><code>src&#x2F;Database.coffee:258</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Unloads the database and all the records. <strong>This does NOT save anything</strong></p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_updateModel" class="method item">
+    <h3 class="name"><code>updateModel</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[id]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>record</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l121"><code>src&#x2F;Database.coffee:121</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Updates a record with the given attributes</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>name of the model</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[id]</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>id of the record to update, if not given it must be in <code>record</code></p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">record</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>attributes of the record to update</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                    
+                    <p>a copy of the updated record</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_uuid" class="method item inherited">
+    <h3 class="name"><code>uuid</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/CoreObject.html#method_uuid">CoreObject</a>:
+            
+        
+        
+        <a href="../files/src_CoreObject.coffee.html#l131"><code>src&#x2F;CoreObject.coffee:131</code></a>
+        
+        </p>
+
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Get the UUID of the object or fail if none defined</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                    
+                    <p>UUID of the object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property__basePath" class="property item private">
+    <h3 class="name"><code>_basePath</code></h3>
+    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l32"><code>src&#x2F;Database.coffee:32</code></a>
+        
+        </p>
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>The base path</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &quot;./json.db&quot;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__config" class="property item private">
+    <h3 class="name"><code>_config</code></h3>
+    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l41"><code>src&#x2F;Database.coffee:41</code></a>
+        
+        </p>
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Configuration options</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> {deletedAtKey: &quot;__deleted&quot;}</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__layers" class="property item private">
+    <h3 class="name"><code>_layers</code></h3>
+    <span class="type">Array<String></span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l50"><code>src&#x2F;Database.coffee:50</code></a>
+        
+        </p>
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Array of all layers (overlays) path</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> [this._baseBath]</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__models" class="property item private">
+    <h3 class="name"><code>_models</code></h3>
+    <span class="type">Object<Model></span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_Database.coffee.html#l59"><code>src&#x2F;Database.coffee:59</code></a>
+        
+        </p>
+
+        
+
+        
+            <p>Available since 0.0.2</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Loaded models, indexed by their bare name</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> null</p>
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+
+        
+    </div>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
