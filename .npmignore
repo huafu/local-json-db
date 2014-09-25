@@ -4,7 +4,6 @@ npm-debug.log
 .travis.yml
 .npmignore
 yuidoc.json
-Makefile
 /docs/
 /tmp/
 /.git/
