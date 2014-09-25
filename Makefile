@@ -19,7 +19,7 @@ test: build
 		multi=$(MOCHA_REPORTERS) \
 		$(BIN)/mocha \
 		--require coffee-script/register \
-		--require spec/loader-coverage.js \
+		--require specs/loader-coverage.js \
 		--reporter mocha-multi \
 		--ui bdd \
 		$(SPEC)

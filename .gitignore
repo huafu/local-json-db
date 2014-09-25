@@ -40,3 +40,4 @@ tmp/
 *.old
 *.map
 docs/
+lib/

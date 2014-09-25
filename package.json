@@ -4,7 +4,8 @@
   "description": "Local JSON database with overlays to be used as fixtures",
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "post-install": "make build"
   },
   "repository": {
     "type": "git",
@@ -38,7 +39,7 @@
   "dependencies": {
     "MD5": "1.2.1",
     "coffee-script": "1.8.0",
-    "lodash": "lodash/lodash#f0fb02074d41c728df28eef19fc5823c7b6bd8a6",
+    "lodash": "lodash/lodash#12ad5d53c9c1d9e3e4b08da0b5370ee5289f8038",
     "mkdirp": "0.5.0",
     "underscore.inflections": "0.2.1"
   }

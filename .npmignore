@@ -13,5 +13,5 @@ Makefile
 /cover_html/
 /.coverage_data/
 /coverage/
-/src/
+/lib/
 *.map
