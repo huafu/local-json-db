@@ -31,8 +31,8 @@ coverall: test
 
 
 doc:
-	VERSION=`node -pe "require('./package.json').version"`
-	@$(BIN)/yuidoc \
+	VERSION=`node -pe "require('./package.json').version"` && \
+		$(BIN)/yuidoc \
 		-e .coffee \
 		--syntaxtype coffee \
 		--project-version "$$VERSION" \
