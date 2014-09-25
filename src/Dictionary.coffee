@@ -3,6 +3,7 @@ CoreObject = require './CoreObject'
 
 Class = null
 
+
 class Dictionary extends CoreObject
   _keys: null
   _values: null

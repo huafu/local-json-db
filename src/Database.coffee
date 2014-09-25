@@ -14,16 +14,31 @@ Class = null
 #
 # @since 0.0.2
 # @example
-#   db = new Database()
-#   record = db.createRecord {name: 'Huafu'}
-#   record.age = 31
-#   db.updateRecord record
-#   db.save()
+#   var db = new Database();
+#   var record = db.createRecord({name: 'Huafu'});
+#   record.age = 31;
+#   db.updateRecord(record);
+#   console.log(db.find('user', record.id));
+#   // will output {id: 1, name: 'Huafu', age: 31}
+#   db.save();
 class Database extends CoreObject
+  # @since 0.0.2
+  # @private
+  # @property {String} base path
   _basePath: null
+  # @since 0.0.2
+  # @private
+  # @property {Object} configuration options
   _config: null
+  # @since 0.0.2
+  # @private
+  # @property {Array<String>} array of all layers (overlays) path
   _layers: null
+  # @since 0.0.2
+  # @private
+  # @property {Object<Model>} loaded models, indexed by their bare name
   _models: null
+
 
   # Constructs a new instance of {Database}
   #
@@ -124,13 +139,13 @@ class Database extends CoreObject
 
   # Finds records using a filter (either function or set of properties to match)
   #
-  # @overlay findQuery(modelName, filter)
+  # @overload findQuery(modelName, filter)
   #   @since 0.0.2
   #   @param {String} modelName name of the model
   #   @param {Object} filter    attributes to match
   #   @return {Array<Object>}   array with all records which matched
   #
-  # @overlay findQuery(modelName, filter, thisArg)
+  # @overload findQuery(modelName, filter, thisArg)
   #   @since 0.0.2
   #   @param {String} modelName name of the model
   #   @param {Function} filter  function used to filter records, each record is given as the first parameter
@@ -244,14 +259,23 @@ class Database extends CoreObject
     @assert not @isLoaded(), "the database is already loaded#{if msg then ", #{msg}" else ''}"
 
 
-  # @private
+  # Normalize a model name
+  #
   # @since 0.0.2
+  # @see {Model._modelName}
+  # @private
+  # @param {String} name  name of the model to normalize
+  # @return {String}      normalized name
   _modelName: (name) ->
     Model._modelName name
 
 
-  # @private
+  # Creates the store for a given model
+  #
   # @since 0.0.2
+  # @private
+  # @param {String} name        name of the model
+  # @return {MergedRecordStore} the newly created store for the given model
   _createModelStore: (modelName) ->
     file = @modelNameToFileName @_modelName modelName
     stores = []
@@ -270,8 +294,13 @@ class Database extends CoreObject
     store
 
 
-  # @private
+  # Saves the store of a given model to disk
+  #
   # @since 0.0.2
+  # @private
+  # @param {String} name  name of the model
+  # @param {Model} model  model instance
+  # @return {String}      the full path of the file that has been saved
   _saveModelStore: (name, model) ->
     file = @modelNameToFileName @_modelName name
     top = @_layers[@_layers.length - 1]
