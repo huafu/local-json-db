@@ -31,15 +31,25 @@ Then, in your CoffeeScript file:
 
 ```coffee
 ljdb = require 'local-json-db'
-db = new ljdb.Database()
+db = new ljdb.Database('./data')
+db.addOverlay 'local'
+
+db.createRecord 'user', name: 'Huafu'
+db.save()
 ```
 
 or in javascript:
 
 ```js
 var ljdb = require('local-json-db');
-var db = new ljdb.Database();
+var db = new ljdb.Database('./data');
+db.addOverlay('local');
+
+db.createRecord('user', {name: 'Huafu'});
+db.save();
 ```
+
+**Full API documentation of `Database` is [here](http://huafu.github.io/local-json-db/classes/Database.html).**
 
 
 ## Example
