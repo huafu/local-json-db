@@ -15,6 +15,7 @@ lib/%.js: src/%.coffee
 
 
 test: build
+	@mkdir coverage
 	@COVERAGE=1 \
 		multi=$(MOCHA_REPORTERS) \
 		$(BIN)/mocha \
