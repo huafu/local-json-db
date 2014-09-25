@@ -72,18 +72,18 @@ define release
 endef
 
 
-release-patch: build test doc
+release-patch: build test
 	@$(call release,patch)
 
 
-release-minor: build test doc
+release-minor: build test
 	@$(call release,minor)
 
 
-release-major: build test doc
+release-major: build test
 	@$(call release,major)
 
 
-publish:
+publish: build test doc
 	git push --tags origin HEAD:master
 	npm publish
