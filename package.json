@@ -1,6 +1,6 @@
 {
   "name": "local-json-db",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Local JSON database with overlays to be used as fixtures",
   "main": "index.js",
   "scripts": {
