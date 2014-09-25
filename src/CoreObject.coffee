@@ -2,34 +2,39 @@ EventEmitter = require('events').EventEmitter
 utils = require './utils'
 
 Class = null
+###*
+  Base for all objects
 
-# Base for all objects
-#
-# @since 0.0.2
-# @example
-#   class MyClass extends CoreObject
-#     # ...
+  @since 0.0.2
+  @class CoreObject
+  @extends EventEmitter
+  @example
+    class MyClass extends CoreObject
+      # ...
+###
 class CoreObject extends EventEmitter
-  # Get the name of the class
-  #
-  # @since 0.0.2
-  # @return {String} name of the class
-  @className: -> @toString().match(/function\s+([a-zA-Z0-9_]+)/)[1]
+  ###*
+    Get the name of the class
+
+    @since 0.0.2
+    @method className
+    @static
+    @return {String} name of the class
+  ###
+  @className:      -> @toString().match(/function\s+([a-zA-Z0-9_]+)/)[1]
 
 
-  # Log a string with the class name as a prefix
-  #
-  # @overload log(level, items...)
-  #   @since 0.0.2
-  #   @param {String} level     level (debug, notice, info, warning, error, danger or fatal)
-  #   @param {Object} items...  anything to give back to the logger
-  #   @return {CoreObject}      this object for chaining
-  #
-  # @overload log(items...)
-  #   @since 0.0.2
-  #   @param {Object} items...  anything to give back to the logger
-  #   @return {CoreObject}      this object for chaining
-  @log: (level, items...) ->
+  ###*
+    Log a string with the class name as a prefix
+
+    @since 0.0.2
+    @method log
+    @static
+    @param {String} [level] level (debug, notice, info, warning, error, danger or fatal)
+    @param {Object} items*  anything to give back to the logger
+    @chainable
+  ###
+  @log:            (level, items...) ->
     unless level in ['debug', 'notice', 'info', 'warning', 'error', 'danger', 'fatal']
       items.unshift level
       level = 'debug'
@@ -37,87 +42,120 @@ class CoreObject extends EventEmitter
     @
 
 
-  # Make an assertion and throw an error if it fails
-  #
-  # @since 0.0.2
-  # @param {Boolean} expression the test to assert true
-  # @return {CoreObject}        this object for chaining
-  @assert: (expression, message) ->
+  ###*
+    Make an assertion and throw an error if it fails
+
+    @since 0.0.2
+    @method assert
+    @static
+    @param {Boolean} expression the test to assert true
+    @param {String} message     the message of the error if assertion is failing
+    @chainable
+  ###
+  @assert:         (expression, message) ->
     unless expression
       utils.throw "[#{@className()}#{if arguments.callee.caller is @:: assert then '#' else '.'}assert] #{ message }"
     @
 
 
-  # Lock given properties so that setting them will fail
-  #
-  # @since 0.0.2
-  # @param {String} names...  the name of each property to lock
-  # @return {CoreObject}      this class for chaining
+  ###*
+    Lock given properties so that setting them will fail
+
+    @since 0.0.2
+    @method lockProperties
+    @static
+    @param {String} names*  the name of each property to lock
+    @chainable
+  ###
   @lockProperties: (names...) ->
     for name in names
       utils.lock(@, name)
     @
 
 
+  ###*
   # Returns the name of the class for this object
   #
   # @since 0.0.2
+    @method className
   # @return {String} class name of this object
-  className: ->
+  ###
+  className:       ->
     @constructor.className()
 
 
-  # Log a some data
-  #
-  # @since 0.0.2
-  # @see {CoreObject.log}
-  log: (level, items...) ->
+  ###*
+    Log a string with the class name as a prefix
+
+    @since 0.0.2
+    @method log
+    @param {String} [level] level (debug, notice, info, warning, error, danger or fatal)
+    @param {Object} items*  anything to give back to the logger
+    @chainable
+  ###
+  log:             (level, items...) ->
     @constructor.log arguments...
     @
 
 
-  # Make an assertion, throwing an error in case of failure
-  #
-  # @since 0.0.2
-  # @see {CoreObject.assert}
-  assert: (expression, message) ->
+  ###*
+    Make an assertion and throw an error if it fails
+
+    @since 0.0.2
+    @method assert
+    @param {Boolean} expression the test to assert true
+    @param {String} message     the message of the error if assertion is failing
+    @chainable
+  ###
+  assert:          (expression, message) ->
     @constructor.assert arguments...
     @
 
 
-  # Lock properties of this object to disallow changing them later
-  #
-  # @since 0.0.2
-  # @see {CoreObject.lockProperties}
-  # @param {String} names...  the name of each property to lock
-  # @return {CoreObject}      this object for chaining
-  lockProperties: (names...) ->
+  ###*
+    Lock given properties so that setting them will fail
+
+    @since 0.0.2
+    @method lockProperties
+    @param {String} names*  the name of each property to lock
+    @chainable
+  ###
+  lockProperties:  (names...) ->
     for name in names
       utils.lock(@, name)
     @
 
 
-  # Get the UUID of the object or fail if none defined
-  #
-  # @since 0.0.2
-  # @return {String} UUID of the object
-  uuid: ->
+  ###*
+    Get the UUID of the object or fail if none defined
+
+    @since 0.0.2
+    @method uuid
+    @return {String} UUID of the object
+  ###
+  uuid:            ->
     @assert (@_uuid and typeof @_uuid is 'string'), "undefined #{ @className() }#_uuid or not a string"
     @_uuid
 
 
-  # Get a string identification of the object
-  #
-  # @since 0.0.2
-  # @return {String} the string identifying the object
-  identify: ->
+  ###*
+    Get a string identification of the object
+
+    @since 0.0.2
+    @method identify
+    @return {String} the string identifying the object
+  ###
+  identify:        ->
     "[object #{ @className() }<#{ @uuid() }>]"
 
 
-  # Used to destroy the object
-  #
-  # @since 0.0.2
-  destroy: ->
+  ###*
+    Used to destroy the object
+
+    @since 0.0.2
+    @method destroy
+  ###
+  destroy:         ->
 
 
 module.exports = Class = CoreObject

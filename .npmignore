@@ -3,10 +3,13 @@ npm-debug.log
 .vimrc.local
 .travis.yml
 .npmignore
+yuidoc.json
+Makefile
+/docs/
 /tmp/
 /.git/
 /node_modules/
-/spec/
+/specs/
 /cover_html/
 /.coverage_data/
 /coverage/
