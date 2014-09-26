@@ -4,17 +4,80 @@ RecordStore = require './RecordStore'
 
 Class = null
 
-class MergedRecordStore extends RecordStore
-  _layers: null
-  _eventsNamespace: null
-  _globalEventsNamespace: null
 
+###*
+  Handle a merged record store with one or more layers of stores
+
+  @since 0.0.2
+  @class MergedRecordStore
+  @extends RecordStore
+  @constructor
+###
+class MergedRecordStore extends RecordStore
+  ###*
+    All our stores, from the bottom one to the top one (the top one being the writable one)
+    @since 0.0.2
+    @private
+    @property _layers
+    @type Array<RecordStore>
+  ###
+  _layers: null
+  ###*
+    Namespace for each store event, events will then be like `layer0.{namespace}.updated`
+    @since 0.0.2
+    @private
+    @property _eventsNamespace
+    @type String
+    @default "record"
+  ###
+  _eventsNamespace: null
+  ###*
+    Namespace for our record events, outside of each layer, events will then be like `{namespace}.updated`
+    @since 0.0.2
+    @private
+    @property _globalEventsNamespace
+    @type String
+    @default "record"
+  ###
+  _globalEventsNamespace: null
+  ###*
+    Used as a record importer
+    @since 0.0.7
+    @private
+    @property _importer
+    @type Function
+  ###
+  _importer: null
+  ###*
+    Used as a record exporter
+    @since 0.0.7
+    @private
+    @property _exporter
+    @type Function
+  ###
+  _exporter: null
+
+
+  ###*
+    Constructs an extended record store
+
+    @since 0.0.2
+    @method constructor
+    @param {Array<Object>} [records=[]] The records to import in the base layer
+    @param {Object} [config={}] The configuration of the base layer and default config for all layers
+    @param {String|Boolean} [config.createdAtKey=false] The key where to store the creation date
+    @param {String|Boolean} [config.updatedAtKey=false] The key where to store the update date
+    @param {String|Boolean} [config.deletedAtKey="__deleted"] The key where to store the deletion date
+    @param {String} [config.eventsNamespace="record"] The namespace for our events
+  ###
   constructor: (records = [], config = {}) ->
     @_config = utils.defaults {}, config, {
       createdAtKey: no
       updatedAtKey: no
       eventsNamespace: 'record'
     }
+    @_importer = (r) -> r
+    @_exporter = (r) -> r
     @_config.deletedAtKey = '__deleted' unless @_config.deletedAtKey
     @_globalEventsNamespace = @_config.eventsNamespace
     @_eventsEmitter = @
@@ -29,6 +92,35 @@ class MergedRecordStore extends RecordStore
     @lockProperties(
       '_layers', '_eventsNamespace', '_records', '_config', '_globalEventsNamespace', '_readOnly'
     )
+
+
+  ###*
+    Defines the importer to be used
+
+    @since 0.0.7
+    @method setImporter
+    @param {Function|null} importer The importer to use
+    @chainable
+  ###
+  setImporter: (importer = (r) -> r) ->
+    @assert utils.isFunction(importer), "the importer must be a function"
+    @_importer = importer
+    @
+
+
+  ###*
+    Defines the exporter to be used
+
+    @since 0.0.7
+    @method setExporter
+    @param {Function|null} exporter The exporter to use
+    @chainable
+  ###
+  setExporter: (exporter = (r) -> r) ->
+    @assert utils.isFunction(exporter), "the exporter must be a function"
+    @_exporter = exporter
+    @
+
 
   addLayer: (records = [], config = {}) ->
     # be sure the other layers follow our config
@@ -66,19 +158,33 @@ class MergedRecordStore extends RecordStore
     res
 
   createRecord: (record = {}) ->
-    record = super
+    record = @_exporter super(@_importer record)
     @emit "#{ @_globalEventsNamespace }.created", record
     record
 
   updateRecord: (id, record) ->
-    record = super
+    if arguments.length is 1
+      record = id
+    else
+      @assert(
+        not record.id? or "#{id}" is "#{record.id}",
+        "the id given `#{id}` does not match the id in the given record `#{record.id}`"
+      )
+      record.id = id
+    record = @_exporter super(@_importer record)
     @emit "#{ @_globalEventsNamespace }.updated", record
     record
 
   deleteRecord: (id) ->
-    record = super(id)
+    record = @_exporter super(id)
     @emit "#{ @_globalEventsNamespace }.deleted", record
     record
+
+  readRecord: (id) ->
+    @_exporter super(id)
+
+  readAllRecords: ->
+    @_exporter(r) for r in super()
 
   countRecords: ->
     @ids().length

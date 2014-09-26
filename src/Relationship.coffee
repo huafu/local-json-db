@@ -176,7 +176,7 @@ class Relationship extends CoreObject
     @method inverseRelationship
     @return {Relationship} The inverse relationship
   ###
-  inverseRelation: ->
+  inverseRelationship: ->
     if (rel = @_inverse) is undefined
       if (rel = @toModel().relationshipAt @toAccessor()) and
           rel.toModel() is @fromModel() and

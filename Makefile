@@ -7,7 +7,7 @@ SPEC = $(wildcard specs/*Spec.coffee) $(wildcard specs/lib/*Spec.coffee) $(wildc
 MOCHA_REPORTERS = "spec=- html-cov=coverage/html-cov.html json-cov=coverage/json-cov.json mocha-lcov-reporter=coverage/coverage.lcov"
 
 
-build: $(LIB)
+build: clean $(LIB)
 
 lib/%.js: src/%.coffee
 	@mkdir -p $(@D)

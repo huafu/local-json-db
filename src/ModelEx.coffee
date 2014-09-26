@@ -6,6 +6,8 @@ Relationship = require './Relationship'
 
 Class = null
 
+hasOwn = (o, p) -> {}.hasOwnProperty.call o, p
+
 ###*
   Extended model with pre-defined attributes and relations
 
@@ -40,14 +42,6 @@ class ModelEx extends Model
     @default false
   ###
   _isDynamic: null
-  ###*
-    The database holding this model
-    @since 0.0.7
-    @private
-    @property _database
-    @type Database
-  ###
-  _database: null
 
 
   ###*
@@ -56,18 +50,18 @@ class ModelEx extends Model
     @since 0.0.7
     @method constructor
     @param {Database} database The database holding the model
+    @param {String} name The name of our model
+    @param {RecordStore} store Our store
     @param {Object} attributes The attribute definitions of the model
   ###
-  constructor: (database, attributes = {'*': yes}) ->
-    @assert(
-      database and database instanceof Class._databaseClass(),
-      "given database must be an instance of Database"
-    )
+  constructor: (database, name, store, attributes = {'*': yes}) ->
+    @assert database, "extended models must have a database defined"
+    @assert name, "extended models must have a name defined"
+    super
     @assert(
       attributes.id is undefined,
       "attribute list cannot contain `id`, it's automatically added as attribute and used as the PK"
     )
-    @_databse = database
     @_attributes = {}
     @_relationships = {}
     @_isDynamic = no
@@ -81,6 +75,10 @@ class ModelEx extends Model
           @_relationships[name] = @_parseRelationship(name, type)
         else
           @assert no, "wrong attribute type: #{ type }"
+    for own prop, rel of @_relationships
+      @assert not @_attributes[rel.fromAttr()], "a relationship cannot be defined on an attribute of the model: #{ @_name }.#{ attr }"
+    @_store.setImporter @_importRecord.bind(@)
+    @_store.setExporter @_exportRecord.bind(@)
     @lockProperties '_attributes', '_relationships', '_isDynamic', '_database'
 
 
@@ -116,6 +114,62 @@ class ModelEx extends Model
       },
       hasMany
     )
+
+
+  ###*
+    Export a record, transforming types and preparing relation accessors
+
+    @since 0.0.7
+    @private
+    @method _exportRecord
+    @param {Object} record The record to export
+    @return {Object} The exported record
+  ###
+  _exportRecord: (record) ->
+    if record?
+      defined = ['id']
+      for key, attr of @_attributes
+        defined.push key
+        record[key] = attr.deserialize(record[key])
+      for key, rel of @_relationships
+        defined.push rel.fromAttr()
+        rel._setupRecord record
+      #FIXME: should we delete undefined keys? pretty sure yes
+      unless @_isDynamic
+        for key, val of record when key not in defined
+          delete record[key]
+    record
+
+
+  ###*
+    Import a record, serializing its known attributes and relationships
+
+    @since 0.0.7
+    @private
+    @method _importRecord
+    @param {Object} record The record to import
+    @return {Object} The serialized record
+  ###
+  _importRecord: (record) ->
+    imported = ['id']
+    rec = {}
+    rec.id = record.id if record.id
+    for attr, rel of @_relationships
+      k = rel.fromAttr()
+      if not hasOwn(record, k) and hasOwn(record, attr)
+        rec[k] = rel._deserializeRelated record[attr]
+      else
+        rec[k] = record[k]
+      imported.push k
+    for key, val of record when key not in imported
+      if (attr = @_attributes[key])
+        rec[key] = attr.serialize(val)
+      else if @_isDynamic
+        rec[key] = record[key]
+    rec
+
+
+
 
 
 module.exports = Class = ModelEx
