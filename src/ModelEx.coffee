@@ -102,6 +102,17 @@ class ModelEx extends Model
 
 
   ###*
+    Finds whether the model is a dynamic model (unknown attributes aren't ignored)
+
+    @since 0.0.7
+    @method isDynamic
+    @return {Boolean} Returns `true` if the model is dynamic, else `false`
+  ###
+  isDynamic: ->
+    @_isDynamic
+
+
+  ###*
     Used to parse the definition of a relationship and return a Relationship object
 
     @since 0.0.7
@@ -156,6 +167,13 @@ class ModelEx extends Model
       unless @_isDynamic
         for key, val of record when key not in defined
           delete record[key]
+      #sign our record
+      Object.defineProperty(record, '__modelName', {
+        value: @_name
+        writable: no
+        configurable: no
+        enumerable: no
+      })
     record
 
 
@@ -172,17 +190,18 @@ class ModelEx extends Model
     imported = ['id']
     rec = {}
     rec.id = record.id if record.id
-    for attr, rel of @_relationships
-      k = rel.fromAttr()
-      if not hasOwn(record, k) and hasOwn(record, attr)
-        rec[k] = rel._deserializeRelated record[attr]
+    for key, rel of @_relationships
+      attr = rel.fromAttr()
+      if not hasOwn(record, attr) and hasOwn(record, key)
+        rec[attr] = rel._serializeRelated record[key]
       else
-        rec[k] = record[k]
-      imported.push k
+        rec[attr] = record[attr]
+      imported.push attr
     for key, val of record when key not in imported
       if (attr = @_attributes[key])
         rec[key] = attr.serialize(val)
-      else if @_isDynamic
+      else
+        @assert @_isDynamic, "unknown attribute `#{ key }` for model `#{ @_name }`"
         rec[key] = record[key]
     rec
 

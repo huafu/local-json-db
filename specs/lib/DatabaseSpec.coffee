@@ -227,7 +227,6 @@ describe 'Database', ->
   describe 'with predefined models', ->
     beforeEach ->
       db = new Database(TEMP_DATA_WITH_MODELS, {
-        updatedAtKey: 'updatedAt'
         deletedAtKey: 'deletedAt'
         schemaPath: 'models'
       })
@@ -247,4 +246,68 @@ describe 'Database', ->
       expect(db.modelFactory('user').knownAttributes(no)).to.deep.equal [
         'id', 'name'
       ]
+      expect(db.modelFactory('posts').knownAttributes()).to.deep.equal [
+        'id', 'title', 'authorId', 'commentIds'
+      ]
+      expect(db.modelFactory('posts').knownAttributes(no)).to.deep.equal [
+        'id', 'title'
+      ]
+
+    it 'throws an error when trying to set a unknown attribute on a fixed model', ->
+      expect(-> db.createRecord 'user', {name: 'Huafu', age: 31}).to.throw()
+
+    it 'allows setting unknown attributes on dynamic models', ->
+      expect(-> db.createRecord 'post', {id: 1000, title: 'my post', published: yes}).to.not.throw()
+      expect(db.find 'post', 1000).to.deep.equal {
+        id: 1000
+        title: 'my post'
+        published: yes
+        authorId: undefined
+        commentIds: undefined
+      }
+
+    it 'set and reads a one-to-one related record', ->
+      user = db.createRecord 'user', {name: 'Huafu'}
+      post = db.createRecord 'post', {title: 'huafu post', author: user}
+      expect(post).to.deep.equal {
+        id: 1, title: 'huafu post', authorId: 1, commentIds: undefined
+      }
+      expect(post.author).to.deep.equal {
+        id: 1, name: 'Huafu', postIds: undefined, commentIds: undefined
+      }
+      expect(post.authorId).to.equal 1
+
+      post = db.find 'post', 1
+      expect(post).to.deep.equal {
+        id: 1, title: 'huafu post', authorId: 1, commentIds: undefined
+      }
+      expect(post.author).to.deep.equal {
+        id: 1, name: 'Huafu', postIds: undefined, commentIds: undefined
+      }
+      expect(post.authorId).to.equal 1
+
+    it 'updates a one-to-one related record', ->
+      user = db.createRecord 'user', {name: 'Huafu'}
+      post = db.createRecord 'post', {title: 'huafu post'}
+      expect(post.author).to.be.undefined
+      expect(post.authorId).to.be.undefined
+      post.author = user
+      expect(post).to.deep.equal {
+        id: 1, title: 'huafu post', authorId: 1, commentIds: undefined
+      }
+      expect(post.author).to.deep.equal {
+        id: 1, name: 'Huafu', postIds: undefined, commentIds: undefined
+      }
+
+      db.updateRecord post
+      post = db.find 'post', 1
+      expect(post).to.deep.equal {
+        id: 1, title: 'huafu post', authorId: 1, commentIds: undefined
+      }
+      expect(post.author).to.deep.equal {
+        id: 1, name: 'Huafu', postIds: undefined, commentIds: undefined
+      }
+      expect(post.authorId).to.equal 1
+
+
 

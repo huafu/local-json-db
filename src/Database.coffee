@@ -151,14 +151,20 @@ class Database extends CoreObject
 
     @since 0.0.2
     @method updateModel
-    @param {String} modelName   name of the model
-    @param {String|Number} [id] id of the record to update, if not given it must be in `record`
-    @param {Object} record      attributes of the record to update
-    @return {Object}            a copy of the updated record
+    @param {String} [modelName] Name of the model (if the database has a schema the record object can directly be given as the only argument)
+    @param {String|Number} [id] Id of the record to update, if not given it must be in `record`
+    @param {Object} record Attributes to update in the record
+    @return {Object} A copy of the updated record
   ###
   updateRecord: (modelName, id, record) ->
-    mdl = @modelFactory(modelName)
-    mdl.update.apply mdl, [].slice.call(arguments, 1)
+    if @hasSchema() and modelName.__modelName
+      mn = modelName.__modelName
+      args = arguments
+    else
+      mn = modelName
+      args = [].slice.call(arguments, 1)
+    mdl = @modelFactory mn
+    mdl.update.apply mdl, args
 
 
   ###*
