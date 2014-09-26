@@ -16,9 +16,10 @@
     require('coffee-script').register();
   }
 
+  this.LIB_PATH = '../' + (useSources ? 'src' : 'lib');
   this.expect = chai.expect;
   this.sinon = require('sinon');
-  this.lib = require('../' + (useSources ? 'src' : 'lib'));
+  this.lib = require(this.LIB_PATH);
 
 
   /* ==== chai configuration ============= */

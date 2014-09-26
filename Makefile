@@ -1,17 +1,18 @@
 BIN = ./node_modules/.bin
+
 SRC = $(wildcard src/*.coffee)
 LIB = $(SRC:src/%.coffee=lib/%.js)
+SPEC = $(wildcard specs/*Spec.coffee) $(wildcard specs/lib/*Spec.coffee) $(wildcard specs/acceptance/*.coffee)
+
 DOC = docs
 COV = coverage
-SPEC = $(wildcard specs/*Spec.coffee) $(wildcard specs/lib/*Spec.coffee) $(wildcard specs/acceptance/*.coffee)
 
 
 
 build: $(LIB)
 
 lib/%.js: src/%.coffee
-	@mkdir -p $(@D)
-	@$(BIN)/coffee -bcp $< > $@
+	$(BIN)/coffee -bc -o lib $<
 
 
 test: build
@@ -21,6 +22,18 @@ test: build
 		--require specs/loader.js \
 		--reporter spec \
 		--ui bdd \
+		$(SPEC)
+
+
+watch:
+	NODE_ENV=test \
+		TEST_WITH_SOURCES=1 \
+		$(BIN)/mocha \
+		--compilers coffee:coffee-script/register \
+		--require specs/loader.js \
+		--reporter dot \
+		--ui bdd \
+		-w \
 		$(SPEC)
 
 
