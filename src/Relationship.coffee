@@ -1,6 +1,5 @@
 utils = require './utils'
 CoreObject = require './CoreObject'
-Database = require './Database'
 
 Class = null
 
@@ -73,16 +72,19 @@ class Relationship extends CoreObject
     @param {Boolean} [hasMany=false] Whether the relation is a `has many` relation kind
   ###
   constructor:      (database, from, to, hasMany) ->
-    @assert database and database instanceof Database, "you must give a Database object as first parameter"
+    @assert(
+      database and database instanceof Class._databaseClass(),
+      "you must give a Database object as first parameter"
+    )
     @_database = database
     @_from =
       model: null
-      modelName: Database._modelName(from.model)
+      modelName: Class._databaseClass()._modelName(from.model)
       attribute: from.attribute
       accessor: from.accessor
     @_to =
       model: null
-      modelName: Database._modelName(to.model)
+      modelName: Class._databaseClass()._modelName(to.model)
       attribute: 'id'
       accessor: to.accessor
     @_hasMany = Boolean(hasMany)
@@ -124,7 +126,7 @@ class Relationship extends CoreObject
   ###
   fromAttr: ->
     unless (attr = @_from.attribute)
-      @_from.attribute = attr = Database._attributeForRelationship(@_to.modelName, @_hasMany)
+      @_from.attribute = attr = Class._databaseClass()._attributeForRelationship(@_to.modelName, @_hasMany)
     attr
 
 
@@ -150,7 +152,7 @@ class Relationship extends CoreObject
   ###
   fromAccessor: ->
     unless (key = @_from.accessor)
-      @_from.accessor = key = Database._accessorForRelationship(@_to.modelName, @_hasMany)
+      @_from.accessor = key = Class._databaseClass()._accessorForRelationship(@_to.modelName, @_hasMany)
     key
 
 
@@ -163,7 +165,7 @@ class Relationship extends CoreObject
   ###
   toAccessor: ->
     unless (key = @_to.accessor)
-      @_to.accessor = key = Database._accessorForRelationship(@_from.modelName, not @_hasMany)
+      @_to.accessor = key = Class._databaseClass()._accessorForRelationship(@_from.modelName, not @_hasMany)
     key
 
 
@@ -289,6 +291,19 @@ class Relationship extends CoreObject
       enumerable: yes
     )
     @
+
+
+  ###*
+    Return the {{#crossLink "Database"}}{{/crossLink}} class, used to avoid cross-referencing packages
+
+    @since 0.0.2
+    @static
+    @private
+    @method _databaseClass
+    @return {Object} the `Database` class
+  ###
+  @_databaseClass: ->
+    require './Database'
 
 
 

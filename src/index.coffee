@@ -9,7 +9,7 @@
 
 all = [
   'utils', 'CoreObject', 'Dictionary', 'DictionaryEx', 'RecordStore', 'MergedRecordStore', 'Model',
-  'Database', 'Relationship', 'ModelEx'
+  'ModelAttribute', 'Relationship', 'ModelEx', 'Database'
 ]
 
 # exports all our classes

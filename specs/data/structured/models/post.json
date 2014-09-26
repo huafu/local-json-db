@@ -2,4 +2,5 @@
   "title":    "string",
   "author":   ":user @ authorId",
   "comments": ":comment[] @ commentIds => post"
+  "*":        true
 }
