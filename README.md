@@ -3,7 +3,7 @@ local-json-db [![Build Status](https://travis-ci.org/huafu/local-json-db.svg?bra
 
 [![NPM](https://nodei.co/npm/local-json-db.png?downloads=true&stars=true)](https://nodei.co/npm/local-json-db/)
 
-# A local JSON database with overlays
+# A local JSON database with overlays and optional schema + relations
 
 ---
 
@@ -33,10 +33,12 @@ Then, in your CoffeeScript file:
 
 ```coffee
 ljdb = require 'local-json-db'
-db = new ljdb.Database('./data')
+db = new ljdb.Database('./data') # by default the db will be in {CWD}/json.db/
 db.addOverlay 'local'
 
-db.createRecord 'user', name: 'Huafu'
+user = db.createRecord 'user', name: 'Huafu'
+# if a schema is defined, it's possible to automatically link records:
+post = db.createRecord 'post', {title: 'my post', author: user}
 db.save()
 ```
 
@@ -44,10 +46,12 @@ or in javascript:
 
 ```js
 var ljdb = require('local-json-db');
-var db = new ljdb.Database('./data');
+var db = new ljdb.Database('./data'); // by default the db will be in {CWD}/json.db/
 db.addOverlay('local');
 
 db.createRecord('user', {name: 'Huafu'});
+// if a schema is defined, it's possible to automatically link records:
+var post = db.createRecord('post', {title: 'my post', author: user});
 db.save();
 ```
 
