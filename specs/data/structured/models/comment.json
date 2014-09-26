@@ -1,0 +1,5 @@
+{
+  "text": "string",
+  "post": ":post @ postId => comments",
+  "user": ":user => comments"
+}

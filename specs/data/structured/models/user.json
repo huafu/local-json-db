@@ -1,0 +1,5 @@
+{
+  "name":     "string",
+  "posts":    ":post[] @ postIds => author",
+  "comments": ":comment[] => user"
+}

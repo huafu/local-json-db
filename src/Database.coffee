@@ -386,4 +386,37 @@ class Database extends CoreObject
     path
 
 
+  ###*
+    Name of the default attribute for a relationship to a given model
+
+    @since 0.0.7
+    @private
+    @static
+    @method _attributeForRelationship
+    @param {String} toModel The destination model of the relationship
+    @param {Boolean} [hasMany=false] Whether it's a hasMany relationship or not
+    @return {String} Name of the attribute
+  ###
+  @_attributeForRelationship: (toModel, hasMany = no) ->
+    "#{ toModel }Id#{ if hasMany then 's' else ''}"
+
+
+  ###*
+    Name of the default accessor for a relationship to a given model
+
+    @since 0.0.7
+    @private
+    @static
+    @method _accessorForRelationship
+    @param {String} toModel The destination model of the relationship
+    @param {Boolean} [hasMany=false] Whether it's a hasMany relationship or not
+    @return {String} Name of the accessor
+  ###
+  @_accessorForRelationship: (toModel, hasMany = no) ->
+    if hasMany
+      utils.pluralize(toModel)
+    else
+      toModel
+
+
 module.exports = Class = Database

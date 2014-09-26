@@ -1,4 +1,3 @@
-
 ###*
   Local JSON database with overlays
 
@@ -8,7 +7,12 @@
   @author Huafu Gandon <huafu.gandon@gmail.com>
 ###
 
+all = [
+  'utils', 'CoreObject', 'Dictionary', 'DictionaryEx', 'RecordStore', 'MergedRecordStore', 'Model',
+  'Database', 'Relationship', 'ModelEx'
+]
+
 # exports all our classes
-for mod in 'utils CoreObject Dictionary DictionaryEx RecordStore MergedRecordStore Model Database'.split(' ')
+for mod in all
   module.exports[mod] = require './' + mod
 
