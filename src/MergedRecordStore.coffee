@@ -76,8 +76,7 @@ class MergedRecordStore extends RecordStore
       updatedAtKey: no
       eventsNamespace: 'record'
     }
-    @_importer = (r) -> r
-    @_exporter = (r) -> r
+    @setImporter().setExporter()
     @_config.deletedAtKey = '__deleted' unless @_config.deletedAtKey
     @_globalEventsNamespace = @_config.eventsNamespace
     @_eventsEmitter = @
