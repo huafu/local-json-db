@@ -45,7 +45,7 @@ describe 'simple example use case', ->
   # =============================================
 
   # define our variables ================
-  {Database} = require '../..'
+  {Database} = lib
   db = null
   user1 = null
   user2 = null

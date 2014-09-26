@@ -2,6 +2,7 @@ BIN = ./node_modules/.bin
 SRC = $(wildcard src/*.coffee)
 LIB = $(SRC:src/%.coffee=lib/%.js)
 DOC = docs
+COV = coverage
 SPEC = $(wildcard specs/*Spec.coffee) $(wildcard specs/lib/*Spec.coffee) $(wildcard specs/acceptance/*.coffee)
 
 
@@ -23,7 +24,7 @@ test: build
 		$(SPEC)
 
 
-cover:
+cover: clean
 	@mkdir -p coverage
 	COVERAGE=1 \
 	  NODE_ENV=test \
@@ -63,6 +64,7 @@ publish-doc: doc
 clean:
 	@rm -f $(LIB)
 	@rm -rf $(DOC)
+	@rm -rf $(COV)
 
 
 install link:

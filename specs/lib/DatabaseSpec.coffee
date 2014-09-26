@@ -285,7 +285,7 @@ describe 'Database', ->
       }
       expect(post.authorId).to.equal 1
 
-    it.only 'updates a one-to-one related record', ->
+    it 'updates a one-to-one related record', ->
       user = db.createRecord 'user', {name: 'Huafu'}
       post = db.createRecord 'post', {title: 'huafu post'}
       expect(post.author).to.be.undefined
