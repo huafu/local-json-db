@@ -40,7 +40,7 @@ class CoreObject extends EventEmitter
     unless level in ['debug', 'notice', 'info', 'warning', 'error', 'danger', 'fatal']
       items.unshift level
       level = 'debug'
-    utils.log "[#{@className()}#{if arguments.callee.caller is @:: log then '#' else '.'}log][#{level}]", items...
+    utils.log "[#{@className()}#{if arguments.callee.caller is @::log then '#' else '.'}log][#{level}]", items...
     @
 
 
@@ -56,7 +56,7 @@ class CoreObject extends EventEmitter
   ###
   @assert:         (expression, message) ->
     unless expression
-      utils.throw "[#{@className()}#{if arguments.callee.caller is @:: assert then '#' else '.'}assert] #{ message }"
+      utils.throw "[#{@className()}#{if arguments.callee.caller is @::assert then '#' else '.'}assert] #{ message }"
     @
 
 

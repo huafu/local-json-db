@@ -157,7 +157,7 @@ class MergedRecordStore extends RecordStore
     res
 
   createRecord: (record = {}) ->
-    record = @_exporter super(@_importer record)
+    record = @_exporter super(@_importer record, @), @
     @emit "#{ @_globalEventsNamespace }.created", record
     record
 
@@ -170,20 +170,20 @@ class MergedRecordStore extends RecordStore
         "the id given `#{id}` does not match the id in the given record `#{record.id}`"
       )
       record.id = id
-    record = @_exporter super(@_importer record)
+    record = @_exporter super(@_importer record, @), @
     @emit "#{ @_globalEventsNamespace }.updated", record
     record
 
   deleteRecord: (id) ->
-    record = @_exporter super(id)
+    record = @_exporter super(id), @
     @emit "#{ @_globalEventsNamespace }.deleted", record
     record
 
   readRecord: (id) ->
-    @_exporter super(id)
+    @_exporter super(id), @
 
   readAllRecords: ->
-    @_exporter(r) for r in super()
+    @_exporter(r, @) for r in super()
 
   countRecords: ->
     @ids().length

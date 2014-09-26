@@ -37,8 +37,10 @@ db = new ljdb.Database('./data') # by default the db will be in {CWD}/json.db/
 db.addOverlay 'local'
 
 user = db.createRecord 'user', name: 'Huafu'
+
 # if a schema is defined, it's possible to automatically link records:
 post = db.createRecord 'post', {title: 'my post', author: user}
+
 db.save()
 ```
 
@@ -50,12 +52,18 @@ var db = new ljdb.Database('./data'); // by default the db will be in {CWD}/json
 db.addOverlay('local');
 
 db.createRecord('user', {name: 'Huafu'});
+
 // if a schema is defined, it's possible to automatically link records:
 var post = db.createRecord('post', {title: 'my post', author: user});
+
 db.save();
 ```
 
 **Full API documentation of `Database` is [here](http://huafu.github.io/local-json-db/classes/Database.html).**
+
+It's important to note that returned records objects by any `Database` method are bare javascript objects,
+with, in the case of db with schema, magic properties or functions non enumerable. So you can then
+serialize them or iterate other their properties as if they were simple js `Object`.
 
 
 ## Example

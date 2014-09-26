@@ -4,7 +4,6 @@ LIB = $(SRC:src/%.coffee=lib/%.js)
 DOC = docs
 SPEC = $(wildcard specs/*Spec.coffee) $(wildcard specs/lib/*Spec.coffee) $(wildcard specs/acceptance/*.coffee)
 
-MOCHA_REPORTERS = "spec=- html-cov=coverage/html-cov.html json-cov=coverage/json-cov.json mocha-lcov-reporter=coverage/coverage.lcov"
 
 
 build: $(LIB)
@@ -15,10 +14,20 @@ lib/%.js: src/%.coffee
 
 
 test: build
+	NODE_ENV=test \
+		$(BIN)/mocha \
+		--compilers coffee:coffee-script/register \
+		--require specs/loader.js \
+		--reporter spec \
+		--ui bdd \
+		$(SPEC)
+
+
+cover:
 	@mkdir -p coverage
 	COVERAGE=1 \
 	  NODE_ENV=test \
-		multi=$(MOCHA_REPORTERS) \
+		multi="html-cov=coverage/html-cov.html json-cov=coverage/json-cov.json mocha-lcov-reporter=coverage/coverage.lcov" \
 		$(BIN)/mocha \
 		--compilers coffee:coffee-script/register \
 		--require specs/loader.js \
@@ -27,7 +36,7 @@ test: build
 		$(SPEC)
 
 
-coverall: test
+coverall: cover
 	@cat coverage/coverage.lcov | ./node_modules/coveralls/bin/coveralls.js
 
 

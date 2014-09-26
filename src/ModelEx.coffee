@@ -26,13 +26,21 @@ class ModelEx extends Model
   ###
   _attributes: null
   ###*
-    The relations of this model
+    The relationships of this model, indexed by their source accessor
     @since 0.0.7
     @private
     @property _relationships
     @type Object<Relationship>
   ###
   _relationships: null
+  ###*
+    The relationships of this model, indexed by their source attribute
+    @since 0.0.7
+    @private
+    @property _relationshipsByAttr
+    @type Object<Relationship>
+  ###
+  _relationshipsByAttr: null
   ###*
     Whether the model is dynamic and accepts the addition of unknown attributes
     @since 0.0.7
@@ -42,6 +50,14 @@ class ModelEx extends Model
     @default false
   ###
   _isDynamic: null
+  ###*
+    Our exported record cache
+    @since 0.0.7
+    @private
+    @property _exportedRecords
+    @type Object<Object>
+  ###
+  _exportedRecords: null
 
 
   ###*
@@ -64,6 +80,8 @@ class ModelEx extends Model
     )
     @_attributes = {}
     @_relationships = {}
+    @_relationshipsByAttr = {}
+    @_exportedRecords = {}
     @_isDynamic = no
     for own name, type of attributes
       if name is '*'
@@ -72,7 +90,8 @@ class ModelEx extends Model
         if type in 'str string num number bool boolean date mixed'.split(' ')
           @_attributes[name] = new ModelAttribute(@, name, type)
         else if type[0] is ':'
-          @_relationships[name] = @_parseRelationship(name, type)
+          @_relationships[name] = rel = @_parseRelationship(name, type)
+          @_relationshipsByAttr[rel.fromAttr()] = rel
         else
           @assert no, "wrong attribute type: #{ type }"
     for own prop, rel of @_relationships
@@ -82,7 +101,7 @@ class ModelEx extends Model
       )
     @_store.setImporter @_importRecord.bind(@)
     @_store.setExporter @_exportRecord.bind(@)
-    @lockProperties '_attributes', '_relationships', '_isDynamic'
+    @lockProperties '_attributes', '_relationships', '_relationshipsByAttr', '_isDynamic', '_exportedRecords'
 
 
   ###*
@@ -101,6 +120,13 @@ class ModelEx extends Model
     res
 
 
+  # @see {Model.delete}
+  delete: (id) ->
+    rec = super
+    delete @_exportedRecords["#{rec.id}"]
+    rec
+
+
   ###*
     Finds whether the model is a dynamic model (unknown attributes aren't ignored)
 
@@ -110,6 +136,26 @@ class ModelEx extends Model
   ###
   isDynamic: ->
     @_isDynamic
+
+
+  ###*
+    Finds the relationship defined on a given accessor name
+
+    @since 0.0.7
+    @method relationshipAt
+    @param {String} accessor The name of the property where the related record is mapped
+    @return {Relationship|undefined} The relationship at this accessor or null if no such relationship defined
+  ###
+  relationshipAt: (accessor) ->
+    @_relationships[accessor]
+
+
+  destroy: ->
+    delete @_exportedRecords[key] for key in Object.keys(@_exportedRecords)
+    delete @_relationships[key] for key in Object.keys(@_relationships)
+    delete @_relationshipsByAttr[key] for key in Object.keys(@_relationshipsByAttr)
+    delete @_attributes[key] for key in Object.keys(@_attributes)
+    super
 
 
   ###*
@@ -156,25 +202,41 @@ class ModelEx extends Model
   ###
   _exportRecord: (record) ->
     if record?
+      isKnown = yes
+      unless (rec = @_exportedRecords["#{record.id}"])
+        rec = @_exportedRecords["#{record.id}"] = @_store._copyRecord(record)
+        isKnown = no
       defined = ['id']
       for key, attr of @_attributes
         defined.push key
-        record[key] = attr.deserialize(record[key])
+        rec[key] = attr.deserialize(record[key])
       for key, rel of @_relationships
-        defined.push rel.fromAttr()
-        rel._setupRecord record
-      #FIXME: should we delete undefined keys? pretty sure yes
+        defined.push (attr = rel.fromAttr())
+        if isKnown
+          rec[attr] = record[attr]
+        else
+          rel._setupRecord rec
+      # delete undefined or obsolete properties
       unless @_isDynamic
         for key, val of record when key not in defined
-          delete record[key]
-      #sign our record
-      Object.defineProperty(record, '__modelName', {
-        value: @_name
+          delete rec[key]
+      unless isKnown
+        # sign our record
+        Object.defineProperty(rec, '__modelName', {
+          value: @_name
+          writable: no
+          configurable: no
+          enumerable: no
+        })
+      Object.defineProperty(rec, '__original', {
+        value: Object.freeze(record),
         writable: no
-        configurable: no
+        configurable: yes
         enumerable: no
       })
-    record
+    else
+      rec = record
+    rec
 
 
   ###*
@@ -184,7 +246,7 @@ class ModelEx extends Model
     @private
     @method _importRecord
     @param {Object} record The record to import
-    @return {Object} The serialized record
+    @return {Object} The serialized record attributes which have been updated
   ###
   _importRecord: (record) ->
     imported = ['id']
@@ -192,10 +254,10 @@ class ModelEx extends Model
     rec.id = record.id if record.id
     for key, rel of @_relationships
       attr = rel.fromAttr()
-      if not hasOwn(record, attr) and hasOwn(record, key)
-        rec[attr] = rel._serializeRelated record[key]
-      else
+      if hasOwn(record, attr)
         rec[attr] = record[attr]
+      else if hasOwn(record, key)
+        rec[attr] = rel._serializeRelated record[key]
       imported.push attr
     for key, val of record when key not in imported
       if (attr = @_attributes[key])
@@ -203,6 +265,15 @@ class ModelEx extends Model
       else
         @assert @_isDynamic, "unknown attribute `#{ key }` for model `#{ @_name }`"
         rec[key] = record[key]
+    # computed differences to only return them and update related records if any
+    if rec.id and (originalRecord = @_exportedRecords["#{rec.id}"])
+      original = originalRecord.__original
+      after = Object.keys(rec)
+      diff = {}
+      for k in after when k isnt 'id' and original[k] isnt rec[k]
+        diff[k] = rec[k]
+        if (rel = @_relationshipsByAttr[k])
+          rel._updateRelated originalRecord, rec[k], original[k]
     rec
 
 

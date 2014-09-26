@@ -139,10 +139,24 @@ class Model extends CoreObject
     @return {Array<Object>} array of all records found
   ###
   findMany: (ids...) ->
+    keepDuplicate = no
+    if (l = ids.length - 1) > 0 and utils.isBoolean(ids[l])
+      keepDuplicate = ids.pop()
     if ids.length is 1 and utils.isArray(ids[0])
       ids = ids[0]
-    ids = utils.uniq ids
-    record for id in ids when (record = @_store.readRecord id)
+    records = []
+    if keepDuplicate
+      found = {}
+      for id in ids
+        sid = "#{id}"
+        unless (r = found[sid])
+          found[sid] = r = @_store.readRecord id
+        records.push r
+    else
+      ids = utils.uniq ids
+      for id in ids when (record = @_store.readRecord id)
+        records.push record
+    records
 
 
   ###*
