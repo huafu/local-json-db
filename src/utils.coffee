@@ -2,7 +2,7 @@ _ = require 'lodash'
 _.mixin require 'underscore.inflections'
 
 
-_.mixin
+_.mixin(utils =
   copy: (object) ->
     _.cloneDeep object
 
@@ -24,6 +24,6 @@ _.mixin
       enumerable:   enumerable
     })
     object
-
+)
 
 module.exports = _

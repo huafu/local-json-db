@@ -7,7 +7,7 @@ SPEC = $(wildcard specs/*Spec.coffee) $(wildcard specs/lib/*Spec.coffee) $(wildc
 MOCHA_REPORTERS = "spec=- html-cov=coverage/html-cov.html json-cov=coverage/json-cov.json mocha-lcov-reporter=coverage/coverage.lcov"
 
 
-build: clean $(LIB)
+build: $(LIB)
 
 lib/%.js: src/%.coffee
 	@mkdir -p $(@D)
@@ -16,11 +16,12 @@ lib/%.js: src/%.coffee
 
 test: build
 	@mkdir -p coverage
-	@COVERAGE=1 \
+	COVERAGE=1 \
+	  NODE_ENV=test \
 		multi=$(MOCHA_REPORTERS) \
 		$(BIN)/mocha \
-		--require coffee-script/register \
-		--require specs/loader-coverage.js \
+		--compilers coffee:coffee-script/register \
+		--require specs/loader.js \
 		--reporter mocha-multi \
 		--ui bdd \
 		$(SPEC)

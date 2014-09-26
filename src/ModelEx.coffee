@@ -76,11 +76,29 @@ class ModelEx extends Model
         else
           @assert no, "wrong attribute type: #{ type }"
     for own prop, rel of @_relationships
-      @assert not @_attributes[rel.fromAttr()], "a relationship cannot be defined on an attribute of the model: #{ @_name }.#{ attr }"
+      @assert(
+        not @_attributes[rel.fromAttr()],
+        "a relationship cannot be defined on an attribute of the model: #{ @_name }.#{ prop }"
+      )
     @_store.setImporter @_importRecord.bind(@)
     @_store.setExporter @_exportRecord.bind(@)
-    @lockProperties '_attributes', '_relationships', '_isDynamic', '_database'
+    @lockProperties '_attributes', '_relationships', '_isDynamic'
 
+
+  ###*
+    Returns the known attributes of a model
+
+    @since 0.0.7
+    @method knownAttributes
+    @param {Boolean} [includeRelationshipAttr=true] If `true` the attributes of relationships will be included
+    @return {Array<String>} List of all known attributes
+  ###
+  knownAttributes: (includeRelationshipAttr = yes) ->
+    res = ['id'].concat Object.keys(@_attributes)
+    if includeRelationshipAttr
+      for name, rel of @_relationships
+        res.push rel.fromAttr()
+    res
 
 
   ###*

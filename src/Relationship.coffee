@@ -1,5 +1,6 @@
 utils = require './utils'
 CoreObject = require './CoreObject'
+Model = require './Model'
 
 Class = null
 
@@ -79,12 +80,12 @@ class Relationship extends CoreObject
     @_database = database
     @_from =
       model: null
-      modelName: Class._databaseClass()._modelName(from.model)
+      modelName: Model._modelName(from.model)
       attribute: from.attribute
       accessor: from.accessor
     @_to =
       model: null
-      modelName: Class._databaseClass()._modelName(to.model)
+      modelName: Model._modelName(to.model)
       attribute: 'id'
       accessor: to.accessor
     @_hasMany = Boolean(hasMany)

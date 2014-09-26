@@ -9,6 +9,7 @@ rmdir = require 'rmdir'
 
 SOURCE = sysPath.join __dirname, '..', 'data'
 TEMP_DATA = sysPath.join __dirname, '..', '..', 'tmp', 'spec-data'
+TEMP_DATA_WITH_MODELS = sysPath.join TEMP_DATA, 'with-models'
 
 describe 'Database', ->
   db = null
@@ -221,3 +222,29 @@ describe 'Database', ->
           }
         ]
       }
+
+
+  describe 'with predefined models', ->
+    beforeEach ->
+      db = new Database(TEMP_DATA_WITH_MODELS, {
+        updatedAtKey: 'updatedAt'
+        deletedAtKey: 'deletedAt'
+        schemaPath: 'models'
+      })
+      db.addOverlay(['alpha'])
+      db.addOverlay('local')
+
+    afterEach ->
+      db.destroy()
+
+    it 'fails loading a unknown model', ->
+      expect(-> db.modelFactory 'dummy').to.throw()
+
+    it 'list all known attributes of a model', ->
+      expect(db.modelFactory('user').knownAttributes()).to.deep.equal [
+        'id', 'name', 'postIds', 'commentIds'
+      ]
+      expect(db.modelFactory('user').knownAttributes(no)).to.deep.equal [
+        'id', 'name'
+      ]
+

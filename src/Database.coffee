@@ -7,6 +7,7 @@ utils = require './utils'
 CoreObject = require './CoreObject'
 MergedRecordStore = require './MergedRecordStore'
 Model = require './Model'
+ModelEx = require './ModelEx'
 
 Class = null
 
@@ -65,6 +66,15 @@ class Database extends CoreObject
     @default null
   ###
   _models: null
+  ###*
+    The path to the database schema if any
+    @since 0.0.7
+    @private
+    @property _schemaPath
+    @type String
+    @default null
+  ###
+  _schemaPath: null
 
 
   ###*
@@ -72,11 +82,12 @@ class Database extends CoreObject
 
     @since 0.0.2
     @method constructor
-    @param {String} [basePath="./json.db"]            the base path for the db files, hosting base JSON files of any added overlay
-    @param {Object} [config={}]                       the configuration options
-    @param {String} [config.createdAtKey]             name of the key to use as the `createdAt` flag for a record
-    @param {String} [config.updatedAtKey]             name of the key to use as the `updatedAt` flag for a record
-    @param {String} [config.deletedAtKey="__deleted"] name of the key to use as the `deletedAt` flag for a record
+    @param {String} [basePath="./json.db"] The base path for the db files, hosting base JSON files of any added overlay
+    @param {Object} [config={}] The configuration options
+    @param {String|Array} [config.schemaPath=null] Path where the definition files for each model is
+    @param {String} [config.createdAtKey] Name of the key to use as the `createdAt` flag for a record
+    @param {String} [config.updatedAtKey] Name of the key to use as the `updatedAt` flag for a record
+    @param {String} [config.deletedAtKey="__deleted"] Name of the key to use as the `deletedAt` flag for a record
   ###
   constructor: (basePath = './json.db', config = {}) ->
     @_basePath = sysPath.resolve basePath
@@ -84,7 +95,24 @@ class Database extends CoreObject
     @_layers = [@_basePath]
     # keep to null so we know if we are loaded or not, in which case adding/removing layers would be impossible
     @_models = null
-    @lockProperties '_basePath', '_config', '_layers'
+    if (path = config.schemaPath)
+      if utils.isArray(path)
+        path = sysPath.join(path...)
+      @_schemaPath = sysPath.resolve @_basePath, path
+    else
+      @_schemaPath = null
+    @lockProperties '_basePath', '_config', '_layers', '_schemaPath'
+
+
+  ###*
+    Finds whether this database has a schema or not
+
+    @since 0.0.7
+    @method hasSchema
+    @return {Boolean} Returns `true` if the database has a schema, else `false`
+  ###
+  hasSchema: ->
+    Boolean(@_schemaPath)
 
 
   ###*
@@ -293,7 +321,14 @@ class Database extends CoreObject
     @load()
     name = @_modelName(modelName)
     unless (model = @_models[name])
-      @_models[name] = model = new Model(@, name, @_createModelStore(name))
+      if (def = @_schemaPath)
+        def = sysPath.join @_schemaPath, "#{ name }.json"
+        @assert fs.existsSync(def), "unknown model #{ name }"
+        def = require def
+        model = new ModelEx(@, name, @_createModelStore(name), def)
+      else
+        model = new Model(@, name, @_createModelStore(name))
+      @_models[name] = model
       @emit 'model.store.loaded', model
     model
 
