@@ -2,6 +2,7 @@ BIN = ./node_modules/.bin
 
 SRC = $(wildcard src/*.coffee)
 LIB = $(SRC:src/%.coffee=lib/%.js)
+MAP = $(SRC:src/%.coffee=lib/%.js.map)
 SPEC = $(wildcard specs/*Spec.coffee) $(wildcard specs/lib/*Spec.coffee) $(wildcard specs/acceptance/*.coffee)
 
 DOC = docs
@@ -11,8 +12,13 @@ COV = coverage
 
 build: $(LIB)
 
+
 lib/%.js: src/%.coffee
-	$(BIN)/coffee -bc -o lib $<
+	$(BIN)/coffee -bmc -o lib $<
+
+
+lib/%.js.map: src/%.coffee
+	$(BIN)/coffee -bmc -o lib $<
 
 
 test: build
