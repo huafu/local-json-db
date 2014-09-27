@@ -320,7 +320,7 @@ class Relationship extends CoreObject
     attr = @fromAttr()
     # prepare our cache
     unless record.__rlCache
-      Object.defineProperty record, '__rlCache', value: {}, writable: no, enumerable: no, configurable: yes
+      Object.defineProperty record, '__rlCache', value: {}, writable: no, enumerable: no, configurable: no
     record.__rlCache[attr] = record[attr]
     delete record[attr]
     delete record[key]
@@ -454,9 +454,9 @@ class Relationship extends CoreObject
         return -1
       return 0
     else
-      if a? and b?
-        return if a is b then 0 else -1
-      else if not a? and not b?
+      if one? and two?
+        return if one is two then 0 else -1
+      else if not one? and not two?
         return 0
       else
         return -1
@@ -483,9 +483,9 @@ class Relationship extends CoreObject
         return -1
       return 0
     else
-      if a? and b?
-        return if "#{a}" is "#{b}" then 0 else -1
-      else if not a? and not b?
+      if one? and two?
+        return if "#{one}" is "#{two}" then 0 else -1
+      else if not one? and not two?
         return 0
       else
         return -1
