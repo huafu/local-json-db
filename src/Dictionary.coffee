@@ -17,7 +17,6 @@ class Dictionary extends CoreObject
     @_undefinedUnsets = Boolean(options.undefinedUnsets)
     @_keys = []
     @_values = []
-    @lockProperties '_stringifyKeys', '_undefinedUnsets', '_keys', '_values'
     @import data
     @
 

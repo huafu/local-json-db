@@ -12,7 +12,6 @@ class DictionaryEx extends Dictionary
   constructor: (data = {}, options = {})->
     @_metadata = []
     @_deleted = new Dictionary({}, options)
-    @lockProperties '_metadata', '_deleted'
     super
 
   clear: (withDeleted = yes) ->

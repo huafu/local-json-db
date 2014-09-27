@@ -1,17 +1,95 @@
-utils = require './utils'
-CoreObject = require './CoreObject'
-DictionaryEx = require './DictionaryEx'
+utils = require '../utils'
+CoreObject = require '../CoreObject'
+DictionaryEx = require '../DictionaryEx'
+Dictionary = require '../Dictionary'
 
 Class = null
 
+###*
+  Holds records and manage a local cache of exported records
+
+  @since 0.0.2
+  @class RecordStore
+  @extends CoreObject
+  @constructor
+###
 class RecordStore extends CoreObject
+  ###*
+    Holds our serialized records, which are actually in the store
+    @since 0.0.2
+    @private
+    @property _records
+    @type DictionaryEx
+  ###
   _records: null
+  ###*
+    Holds the cache of our exported records
+    @since 0.0.7
+    @private
+    @property _exportCache
+    @type Dictionary
+  ###
+  _exportCache: null
+  ###*
+    Our configuration
+    @since 0.0.2
+    @private
+    @property _config
+    @type Object
+  ###
   _config:  null
+  ###*
+    The last used ID
+    @since 0.0.2
+    @private
+    @property _lastId
+    @type Number
+    @default 0
+  ###
   _lastId:  null
+  ###*
+    Namespace for our events
+    @since 0.0.2
+    @private
+    @property _eventsNamespace
+    @type String
+    @default "record"
+  ###
   _eventsNamespace: null
+  ###*
+    The event emitter object
+    @since 0.0.2
+    @private
+    @property _eventsEmitter
+    @type EventEmitter
+    @default this
+  ###
   _eventsEmitter: null
+  ###*
+    Whether we are read-only or not
+    @since 0.0.2
+    @private
+    @property _readOnly
+    @type Boolean
+    @default false
+  ###
   _readOnly: null
 
+
+  ###*
+    Constructs a new store
+
+    @since 0.0.2
+    @method constructor
+    @param {Array<Object>} [records] An array of records to import into the store
+    @param {Object} [config] Configuration for this store
+    @param {String} [config.createdAtKey="createdAt"] The property where to store the creation date of a record
+    @param {String} [config.updatedAtKey="updatedAt"] The property where to store the update date of a record
+    @param {String} [config.deletedAtKey="deletedAt"] The property where to store the deleted date of a record
+    @param {String} [config.eventsNamespace="record"] The namespace for our events
+    @param {String} [config.eventEmitter=this] The event emitter object
+    @param {String} [config.readOnly=false] Whether we are read-only or not
+  ###
   constructor: (records = [], config = {}) ->
     @_records = new DictionaryEx({}, {stringifyKeys: yes})
     @_config = utils.defaults {}, config, {
@@ -22,6 +100,7 @@ class RecordStore extends CoreObject
       eventsEmitter: @
       readOnly: no
     }
+    @_exportCache = new Dictionary({}, {stringifyKeys: yes})
     @_readOnly = no
     readOnly = Boolean(@_config.readOnly)
     delete @_config.readOnly
@@ -33,6 +112,85 @@ class RecordStore extends CoreObject
     # create a new method instead of using `bind` to be sure we have only the record given as attribute
     @importRecords records
     @_readOnly = readOnly
+
+
+
+  _createExportableRecord: (id) ->
+    res = {}
+    self = @
+    Object.defineProperty res, 'id', {value: id, enumerable: yes}
+    Object.defineProperty res, '__recordMeta__', value: {original: null}
+    Object.defineProperty res, 'save', value: -> self.updateRecord @
+    Object.defineProperty res, 'delete', value: -> self.deleteRecord @
+    Object.defineProperty res, 'export', value: -> self._barify @
+    res
+
+
+  _exportRecord: (id, entry) ->
+    cacheEntry = @_exportCache.entryForKey(id)
+    bareRecord = @_entryToRecord(entry)
+    if (isNew = cacheEntry.index < 0)
+      return undefined unless bareRecord
+      record = @_createExportableRecord id
+      cacheEntry = @_exportCache.set id, record
+    else
+      unless bareRecord
+        @_exportCache.unset id
+        return undefined
+      record = cacheEntry.value
+    recordMeta = record.__recordMeta__
+    recordMeta.original = bareRecord
+    checked = ['id']
+    for key, value of bareRecord when key isnt 'id'
+      record[key] = utils.copy(value)
+    unless isNew
+      for key, value of record when key not in checked
+        delete record[key]
+    record
+
+
+  _recordToEntry: (record) ->
+    {
+      index: -1
+      value: record ? undefined
+
+    }
+
+
+
+
+
+
+  _recordDiff: (record, old) ->
+    checked = ['id']
+    diff = {}
+    for key, value of record when key isnt 'id'
+      checked.push key
+      unless utils.has(old, key) and old[key] is value
+        diff[key] = value
+    for key, value of old when key not in checked
+      # flag as deleted
+      diff[key] = null
+    diff
+
+
+  _entryToRecord: (entry) ->
+    if entry.index >= 0
+      rec = utils.copy entry.value
+      rec[k] = entry.metadata.createdAt if (k = @_config.createdAtKey)
+      rec[k] = entry.metadata.updatedAt if (k = @_config.updatedAtKey)
+    else
+      undefined
+
+  _entryForId: (id) ->
+    @_records.entryForKey id
+
+  _bareRecord: (id) ->
+    @_records.get(id)
+
+
+
+  # ===== OLD METHODS ===== #
 
   readRecord: (id) ->
     @assertValidId id

@@ -14,5 +14,11 @@ all = [
 
 # exports all our classes
 for mod in all
-  module.exports[mod] = require './' + mod
+  try
+    module.exports[mod] = require './new/' + mod
+  catch e
+    if e.code is 'MODULE_NOT_FOUND'
+      module.exports[mod] = require './' + mod
+    else
+      throw e
 

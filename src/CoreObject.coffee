@@ -2,6 +2,9 @@ EventEmitter = require('events').EventEmitter
 utils = require './utils'
 
 Class = null
+uuid = 0
+
+
 ###*
   Base for all objects
 
@@ -15,6 +18,17 @@ Class = null
     ```
 ###
 class CoreObject extends EventEmitter
+  ###*
+    Valid log levels
+    @since 0.0.7
+    @static
+    @final
+    @property VALID_LOG_LEVELS
+    @type Array<String>
+  ###
+  @VALID_LOG_LEVELS = ['debug', 'notice', 'info', 'warning', 'error', 'danger', 'fatal']
+
+
   ###*
     Get the name of the class
 
@@ -37,7 +51,7 @@ class CoreObject extends EventEmitter
     @chainable
   ###
   @log:            (level, items...) ->
-    unless level in ['debug', 'notice', 'info', 'warning', 'error', 'danger', 'fatal']
+    unless level in @VALID_LOG_LEVELS
       items.unshift level
       level = 'debug'
     utils.log "[#{@className()}#{if arguments.callee.caller is @::log then '#' else '.'}log][#{level}]", items...
@@ -96,7 +110,11 @@ class CoreObject extends EventEmitter
     @chainable
   ###
   log:             (level, items...) ->
-    @constructor.log arguments...
+    unless level in @VALID_LOG_LEVELS
+      items.unshift level
+      level = 'debug'
+    items.unshift @identify()
+    @constructor.log level, items...
     @
 
 
@@ -105,12 +123,13 @@ class CoreObject extends EventEmitter
 
     @since 0.0.2
     @method assert
-    @param {Boolean} expression the test to assert true
-    @param {String} message     the message of the error if assertion is failing
+    @param {Boolean} expression The test to assert true
+    @param {String} [message=""] The message of the error if assertion is failing
     @chainable
   ###
-  assert:          (expression, message) ->
-    @constructor.assert arguments...
+  assert:          (expression, message = '') ->
+    message = utils.trim "#{ @identify() } #{message}"
+    @constructor.assert expression, message
     @
 
 
@@ -129,14 +148,15 @@ class CoreObject extends EventEmitter
 
 
   ###*
-    Get the UUID of the object or fail if none defined
+    Get the UUID of the object, generating one if none available
 
     @since 0.0.2
     @method uuid
     @return {String} UUID of the object
   ###
   uuid:            ->
-    @assert (@_uuid and typeof @_uuid is 'string'), "undefined #{ @className() }#_uuid or not a string"
+    unless @_uuid
+      @_uuid = "#{++uuid}"
     @_uuid
 
 

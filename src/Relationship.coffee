@@ -391,13 +391,23 @@ class Relationship extends CoreObject
             delete r.__rlCache[invKey]
             r.__rlCache[invAttr] = v
         else
-          unless inverse._hasMany
-            if oldAttrValue and (r = toModel._exportedRecords["#{oldAttrValue}"])
-              delete r.__rlCache[invKey]
-              r.__rlCache[invAttr] = null
-            if newAttrValue
-              delete r.__rlCache[invKey]
-              r.__rlCache[invAttr] = fromRecord[inverse.toAttr()]
+          oldRecord = if oldAttrValue then toModel._exportedRecords["#{oldAttrValue}"] else null
+          newRecord = if newAttrValue then toModel._exportedRecords["#{newAttrValue}"] else null
+          myId = fromRecord[inverse.toAttr()]
+          if inverse._hasMany
+            if oldRecord
+              delete oldRecord.__rlCache[invKey]
+              delete oldRecord.__rlCache[invAttr]
+            if newRecord
+              delete newRecord.__rlCache[invKey]
+              delete newRecord.__rlCache[invAttr]
+          else
+            if oldRecord
+              delete oldRecord.__rlCache[invKey]
+              oldRecord.__rlCache[invAttr] = null
+            if newRecord
+              delete newRecord.__rlCache[invKey]
+              newRecord.__rlCache[invAttr] = myId
 
       else if @_hasMany
         # update the related records' `inverse.fromAttr()` using our `inverse.toAttr()`

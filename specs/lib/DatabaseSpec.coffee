@@ -265,48 +265,60 @@ describe 'Database', ->
         authorId: undefined
       }
 
-    it 'set and reads a one-to-one related record', ->
-      user = db.createRecord 'user', {name: 'Huafu'}
-      post = db.createRecord 'post', {title: 'huafu post', author: user}
-      expect(post).to.deep.equal {
-        id: 1, title: 'huafu post', authorId: 1
-      }
-      expect(post.author).to.deep.equal {
-        id: 1, name: 'Huafu'
-      }
-      expect(post.authorId).to.equal 1
 
-      post = db.find 'post', 1
-      expect(post).to.deep.equal {
-        id: 1, title: 'huafu post', authorId: 1
-      }
-      expect(post.author).to.deep.equal {
-        id: 1, name: 'Huafu'
-      }
-      expect(post.authorId).to.equal 1
+    describe 'with `belongs to` relationship', ->
+      user = null
+      post = null
+      beforeEach ->
+        user = db.createRecord 'user', {name: 'Huafu'}
+        post = db.createRecord 'post', {title: 'huafu post', author: user}
+      afterEach ->
+        user = post = null
 
-    it 'updates a one-to-one related record', ->
-      user = db.createRecord 'user', {name: 'Huafu'}
-      post = db.createRecord 'post', {title: 'huafu post'}
-      expect(post.author).to.be.undefined
-      expect(post.authorId).to.be.undefined
-      post.author = user
-      expect(post).to.deep.equal {
-        id: 1, title: 'huafu post', authorId: 1
-      }
-      expect(post.author).to.deep.equal {
-        id: 1, name: 'Huafu'
-      }
+      it 'reads a relationship property', ->
+        expect(post).to.deep.equal {
+          id: 1, title: 'huafu post', authorId: 1
+        }
+        expect(post.author).to.deep.equal {
+          id: 1, name: 'Huafu'
+        }
+        expect(post.authorId).to.equal 1
 
-      db.updateRecord post
-      post = db.find 'post', 1
-      expect(post).to.deep.equal {
-        id: 1, title: 'huafu post', authorId: 1
-      }
-      expect(post.author).to.deep.equal {
-        id: 1, name: 'Huafu'
-      }
-      expect(post.authorId).to.equal 1
+        post = db.find 'post', 1
+        expect(post).to.deep.equal {
+          id: 1, title: 'huafu post', authorId: 1
+        }
+        expect(post.author).to.deep.equal {
+          id: 1, name: 'Huafu'
+        }
+        expect(post.authorId).to.equal 1
+
+      it 'updates a relationship property and saves it in the db', ->
+        post.author = null
+        expect(post.author).to.be.undefined
+        expect(post.authorId).to.be.undefined
+        post.author = user
+        expect(post).to.deep.equal {
+          id: 1, title: 'huafu post', authorId: 1
+        }
+        expect(post.author).to.deep.equal {
+          id: 1, name: 'Huafu'
+        }
+        db.updateRecord post
+        post = db.find 'post', 1
+        expect(post).to.deep.equal {
+          id: 1, title: 'huafu post', authorId: 1
+        }
+        expect(post.author).to.deep.equal {
+          id: 1, name: 'Huafu'
+        }
+        expect(post.authorId).to.equal 1
+
+      it.only 'updates related records\' volatile property', ->
+        expect(user.postIds).to.deep.equal [1]
+        expect(user.posts).to.deep.equal [
+          {id: 1, title: 'huafu post', authorId: 1}
+        ]
 
 
 

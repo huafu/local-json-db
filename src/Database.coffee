@@ -91,6 +91,7 @@ class Database extends CoreObject
   ###
   constructor: (basePath = './json.db', config = {}) ->
     @_basePath = sysPath.resolve basePath
+    @_uuid = sysPath.relative process.cwd(), @_basePath
     @_config = utils.defaults {}, config
     @_layers = [@_basePath]
     # keep to null so we know if we are loaded or not, in which case adding/removing layers would be impossible
@@ -101,7 +102,6 @@ class Database extends CoreObject
       @_schemaPath = sysPath.resolve @_basePath, path
     else
       @_schemaPath = null
-    @lockProperties '_basePath', '_config', '_layers', '_schemaPath'
 
 
   ###*
@@ -130,6 +130,7 @@ class Database extends CoreObject
     path = sysPath.resolve @_basePath, path
     @assert path not in @_layers, "you cannot add twice the same path for 2 different overlays"
     @_layers.push path
+    @_uuid += ":#{ sysPath.relative @_basePath, path }"
     @
 
 

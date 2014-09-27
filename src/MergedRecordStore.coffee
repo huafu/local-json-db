@@ -88,9 +88,6 @@ class MergedRecordStore extends RecordStore
     @_records = coreLayer._records
     @_eventsNamespace = coreLayer._eventsNamespace
     @_readOnly = coreLayer._readOnly
-    @lockProperties(
-      '_layers', '_eventsNamespace', '_records', '_config', '_globalEventsNamespace', '_readOnly'
-    )
 
 
   ###*

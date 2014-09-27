@@ -208,6 +208,11 @@ class Model extends CoreObject
     super
 
 
+  # @see {CoreObject.uuid}
+  uuid: ->
+    @_name
+
+
   ###*
     Attach events on the store
 

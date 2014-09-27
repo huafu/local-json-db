@@ -101,7 +101,6 @@ class ModelEx extends Model
       )
     @_store.setImporter @_importRecord.bind(@)
     @_store.setExporter @_exportRecord.bind(@)
-    @lockProperties '_attributes', '_relationships', '_relationshipsByAttr', '_isDynamic', '_exportedRecords'
 
 
   ###*
@@ -125,6 +124,15 @@ class ModelEx extends Model
     rec = super
     delete @_exportedRecords["#{rec.id}"]
     rec
+
+
+  # @see {Model.create}
+  create: (record) ->
+    res = super
+    for attr, rel of @_relationshipsByAttr
+      if (newVal = res[attr])
+        rel._updateRelated res, newVal
+    res
 
 
   ###*
@@ -274,6 +282,7 @@ class ModelEx extends Model
         diff[k] = rec[k]
         if (rel = @_relationshipsByAttr[k])
           rel._updateRelated originalRecord, rec[k], original[k]
+      rec = diff
     rec
 
 

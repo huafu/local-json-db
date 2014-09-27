@@ -1,6 +1,6 @@
 {
   "title":    "string",
-  "author":   ":user @ authorId",
+  "author":   ":user @ authorId => posts",
   "comments": ":comment[] => post",
   "*":        true
 }

@@ -52,8 +52,11 @@ class ModelAttribute extends CoreObject
   ###
   constructor: (model, name, type = 'string') ->
     @assert model and model instanceof Model, "given model must be an instance of Model"
-    @assert name and utils.isString(name) and /^[a-z_][a-z0-9_]*$/i.test(name), "given name must be a string with alphanumeric characters"
-    @assert type and utils.isString(type) and type.length
+    @assert(
+      name and utils.isString(name) and /^[a-z_][a-z0-9_]*$/i.test(name),
+      "given name must be a string with alphanumeric characters"
+    )
+    @assert type and utils.isString(type) and type.length, "type must be a string of at least 1 char"
     @_model = model
     @_name = name
     @_type = type
@@ -79,7 +82,7 @@ class ModelAttribute extends CoreObject
           else
             (new Date value).toISOString()
         else
-          throw new TypeError("unknown type: #{ @_type }")
+          @assert no, "unknown type: #{ @_type }"
     else
       value
 
@@ -104,9 +107,14 @@ class ModelAttribute extends CoreObject
           else
             new Date value
         else
-          throw new TypeError("unknown type: #{ @_type }")
+          @assert no, "unknown type: #{ @_type }"
     else
       value
+
+
+  # @see {CoreObject.uuid}
+  uuid: ->
+    "#{ @_model.uuid() }.#{ @_name }"
 
 
 module.exports = Class = ModelAttribute
