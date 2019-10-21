@@ -33,7 +33,7 @@
     "mocha-multi": "0.4.1",
     "ncp": "0.6.0",
     "rmdir": "1.0.4",
-    "semver": "4.0.0",
+    "semver": "6.3.0",
     "sinon": "1.10.3",
     "yuidocjs": "0.3.50"
   },
